@@ -1,0 +1,46 @@
+<div class="vb-app-shell">
+  <mat-toolbar class="vb-app-shell__toolbar">
+    <button
+      mat-icon-button
+      type="button"
+      (click)="toggleSidenav()"
+      [attr.aria-label]="isHandset() ? 'Toggle navigation drawer' : 'Collapse or expand navigation'"
+    >
+      <i [class]="'vb-app-shell__toolbar-menu-icon ' + menuIconClass()" aria-hidden="true"></i>
+    </button>
+    <span class="vb-app-shell__title">{{ appTitle() }}</span>
+    <span class="vb-app-shell__spacer"></span>
+    <ng-content select="[vbShellHeaderActions]" />
+    <vb-theme-toggle />
+  </mat-toolbar>
+
+  <mat-sidenav-container #drawerContainer class="vb-app-shell__container" autosize>
+    <mat-sidenav
+      [mode]="sidenavMode()"
+      [opened]="isHandset() ? sidenavOpened() : true"
+      class="vb-app-shell__sidenav"
+      [class.vb-app-shell__sidenav--collapsed]="!isHandset() && sidenavCollapsed()"
+      (openedChange)="onSidenavOpenedChange($event)"
+    >
+      <mat-nav-list>
+        @for (link of navLinks(); track link.path) {
+          <a
+            mat-list-item
+            [disableRipple]="true"
+            [routerLink]="link.path"
+            routerLinkActive="vb-app-shell__nav--active"
+            (click)="onNavigate()"
+          >
+            <i [class]="'vb-app-shell__nav-icon ' + link.icon" aria-hidden="true"></i>
+            <span matListItemTitle class="vb-app-shell__nav-label">{{ link.label }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="vb-app-shell__content">
+      <div class="vb-app-shell__main" [@vbMainRoute]="mainRouteState()">
+        <router-outlet />
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

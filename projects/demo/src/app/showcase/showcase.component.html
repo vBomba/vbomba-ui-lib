@@ -1,0 +1,62 @@
+<div class="showcase">
+  <header class="showcase__hero">
+    <h1>vbomba-ui</h1>
+    <p class="showcase__lede">Component library sticker sheet — buttons, app shell, and a simple Material table.</p>
+  </header>
+
+  <section class="showcase__section" aria-labelledby="sec-buttons">
+    <h2 id="sec-buttons">Buttons</h2>
+    <p class="showcase__hint">Variants: filled, outlined, text, elevated — primary / warn / disabled. Button text: <code>label</code> input or projected content.</p>
+    <div class="showcase__row">
+      <vb-button variant="filled" color="primary" label="Primary filled" />
+      <vb-button variant="outlined" color="primary" label="Primary outlined" />
+      <vb-button variant="text" color="primary" label="Primary text" />
+      <vb-button variant="elevated" color="primary" label="Primary elevated" />
+    </div>
+    <div class="showcase__row">
+      <vb-button variant="filled" color="warn" label="Warn" />
+      <vb-button variant="filled" color="primary" disabled label="Disabled" />
+    </div>
+  </section>
+
+  <section class="showcase__section" aria-labelledby="sec-fields">
+    <h2 id="sec-fields">Text field &amp; select</h2>
+    <p class="showcase__hint">
+      <code>vb-textarea</code> and <code>vb-select</code> mirror chromadb-desc native controls (hairline ring, focus ring, chevron on select). Use
+      <code>[options]</code> or project <code>&lt;option&gt;</code> children — not both at once.
+    </p>
+    <div class="showcase__controls">
+      <label class="showcase__label" for="showcase-role">Role</label>
+      <vb-select
+        id="showcase-role"
+        [(value)]="teamRole"
+        placeholder="Choose a role"
+        [options]="roleOptions()"
+      />
+    </div>
+    <div class="showcase__controls">
+      <label class="showcase__label" for="showcase-env">Environment (projected options)</label>
+      <vb-select id="showcase-env" [(value)]="deployEnv">
+        <option value="dev">Development</option>
+        <option value="stage">Staging</option>
+        <option value="prod">Production</option>
+      </vb-select>
+    </div>
+    <div class="showcase__controls showcase__controls--stack">
+      <label class="showcase__label" for="showcase-notes">Notes</label>
+      <vb-textarea id="showcase-notes" [(value)]="draftNotes" [rows]="5" placeholder="Optional notes…" />
+    </div>
+    <div class="showcase__controls showcase__controls--stack">
+      <label class="showcase__label" for="showcase-json">Monospace sample</label>
+      <vb-textarea id="showcase-json" mono [rows]="4" [isReadonly]="true" [value]="jsonSample" />
+    </div>
+  </section>
+
+  <section class="showcase__section" aria-labelledby="sec-table">
+    <h2 id="sec-table">Table</h2>
+    <p class="showcase__hint"><code>vb-simple-table</code> — dynamic columns over <code>mat-table</code>.</p>
+    <div class="showcase__table-wrap">
+      <vb-simple-table [columns]="tableColumns()" [rows]="tableRows()" />
+    </div>
+  </section>
+</div>

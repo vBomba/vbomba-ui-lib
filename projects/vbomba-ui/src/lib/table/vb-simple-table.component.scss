@@ -1,0 +1,96 @@
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*
+ * chromadb-desc: mat-table grid + default mat-sort-header (Material SVG).
+ * Scoped with ::ng-deep so we win over Material cell defaults.
+ */
+:host ::ng-deep table.vb-simple-table.mat-mdc-table {
+  --mat-sort-arrow-color: color-mix(in srgb, var(--vb-color-action-primary-strong) 52%, var(--vb-color-text-primary));
+  width: 100%;
+  font-family: inherit;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--vb-color-surface-default) !important;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-row,
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-row {
+  min-height: 48px;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table thead .mat-mdc-header-cell {
+  border-top: 1px solid var(--vb-color-border-default) !important;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-cell,
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-cell {
+  border-right: 1px solid var(--vb-color-border-default) !important;
+  border-bottom: 1px solid var(--vb-color-border-default) !important;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-cell:first-child,
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-cell:first-child {
+  border-left: 1px solid var(--vb-color-border-default) !important;
+}
+
+/* Restore bottom edge (Material may strip last row bottom border). */
+:host ::ng-deep table.vb-simple-table.mat-mdc-table tbody .mdc-data-table__row:last-child > .mat-mdc-cell {
+  border-bottom: 1px solid var(--vb-color-border-default) !important;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table thead .mat-mdc-header-row .mat-mdc-header-cell:first-of-type {
+  border-top-left-radius: 11px;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table thead .mat-mdc-header-row .mat-mdc-header-cell:last-of-type {
+  border-top-right-radius: 11px;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table tbody tr.mat-mdc-row:last-child .mat-mdc-cell:first-of-type {
+  border-bottom-left-radius: 11px;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table tbody tr.mat-mdc-row:last-child .mat-mdc-cell:last-of-type {
+  border-bottom-right-radius: 11px;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-cell {
+  background: var(--vb-color-surface-muted) !important;
+  color: color-mix(in srgb, var(--vb-color-action-primary-strong) 58%, var(--vb-color-text-primary)) !important;
+  font-weight: 600;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-row:hover .mat-mdc-cell {
+  background: color-mix(in srgb, var(--vb-color-action-primary) 5%, var(--vb-color-surface-default));
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-cell,
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-cell {
+  padding: 0.75rem 0.65rem;
+  line-height: 1.5;
+}
+
+/* MatSortHeader: keep Material’s opacity / transform behaviour; only nudge layout like collections-list. */
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-sort-header-container {
+  align-items: center;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-sort-header-content {
+  align-items: center;
+}
+
+:host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-sort-header-arrow > svg {
+  fill: currentColor;
+}

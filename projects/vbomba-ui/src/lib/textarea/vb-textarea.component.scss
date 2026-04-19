@@ -1,0 +1,58 @@
+/* Styling aligned with chromadb-desc native textarea (box-shadow ring, no border seam). */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.vb-textarea__field {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  border-radius: var(--vb-radius-input);
+  background-color: var(--vb-color-surface-input);
+  color: var(--vb-color-text-primary);
+  font: inherit;
+  padding: var(--vb-input-padding-y) var(--vb-input-padding-x);
+  appearance: none;
+  box-shadow: 0 0 0 1px var(--vb-color-border-default);
+  background-clip: padding-box;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition:
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+  min-height: 5rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.vb-textarea__field:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 6%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
+}
+
+:host-context(body.app-dark-theme) .vb-textarea__field:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 9%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+}
+
+.vb-textarea__field:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--vb-color-action-primary),
+    0 0 0 4px var(--vb-color-effect-ring-focus);
+}
+
+.vb-textarea__field:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  resize: none;
+}
+
+:host(.vb-textarea--mono) .vb-textarea__field {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}

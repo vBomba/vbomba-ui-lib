@@ -1,0 +1,38 @@
+@switch (variant()) {
+  @case ('filled') {
+    <button mat-flat-button [color]="color()" [disabled]="disabled()" [type]="type()">
+      @if (label()) {
+        {{ label() }}
+      } @else {
+        <ng-content />
+      }
+    </button>
+  }
+  @case ('outlined') {
+    <button mat-stroked-button [color]="color()" [disabled]="disabled()" [type]="type()">
+      @if (label()) {
+        {{ label() }}
+      } @else {
+        <ng-content />
+      }
+    </button>
+  }
+  @case ('text') {
+    <button mat-button [color]="color()" [disabled]="disabled()" [type]="type()">
+      @if (label()) {
+        {{ label() }}
+      } @else {
+        <ng-content />
+      }
+    </button>
+  }
+  @case ('elevated') {
+    <button mat-raised-button [color]="color()" [disabled]="disabled()" [type]="type()">
+      @if (label()) {
+        {{ label() }}
+      } @else {
+        <ng-content />
+      }
+    </button>
+  }
+}

@@ -1,0 +1,98 @@
+@use '@angular/material' as mat;
+@use '../../vbomba-ui/src/lib/theme/vb-color-tokens';
+@use '../../vbomba-ui/src/lib/theme/vb-material-bridge';
+
+@import '@fontsource/lexend/400.css';
+@import '@fontsource/lexend/500.css';
+@import '@fontsource/lexend/600.css';
+@import '@fontsource/lexend/700.css';
+
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$green-palette,
+    ),
+    density: (
+      scale: 0,
+    ),
+    typography: (
+      plain-family: '"Lexend", "Lexend Fallback", sans-serif',
+      brand-family: '"Lexend", "Lexend Fallback", sans-serif',
+    ),
+  )
+);
+
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$violet-palette,
+    ),
+    density: (
+      scale: 0,
+    ),
+    typography: (
+      plain-family: '"Lexend", "Lexend Fallback", sans-serif',
+      brand-family: '"Lexend", "Lexend Fallback", sans-serif',
+    ),
+  )
+);
+
+body.app-light-theme {
+  @include mat.all-component-themes($light-theme);
+}
+
+body.app-dark-theme {
+  @include mat.all-component-themes($dark-theme);
+}
+
+body.app-dark-theme input:not([type='checkbox']):not(.mat-mdc-input-element):hover,
+body.app-dark-theme .filter-select:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-color-text-primary) 9%);
+}
+
+body.app-dark-theme
+  .mat-mdc-form-field:not(.mat-focused):not(.mat-form-field-disabled):hover
+  .mat-mdc-text-field-wrapper {
+  background-color: color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-color-text-primary) 9%) !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: 'Lexend', 'Lexend Fallback', sans-serif;
+  background: var(--vb-color-surface-canvas);
+  color: var(--vb-color-text-primary);
+}
+
+body {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--vb-color-text-primary);
+}
+
+p,
+li,
+label,
+small {
+  line-height: 1.45;
+}

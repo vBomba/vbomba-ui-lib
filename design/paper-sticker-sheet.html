@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>vbomba-ui — sticker sheet (Paper / handoff)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+      :root {
+        --eco-bg: #f4f4f5;
+        --eco-surface: #ffffff;
+        --eco-surface-muted: #f9fafb;
+        --eco-text: #18181b;
+        --eco-text-muted: #71717a;
+        --eco-border: #e4e4e7;
+        --eco-primary: #0f9d58;
+        --eco-primary-strong: #0b7d45;
+        --eco-warn: #c62828;
+        --eco-radius: 10px;
+        --eco-shadow: 0 1px 2px rgba(24, 24, 27, 0.06), 0 2px 8px rgba(15, 157, 88, 0.07);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 2rem 1.5rem 3rem;
+        font-family: Lexend, system-ui, sans-serif;
+        background: var(--eco-bg);
+        color: var(--eco-text);
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0 0 0.35rem;
+        font-size: 1.75rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .lede {
+        margin: 0 0 2rem;
+        color: var(--eco-text-muted);
+        line-height: 1.5;
+        max-width: 52ch;
+      }
+      section {
+        margin-bottom: 2.5rem;
+        padding: 1.25rem 1.25rem 1.5rem;
+        border-radius: var(--eco-radius);
+        background: var(--eco-surface);
+        border: 1px solid var(--eco-border);
+        box-shadow: var(--eco-shadow);
+      }
+      section h2 {
+        margin: 0 0 0.35rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .hint {
+        margin: 0 0 1rem;
+        font-size: 0.85rem;
+        color: var(--eco-text-muted);
+        line-height: 1.45;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        align-items: center;
+        margin-bottom: 0.65rem;
+      }
+      .row:last-child {
+        margin-bottom: 0;
+      }
+      .btn {
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 0.875rem;
+        letter-spacing: 0.02em;
+        border-radius: 20px;
+        padding: 0 1.25rem;
+        min-height: 40px;
+        border: none;
+        cursor: default;
+      }
+      .btn-filled {
+        background: var(--eco-primary);
+        color: #fff;
+      }
+      .btn-outlined {
+        background: transparent;
+        color: var(--eco-primary);
+        border: 1px solid var(--eco-border);
+        box-shadow: inset 0 0 0 1px rgba(15, 157, 88, 0.35);
+      }
+      .btn-text {
+        background: transparent;
+        color: var(--eco-primary);
+      }
+      .btn-elevated {
+        background: #fafafa;
+        color: var(--eco-primary);
+        box-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.12),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      .btn-warn {
+        background: var(--eco-warn);
+        color: #fff;
+      }
+      .btn-disabled {
+        background: rgba(0, 0, 0, 0.12);
+        color: rgba(0, 0, 0, 0.38);
+        cursor: not-allowed;
+      }
+      .menu-panel {
+        display: inline-flex;
+        flex-direction: column;
+        min-width: 220px;
+        padding: 0.35rem 0;
+        border-radius: 8px;
+        background: var(--eco-surface);
+        border: 1px solid var(--eco-border);
+        box-shadow: 0 4px 16px rgba(24, 24, 27, 0.12);
+      }
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.65rem 1rem;
+        border: none;
+        background: transparent;
+        font: inherit;
+        color: var(--eco-text);
+        text-align: left;
+        cursor: default;
+      }
+      .menu-item .material-icons {
+        font-size: 20px;
+        color: var(--eco-text-muted);
+      }
+      .menu-item:hover {
+        background: var(--eco-surface-muted);
+      }
+      .table-wrap {
+        overflow: auto;
+        border-radius: 8px;
+        border: 1px solid var(--eco-border);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+      th,
+      td {
+        padding: 0.65rem;
+        text-align: left;
+        border-bottom: 1px solid var(--eco-border);
+      }
+      th {
+        font-weight: 600;
+        background: var(--eco-surface-muted);
+        color: var(--eco-text-muted);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>vbomba-ui</h1>
+      <p class="lede">
+        Component library sticker sheet — buttons, menu items with icons, and a simple table. Matches demo theme
+        (Lexend + green primary from chromadb-desc).
+      </p>
+
+      <section aria-labelledby="s-buttons">
+        <h2 id="s-buttons">Buttons</h2>
+        <p class="hint">Variants: filled, outlined, text, elevated — primary / warn / disabled.</p>
+        <div class="row">
+          <button type="button" class="btn btn-filled">Primary filled</button>
+          <button type="button" class="btn btn-outlined">Primary outlined</button>
+          <button type="button" class="btn btn-text">Primary text</button>
+          <button type="button" class="btn btn-elevated">Primary elevated</button>
+        </div>
+        <div class="row">
+          <button type="button" class="btn btn-filled btn-warn">Warn</button>
+          <button type="button" class="btn btn-filled btn-disabled" disabled>Disabled</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="s-menu">
+        <h2 id="s-menu">Menu</h2>
+        <p class="hint">Material-style menu rows with Material Icons ligatures.</p>
+        <div class="menu-panel" role="menu">
+          <button type="button" class="menu-item" role="menuitem">
+            <span class="material-icons" aria-hidden="true">edit</span>
+            <span>Edit</span>
+          </button>
+          <button type="button" class="menu-item" role="menuitem">
+            <span class="material-icons" aria-hidden="true">content_copy</span>
+            <span>Duplicate</span>
+          </button>
+          <button type="button" class="menu-item" role="menuitem">
+            <span class="material-icons" aria-hidden="true">share</span>
+            <span>Share</span>
+          </button>
+          <button type="button" class="menu-item" role="menuitem">
+            <span class="material-icons" aria-hidden="true">delete</span>
+            <span>Delete</span>
+          </button>
+        </div>
+      </section>
+
+      <section aria-labelledby="s-table">
+        <h2 id="s-table">Table</h2>
+        <p class="hint">vb-simple-table — Name / Role / Status.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ada Lovelace</td>
+                <td>Engineer</td>
+                <td>Active</td>
+              </tr>
+              <tr>
+                <td>Grace Hopper</td>
+                <td>Engineer</td>
+                <td>Away</td>
+              </tr>
+              <tr>
+                <td>Margaret Hamilton</td>
+                <td>Lead</td>
+                <td>Active</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

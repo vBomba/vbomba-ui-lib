@@ -1,0 +1,11 @@
+---
+description: vbomba-ui color tokens — no raw hex in components
+globs: projects/vbomba-ui/**/*.scss,projects/vbomba-ui/**/*.html,projects/demo/**/*.scss
+---
+
+Use only CSS custom properties from `vb-color-tokens.scss`:
+
+- **Primitives** (fixed): `--vb-palette-{family}-{step}` (e.g. `--vb-palette-green-600`, `--vb-palette-night-900`).
+- **Semantic** (theme on `body.app-light-theme` / `body.app-dark-theme`): `--vb-color-{category}-{role}` — categories `surface`, `text`, `border`, `action`, `on-action`, `effect`.
+
+Do not introduce ad-hoc `#rrggbb` in component styles; extend tokens in `vb-color-tokens.scss` if a new color is needed.

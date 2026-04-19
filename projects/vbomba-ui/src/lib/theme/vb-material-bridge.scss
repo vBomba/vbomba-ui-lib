@@ -1,0 +1,181 @@
+/**
+ * Align Angular Material (MDC) with vb semantic tokens — same idea as chromadb-desc/src/styles.scss.
+ * All colors go through var(--vb-color-*) / var(--vb-palette-*).
+ */
+
+button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
+  border-radius: var(--vb-radius-control) !important;
+  min-height: 38px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition:
+    transform 150ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease,
+    color 200ms ease !important;
+}
+
+/* Filled (mat-flat) + elevated (mat-raised): background and label like chromadb (--eco-btn-*) */
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  background: var(--vb-color-action-primary) !important;
+  color: var(--vb-color-text-on-action-primary) !important;
+  border: 1px solid color-mix(in srgb, var(--vb-color-action-primary-strong) 52%, transparent) !important;
+  box-shadow: var(--vb-color-effect-shadow-xs), 0 1px 3px rgba(var(--vb-palette-shadow-soft-rgb), 0.05) !important;
+}
+
+.mat-mdc-raised-button .mdc-button__label,
+.mat-mdc-unelevated-button .mdc-button__label {
+  color: var(--vb-color-text-on-action-primary) !important;
+}
+
+.mat-mdc-raised-button:hover,
+.mat-mdc-unelevated-button:hover {
+  background: var(--vb-color-action-primary-strong) !important;
+  box-shadow: 0 2px 5px rgba(var(--vb-palette-shadow-rgb), 0.12), 0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.08) !important;
+}
+
+body.app-dark-theme .mat-mdc-raised-button:hover,
+body.app-dark-theme .mat-mdc-unelevated-button:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.22) !important;
+}
+
+.mat-mdc-outlined-button {
+  border-color: var(--vb-color-border-default) !important;
+  background: var(--vb-color-surface-default) !important;
+  color: var(--vb-color-text-outlined-button) !important;
+  box-shadow: var(--vb-color-effect-shadow-xs) !important;
+}
+
+.mat-mdc-outlined-button .mdc-button__label {
+  color: var(--vb-color-text-outlined-button) !important;
+}
+
+.mat-mdc-outlined-button:hover {
+  border-color: var(--vb-color-action-primary) !important;
+  background: color-mix(in srgb, var(--vb-color-action-primary) 12%, var(--vb-color-surface-default)) !important;
+  box-shadow: 0 4px 10px rgba(var(--vb-palette-shadow-rgb), 0.08) !important;
+}
+
+/* Text button (mat-button) */
+.mat-mdc-button:not(.mat-mdc-icon-button):not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(
+    .mat-mdc-raised-button
+  ) {
+  color: var(--vb-color-action-primary) !important;
+}
+
+.mat-mdc-button:not(.mat-mdc-icon-button):not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(
+    .mat-mdc-raised-button
+  )
+  .mdc-button__label {
+  color: var(--vb-color-action-primary) !important;
+}
+
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-unelevated-button.mat-accent,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-raised-button.mat-accent {
+  background: var(--vb-color-action-primary) !important;
+  color: var(--vb-color-text-on-action-primary) !important;
+}
+
+.mat-mdc-unelevated-button.mat-primary .mdc-button__label,
+.mat-mdc-unelevated-button.mat-accent .mdc-button__label,
+.mat-mdc-raised-button.mat-primary .mdc-button__label,
+.mat-mdc-raised-button.mat-accent .mdc-button__label {
+  color: var(--vb-color-text-on-action-primary) !important;
+}
+
+/* Warn */
+.mat-mdc-unelevated-button.mat-warn,
+.mat-mdc-raised-button.mat-warn {
+  background: var(--vb-color-action-destructive) !important;
+  color: var(--vb-color-text-on-action-destructive) !important;
+  border-color: color-mix(in srgb, var(--vb-color-action-destructive) 65%, var(--vb-palette-black) 35%) !important;
+}
+
+.mat-mdc-unelevated-button.mat-warn .mdc-button__label,
+.mat-mdc-raised-button.mat-warn .mdc-button__label {
+  color: var(--vb-color-text-on-action-destructive) !important;
+}
+
+.mat-mdc-outlined-button.mat-warn {
+  color: var(--vb-color-action-destructive) !important;
+  border-color: color-mix(in srgb, var(--vb-color-action-destructive) 45%, var(--vb-color-border-default)) !important;
+}
+
+.mat-mdc-outlined-button.mat-warn .mdc-button__label {
+  color: var(--vb-color-action-destructive) !important;
+}
+
+.mat-mdc-button.mat-warn:not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(.mat-mdc-raised-button) {
+  color: var(--vb-color-action-destructive) !important;
+}
+
+.mat-mdc-raised-button:disabled,
+.mat-mdc-unelevated-button:disabled,
+.mat-mdc-outlined-button:disabled,
+.mat-mdc-button:disabled {
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.55;
+}
+
+/* Dark theme: unthemed text buttons (not icon) — like chromadb */
+body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button),
+body.app-dark-theme .mat-mdc-button-base.mat-unthemed:not(.mat-mdc-icon-button) {
+  color: var(--vb-color-text-primary) !important;
+  background: color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-palette-white) 5%);
+  border: 1px solid color-mix(in srgb, var(--vb-color-border-default) 70%, var(--vb-palette-white) 30%);
+  box-shadow: var(--vb-color-effect-shadow-xs);
+}
+
+body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button):hover,
+body.app-dark-theme .mat-mdc-button-base.mat-unthemed:not(.mat-mdc-icon-button):hover {
+  background: color-mix(in srgb, var(--vb-color-action-primary) 14%, var(--vb-color-surface-muted));
+  border-color: color-mix(in srgb, var(--vb-color-action-primary) 52%, var(--vb-color-border-default));
+}
+
+body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button):focus-visible,
+body.app-dark-theme .mat-mdc-button-base.mat-unthemed:not(.mat-mdc-icon-button):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--vb-color-effect-ring-focus);
+}
+
+.mat-mdc-icon-button.mat-unthemed,
+.mat-mdc-icon-button.mat-primary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.mat-mdc-icon-button.mat-unthemed .mat-icon,
+.mat-mdc-icon-button.mat-primary .mat-icon,
+.mat-mdc-icon-button.mat-unthemed > i.bx,
+.mat-mdc-icon-button.mat-primary > i.bx {
+  color: inherit !important;
+}
+
+.mat-mdc-icon-button > i.bx {
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.app-dark-theme .mat-mdc-icon-button.mat-unthemed,
+body.app-dark-theme .mat-mdc-icon-button.mat-primary {
+  color: var(--vb-color-text-muted) !important;
+}

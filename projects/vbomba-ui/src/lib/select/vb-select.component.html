@@ -1,0 +1,24 @@
+<div class="vb-select__wrap">
+  <select
+    #sel
+    class="vb-select__native"
+    [id]="id()"
+    [name]="name()"
+    [attr.aria-label]="ariaLabel()"
+    [disabled]="disabled()"
+    [value]="value()"
+    (change)="onChange(sel)"
+  >
+    @if (placeholder()) {
+      <option value="" disabled>{{ placeholder() }}</option>
+    }
+    @if (options().length) {
+      @for (opt of options(); track opt.value) {
+        <option [value]="opt.value" [disabled]="opt.disabled ?? false">{{ opt.label }}</option>
+      }
+    } @else {
+      <ng-content />
+    }
+  </select>
+  <span class="vb-select__chevron" aria-hidden="true"></span>
+</div>

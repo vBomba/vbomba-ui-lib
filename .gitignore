@@ -1,0 +1,79 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code — keep shared workspace config; ignore local-only files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Private / secrets (never commit)
+.env
+.env.*
+!.env.example
+!.env*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*_rsa
+*_ecdsa
+*.keystore
+credentials.json
+.secrets/
+secrets/
+.netrc
+.git-credentials
+*.secret
+.auth/
+PRIVATE*
+*.private
+.local/
+.npmrc
+.pnpm-debug.log
+
+# Cursor — local MCP / machine-specific (project rules under .cursor/rules may still be committed)
+.cursor/mcp.json
+.cursor/**/mcp*.local.json
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+*.log
+.turbo/
+.vercel/
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db

@@ -1,0 +1,13 @@
+---
+description: vbomba-ui-lib monorepo — library + demo conventions for agents
+globs: projects/vbomba-ui/**/*,projects/demo/**/*,AGENTS.md,package.json,angular.json
+---
+
+Read **`AGENTS.md`** at the repo root for full principles (structure, commands, shell, Paper, tokens).
+
+Quick rules:
+
+- **Library** `projects/vbomba-ui`: export new surface in `public-api.ts`; respect `peerDependencies` in `projects/vbomba-ui/package.json`; keep `sideEffects: true` unless you verify tree-shaking.
+- **Demo** `projects/demo`: `npm start` serves demo; routes use `VbAppShellComponent` with `data.appTitle` + `data.navLinks`; child routes use `data.animation` for main content transition.
+- **Styles**: use `@use` for `vb-color-tokens` / `vb-material-bridge` from demo `styles.scss`; never raw hex in components — see **`vbomba-ui-colors`** rule.
+- **Angular 21**: standalone components; match existing import/style patterns.

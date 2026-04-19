@@ -1,0 +1,76 @@
+/* Styling aligned with chromadb-desc native select (appearance none, chevron, box-shadow ring). */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.vb-select__wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.vb-select__native {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  min-height: var(--vb-input-min-height);
+  border: 0;
+  border-radius: var(--vb-radius-input);
+  background-color: var(--vb-color-surface-input);
+  color: var(--vb-color-text-primary);
+  font: inherit;
+  padding: var(--vb-input-padding-y) var(--vb-input-padding-x);
+  padding-inline-end: 2.35rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: 0 0 0 1px var(--vb-color-border-default);
+  background-clip: padding-box;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition:
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+  cursor: pointer;
+}
+
+.vb-select__native::-ms-expand {
+  display: none;
+}
+
+.vb-select__native:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 6%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
+}
+
+:host-context(body.app-dark-theme) .vb-select__native:hover {
+  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 9%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+}
+
+.vb-select__native:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--vb-color-action-primary),
+    0 0 0 4px var(--vb-color-effect-ring-focus);
+}
+
+.vb-select__native:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.vb-select__chevron {
+  position: absolute;
+  top: 50%;
+  right: 0.55rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  translate: 0 -50%;
+  background-color: var(--vb-color-text-muted);
+  pointer-events: none;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='black' d='M6 8l4 4 4-4H6z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}

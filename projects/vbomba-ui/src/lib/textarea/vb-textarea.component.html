@@ -1,0 +1,12 @@
+<textarea
+  class="vb-textarea__field"
+  [id]="id()"
+  [name]="name()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.rows]="rows()"
+  [disabled]="disabled()"
+  [readonly]="isReadonly()"
+  [placeholder]="placeholder()"
+  [value]="value()"
+  (input)="onInput($event)"
+></textarea>
