@@ -1,0 +1,39 @@
+@if (open()) {
+  <div class="vb-popup__backdrop" (click)="onBackdropClick()">
+    <section
+      class="vb-popup__panel"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="title() ? titleId : null"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="vb-popup__header">
+        <div class="vb-popup__heading">
+          @if (title()) {
+            <h2 class="vb-popup__title" [id]="titleId">{{ title() }}</h2>
+          }
+          @if (subtitle()) {
+            <p class="vb-popup__subtitle">{{ subtitle() }}</p>
+          }
+        </div>
+
+        <button
+          class="vb-popup__close"
+          type="button"
+          [attr.aria-label]="closeAriaLabel()"
+          (click)="close()"
+        >
+          <span aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <div class="vb-popup__body">
+        <ng-content />
+      </div>
+
+      <footer class="vb-popup__footer" aria-label="Popup actions">
+        <ng-content select="[vbPopupActions]" />
+      </footer>
+    </section>
+  </div>
+}

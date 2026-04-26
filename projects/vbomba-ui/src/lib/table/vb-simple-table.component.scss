@@ -9,7 +9,11 @@
  * Scoped with ::ng-deep so we win over Material cell defaults.
  */
 :host ::ng-deep table.vb-simple-table.mat-mdc-table {
-  --mat-sort-arrow-color: color-mix(in srgb, var(--vb-color-action-primary-strong) 52%, var(--vb-color-text-primary));
+  --mat-sort-arrow-color: color-mix(
+    in srgb,
+    var(--vb-color-action-primary-strong) 52%,
+    var(--vb-color-text-primary)
+  );
   width: 100%;
   font-family: inherit;
   border-collapse: separate;
@@ -46,34 +50,67 @@
 }
 
 /* Restore bottom edge (Material may strip last row bottom border). */
-:host ::ng-deep table.vb-simple-table.mat-mdc-table tbody .mdc-data-table__row:last-child > .mat-mdc-cell {
+:host
+  ::ng-deep
+  table.vb-simple-table.mat-mdc-table
+  tbody
+  .mdc-data-table__row:last-child
+  > .mat-mdc-cell {
   border-bottom: 1px solid var(--vb-color-border-default) !important;
 }
 
-:host ::ng-deep table.vb-simple-table.mat-mdc-table thead .mat-mdc-header-row .mat-mdc-header-cell:first-of-type {
+:host
+  ::ng-deep
+  table.vb-simple-table.mat-mdc-table
+  thead
+  .mat-mdc-header-row
+  .mat-mdc-header-cell:first-of-type {
   border-top-left-radius: 11px;
 }
 
-:host ::ng-deep table.vb-simple-table.mat-mdc-table thead .mat-mdc-header-row .mat-mdc-header-cell:last-of-type {
+:host
+  ::ng-deep
+  table.vb-simple-table.mat-mdc-table
+  thead
+  .mat-mdc-header-row
+  .mat-mdc-header-cell:last-of-type {
   border-top-right-radius: 11px;
 }
 
-:host ::ng-deep table.vb-simple-table.mat-mdc-table tbody tr.mat-mdc-row:last-child .mat-mdc-cell:first-of-type {
+:host
+  ::ng-deep
+  table.vb-simple-table.mat-mdc-table
+  tbody
+  tr.mat-mdc-row:last-child
+  .mat-mdc-cell:first-of-type {
   border-bottom-left-radius: 11px;
 }
 
-:host ::ng-deep table.vb-simple-table.mat-mdc-table tbody tr.mat-mdc-row:last-child .mat-mdc-cell:last-of-type {
+:host
+  ::ng-deep
+  table.vb-simple-table.mat-mdc-table
+  tbody
+  tr.mat-mdc-row:last-child
+  .mat-mdc-cell:last-of-type {
   border-bottom-right-radius: 11px;
 }
 
 :host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-cell {
   background: var(--vb-color-surface-muted) !important;
-  color: color-mix(in srgb, var(--vb-color-action-primary-strong) 58%, var(--vb-color-text-primary)) !important;
+  color: color-mix(
+    in srgb,
+    var(--vb-color-action-primary-strong) 58%,
+    var(--vb-color-text-primary)
+  ) !important;
   font-weight: 600;
 }
 
 :host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-row:hover .mat-mdc-cell {
-  background: color-mix(in srgb, var(--vb-color-action-primary) 5%, var(--vb-color-surface-default));
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 5%,
+    var(--vb-color-surface-default)
+  );
 }
 
 :host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-mdc-header-cell,
@@ -93,4 +130,8 @@
 
 :host ::ng-deep table.vb-simple-table.mat-mdc-table .mat-sort-header-arrow > svg {
   fill: currentColor;
+}
+
+.vb-simple-table__paginator {
+  margin-top: 0.75rem;
 }

@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
 import {
   VbButtonComponent,
+  VbLoaderComponent,
+  VbPaginatorComponent,
+  VbPopupComponent,
   VbSelectComponent,
   VbSimpleTableComponent,
   VbTextareaComponent,
@@ -11,12 +14,23 @@ import {
 @Component({
   selector: 'app-showcase',
   standalone: true,
-  imports: [VbButtonComponent, VbSelectComponent, VbSimpleTableComponent, VbTextareaComponent],
+  imports: [
+    VbButtonComponent,
+    VbLoaderComponent,
+    VbPaginatorComponent,
+    VbPopupComponent,
+    VbSelectComponent,
+    VbSimpleTableComponent,
+    VbTextareaComponent,
+  ],
   templateUrl: './showcase.component.html',
   styleUrl: './showcase.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowcaseComponent {
+  protected readonly popupOpen = model(false);
+  protected readonly paginatorPage = model(2);
+  protected readonly tablePage = model(1);
   protected readonly teamRole = model<string>('eng');
   protected readonly deployEnv = model<string>('dev');
   protected readonly draftNotes = model<string>('');
@@ -39,5 +53,9 @@ export class ShowcaseComponent {
     { name: 'Ada Lovelace', role: 'Engineer', status: 'Active' },
     { name: 'Grace Hopper', role: 'Engineer', status: 'Away' },
     { name: 'Margaret Hamilton', role: 'Lead', status: 'Active' },
+    { name: 'Katherine Johnson', role: 'Analyst', status: 'Active' },
+    { name: 'Radia Perlman', role: 'Architect', status: 'Active' },
+    { name: 'Hedy Lamarr', role: 'Inventor', status: 'Away' },
+    { name: 'Annie Easley', role: 'Engineer', status: 'Active' },
   ]);
 }

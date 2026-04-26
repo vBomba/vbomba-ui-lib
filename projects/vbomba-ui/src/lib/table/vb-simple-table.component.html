@@ -1,4 +1,10 @@
-<table mat-table [dataSource]="dataSource" matSort class="vb-simple-table">
+<table
+  mat-table
+  [dataSource]="displayedRows()"
+  matSort
+  class="vb-simple-table"
+  (matSortChange)="onSortChange($event)"
+>
   @for (col of columns(); track col.key) {
     <ng-container [matColumnDef]="col.key">
       @if (isSortable(col)) {
@@ -12,3 +18,13 @@
   <tr mat-header-row *matHeaderRowDef="columnKeys()"></tr>
   <tr mat-row *matRowDef="let row; columns: columnKeys()"></tr>
 </table>
+
+@if (pagination()) {
+  <vb-paginator
+    class="vb-simple-table__paginator"
+    [(page)]="page"
+    [pageSize]="pageSize()"
+    [totalItems]="rows().length"
+    aria-label="Table pagination"
+  />
+}

@@ -1,0 +1,39 @@
+<nav class="vb-paginator" [attr.aria-label]="ariaLabel()">
+  <p class="vb-paginator__range">{{ rangeLabel() }}</p>
+
+  <div class="vb-paginator__controls">
+    <button
+      class="vb-paginator__button"
+      type="button"
+      aria-label="Previous page"
+      [disabled]="currentPage() <= 1"
+      (click)="setPage(currentPage() - 1)"
+    >
+      &lsaquo;
+    </button>
+
+    <label class="vb-paginator__page">
+      <span>Page</span>
+      <input
+        type="number"
+        inputmode="numeric"
+        min="1"
+        [max]="totalPages()"
+        [value]="currentPage()"
+        (change)="setPageFromInput($any($event.target).value)"
+        (keydown.enter)="setPageFromInput($any($event.target).value)"
+      />
+      <span>of {{ totalPages() }}</span>
+    </label>
+
+    <button
+      class="vb-paginator__button"
+      type="button"
+      aria-label="Next page"
+      [disabled]="currentPage() >= totalPages()"
+      (click)="setPage(currentPage() + 1)"
+    >
+      &rsaquo;
+    </button>
+  </div>
+</nav>

@@ -1,12 +1,17 @@
 <div class="showcase">
   <header class="showcase__hero">
     <h1>vbomba-ui</h1>
-    <p class="showcase__lede">Component library sticker sheet — buttons, app shell, and a simple Material table.</p>
+    <p class="showcase__lede">
+      Component library sticker sheet — buttons, app shell, and a simple Material table.
+    </p>
   </header>
 
   <section class="showcase__section" aria-labelledby="sec-buttons">
     <h2 id="sec-buttons">Buttons</h2>
-    <p class="showcase__hint">Variants: filled, outlined, text, elevated — primary / warn / disabled. Button text: <code>label</code> input or projected content.</p>
+    <p class="showcase__hint">
+      Variants: filled, outlined, text, elevated — primary / warn / disabled. Button text:
+      <code>label</code> input or projected content.
+    </p>
     <div class="showcase__row">
       <vb-button variant="filled" color="primary" label="Primary filled" />
       <vb-button variant="outlined" color="primary" label="Primary outlined" />
@@ -19,11 +24,64 @@
     </div>
   </section>
 
+  <section class="showcase__section" aria-labelledby="sec-loader">
+    <h2 id="sec-loader">Loader</h2>
+    <p class="showcase__hint">
+      <code>vb-loader</code> uses project action and text tokens, with a configurable
+      <code>size</code> input.
+    </p>
+    <div class="showcase__row showcase__row--loaders">
+      <vb-loader aria-label="Loading default example" />
+      <vb-loader [size]="32" aria-label="Loading small example" />
+      <vb-loader [size]="64" aria-label="Loading large example" />
+    </div>
+  </section>
+
+  <section class="showcase__section" aria-labelledby="sec-popup">
+    <h2 id="sec-popup">Popup</h2>
+    <p class="showcase__hint">
+      <code>vb-popup</code> renders an animated dialog with highlighted header, close icon, and
+      projected footer actions.
+    </p>
+    <vb-button variant="filled" label="Open popup" (click)="popupOpen.set(true)" />
+
+    <vb-popup
+      [(open)]="popupOpen"
+      title="Confirm workspace update"
+      subtitle="Review the summary before applying this change."
+    >
+      <p class="showcase__popup-copy">
+        This popup uses the same surface, border, action, and focus tokens as the rest of the
+        library. The footer below shows the maximum recommended action count.
+      </p>
+
+      <div vbPopupActions class="showcase__popup-actions">
+        <vb-button variant="text" label="Cancel" (click)="popupOpen.set(false)" />
+        <vb-button variant="outlined" label="Save draft" (click)="popupOpen.set(false)" />
+        <vb-button variant="filled" label="Apply" (click)="popupOpen.set(false)" />
+      </div>
+    </vb-popup>
+  </section>
+
+  <section class="showcase__section" aria-labelledby="sec-paginator">
+    <h2 id="sec-paginator">Paginator</h2>
+    <p class="showcase__hint">
+      <code>vb-paginator</code> supports direct page input plus previous / next buttons.
+    </p>
+    <vb-paginator
+      [(page)]="paginatorPage"
+      [pageSize]="10"
+      [totalItems]="87"
+      aria-label="Standalone paginator example"
+    />
+  </section>
+
   <section class="showcase__section" aria-labelledby="sec-fields">
     <h2 id="sec-fields">Text field &amp; select</h2>
     <p class="showcase__hint">
-      <code>vb-textarea</code> and <code>vb-select</code> mirror chromadb-desc native controls (hairline ring, focus ring, chevron on select). Use
-      <code>[options]</code> or project <code>&lt;option&gt;</code> children — not both at once.
+      <code>vb-textarea</code> and <code>vb-select</code> mirror chromadb-desc native controls
+      (hairline ring, focus ring, chevron on select). Use <code>[options]</code> or project
+      <code>&lt;option&gt;</code> children — not both at once.
     </p>
     <div class="showcase__controls">
       <label class="showcase__label" for="showcase-role">Role</label>
@@ -44,7 +102,12 @@
     </div>
     <div class="showcase__controls showcase__controls--stack">
       <label class="showcase__label" for="showcase-notes">Notes</label>
-      <vb-textarea id="showcase-notes" [(value)]="draftNotes" [rows]="5" placeholder="Optional notes…" />
+      <vb-textarea
+        id="showcase-notes"
+        [(value)]="draftNotes"
+        [rows]="5"
+        placeholder="Optional notes…"
+      />
     </div>
     <div class="showcase__controls showcase__controls--stack">
       <label class="showcase__label" for="showcase-json">Monospace sample</label>
@@ -54,9 +117,18 @@
 
   <section class="showcase__section" aria-labelledby="sec-table">
     <h2 id="sec-table">Table</h2>
-    <p class="showcase__hint"><code>vb-simple-table</code> — dynamic columns over <code>mat-table</code>.</p>
+    <p class="showcase__hint">
+      <code>vb-simple-table</code> — dynamic columns over <code>mat-table</code>, with optional
+      pagination.
+    </p>
     <div class="showcase__table-wrap">
-      <vb-simple-table [columns]="tableColumns()" [rows]="tableRows()" />
+      <vb-simple-table
+        [(page)]="tablePage"
+        [columns]="tableColumns()"
+        [rows]="tableRows()"
+        [pageSize]="3"
+        pagination
+      />
     </div>
   </section>
 </div>

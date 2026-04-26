@@ -1,6 +1,10 @@
 <div class="vb-app-shell">
-  <mat-toolbar class="vb-app-shell__toolbar">
+  <mat-toolbar
+    class="vb-app-shell__toolbar"
+    [class.vb-app-shell__toolbar--collapsed]="!isHandset() && sidenavCollapsed()"
+  >
     <button
+      class="vb-app-shell__toolbar-toggle"
       mat-icon-button
       type="button"
       (click)="toggleSidenav()"

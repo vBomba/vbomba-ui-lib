@@ -1,15 +1,20 @@
 :host {
   display: block;
-  height: 100%;
+  height: 100vh;
   min-height: 100vh;
   --vb-shell-drawer-ms: 200ms;
+  --vb-shell-collapsed-width: 64px;
+  --vb-shell-nav-offset: 10px;
+  --vb-shell-nav-control-size: 44px;
+  --vb-shell-nav-icon-size: 1.24rem;
 }
 
 .vb-app-shell {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   min-height: 100vh;
+  overflow: hidden;
   background: var(--vb-color-surface-canvas);
 }
 
@@ -20,11 +25,15 @@
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: var(--vb-shell-nav-offset);
   min-height: 56px;
   height: 56px;
-  padding: 0 0.5rem;
-  background: color-mix(in srgb, var(--vb-color-surface-default) 94%, var(--vb-palette-white) 6%) !important;
+  padding: 0 var(--vb-shell-nav-offset);
+  background: color-mix(
+    in srgb,
+    var(--vb-color-surface-default) 94%,
+    var(--vb-palette-white) 6%
+  ) !important;
   border-bottom: 1px solid var(--vb-color-border-default);
   box-shadow: 0 1px 0 rgba(var(--vb-palette-shadow-rgb), 0.08);
   color: var(--vb-color-text-primary) !important;
@@ -44,7 +53,7 @@
 .vb-app-shell__container {
   flex: 1 1 auto;
   min-height: 0;
-  height: 100%;
+  height: calc(100vh - 56px);
   background: var(--vb-color-surface-canvas);
 }
 
@@ -93,7 +102,7 @@
 }
 
 .vb-app-shell__sidenav--collapsed {
-  width: 76px;
+  width: var(--vb-shell-collapsed-width);
 }
 
 :host ::ng-deep .vb-app-shell__sidenav a.mat-mdc-list-item {
@@ -103,16 +112,22 @@
 }
 
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item {
-  min-height: 48px;
-  height: 48px;
-  margin: 4px 10px;
+  min-height: var(--vb-shell-nav-control-size);
+  height: var(--vb-shell-nav-control-size);
+  margin: 4px var(--vb-shell-nav-offset);
   padding-inline: 12px !important;
-  width: calc(100% - 20px);
-  border-radius: 0 !important;
+  width: calc(100% - (var(--vb-shell-nav-offset) * 2));
+  border-radius: var(--vb-radius-md) !important;
   transition:
     background-color 180ms ease,
     color 180ms ease,
     transform 150ms ease;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .mdc-list-item__ripple,
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .mat-mdc-focus-indicator,
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .mat-ripple {
+  border-radius: inherit;
 }
 
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .mdc-list-item__content {
@@ -127,7 +142,6 @@
   overflow: visible !important;
 }
 
-/* Match chromadb-desc dashboard: icon is a plain leading node, not matListItemIcon (centers when collapsed). */
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .vb-app-shell__nav-icon {
   order: 1;
   flex: 0 0 24px;
@@ -139,7 +153,7 @@
   justify-content: center !important;
   margin-right: 10px;
   margin-left: 0;
-  font-size: 1.12rem;
+  font-size: var(--vb-shell-nav-icon-size);
   line-height: 1 !important;
 }
 
@@ -155,19 +169,27 @@
 }
 
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item:hover {
-  background: color-mix(in srgb, var(--vb-color-action-primary) 8%, var(--vb-color-surface-default)) !important;
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 8%,
+    var(--vb-color-surface-default)
+  ) !important;
   transform: translateX(2px);
 }
 
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item:focus-visible,
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item:focus-within {
   outline: none;
-  background: color-mix(in srgb, var(--vb-color-action-primary) 10%, var(--vb-color-surface-default)) !important;
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 10%,
+    var(--vb-color-surface-default)
+  ) !important;
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--vb-color-action-primary) 18%, transparent);
 }
 
 .vb-app-shell__toolbar-menu-icon {
-  font-size: 22px;
+  font-size: var(--vb-shell-nav-icon-size);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -204,7 +226,11 @@
 }
 
 :host ::ng-deep .vb-app-shell__nav--active {
-  background: color-mix(in srgb, var(--vb-color-action-primary) 16%, var(--vb-color-surface-default)) !important;
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 16%,
+    var(--vb-color-surface-default)
+  ) !important;
 }
 
 .vb-app-shell__sidenav--collapsed .vb-app-shell__nav-label {
@@ -223,11 +249,11 @@
 
 :host ::ng-deep .vb-app-shell__sidenav--collapsed .mat-mdc-list-item {
   justify-content: center;
-  margin: 6px auto;
-  width: 44px !important;
-  min-width: 44px;
-  height: 44px !important;
-  min-height: 44px !important;
+  margin: 6px var(--vb-shell-nav-offset);
+  width: var(--vb-shell-nav-control-size) !important;
+  min-width: var(--vb-shell-nav-control-size);
+  height: var(--vb-shell-nav-control-size) !important;
+  min-height: var(--vb-shell-nav-control-size) !important;
   padding: 0 !important;
   border-radius: var(--vb-radius-md) !important;
   text-align: center;
@@ -245,7 +271,7 @@
   justify-content: center !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  font-size: 1.24rem;
+  font-size: var(--vb-shell-nav-icon-size);
   line-height: 1 !important;
 }
 
@@ -258,6 +284,7 @@
   flex-direction: column;
   min-height: 100%;
   height: 100%;
+  overflow: auto;
   background: var(--vb-color-surface-canvas);
 }
 
@@ -270,5 +297,18 @@
 }
 
 :host ::ng-deep .vb-app-shell__toolbar .mat-mdc-icon-button {
+  --mdc-icon-button-state-layer-size: var(--vb-shell-nav-control-size);
+  --mdc-icon-button-icon-size: var(--vb-shell-nav-icon-size);
+
+  width: var(--vb-shell-nav-control-size);
+  height: var(--vb-shell-nav-control-size);
   color: var(--vb-color-text-primary) !important;
+  overflow: hidden;
+}
+
+:host ::ng-deep .vb-app-shell__toolbar .mat-mdc-icon-button .mat-mdc-button-persistent-ripple,
+:host ::ng-deep .vb-app-shell__toolbar .mat-mdc-icon-button .mat-mdc-button-ripple,
+:host ::ng-deep .vb-app-shell__toolbar .mat-mdc-icon-button .mat-mdc-focus-indicator,
+:host ::ng-deep .vb-app-shell__toolbar .mat-mdc-icon-button .mat-ripple {
+  border-radius: inherit;
 }

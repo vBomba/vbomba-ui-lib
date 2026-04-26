@@ -1,0 +1,67 @@
+:host {
+  --vb-loader-size: 48px;
+  --vb-loader-stroke: max(2px, calc(var(--vb-loader-size) / 24));
+
+  display: inline-flex;
+  width: var(--vb-loader-size);
+  height: var(--vb-loader-size);
+  color: var(--vb-color-action-primary);
+  vertical-align: middle;
+}
+
+.vb-loader__shape {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+.vb-loader__shape::before,
+.vb-loader__shape::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border: var(--vb-loader-stroke) solid currentColor;
+  border-radius: calc(var(--vb-loader-size) / 12);
+  animation: vb-loader-rotation-break 3s ease-in-out infinite alternate;
+}
+
+.vb-loader__shape::before {
+  border-color: color-mix(in srgb, var(--vb-color-text-muted) 70%, transparent);
+}
+
+.vb-loader__shape::after {
+  border-color: var(--vb-color-action-primary);
+  box-shadow: 0 0 0 4px var(--vb-color-effect-ring-focus);
+  animation-direction: alternate-reverse;
+}
+
+@keyframes vb-loader-rotation-break {
+  0% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(90deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  75% {
+    transform: rotate(270deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vb-loader__shape::before,
+  .vb-loader__shape::after {
+    animation-duration: 8s;
+  }
+}

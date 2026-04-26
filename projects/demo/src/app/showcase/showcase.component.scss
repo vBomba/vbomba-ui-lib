@@ -60,6 +60,22 @@
   }
 }
 
+.showcase__row--loaders {
+  gap: 1rem;
+}
+
+.showcase__popup-copy {
+  margin: 0;
+  color: var(--vb-color-text-muted);
+}
+
+.showcase__popup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
 .showcase__controls {
   margin-bottom: 1rem;
   max-width: 28rem;
@@ -90,6 +106,10 @@
 }
 
 :host-context(body.app-dark-theme) .showcase__hint code {
-  background: color-mix(in srgb, var(--vb-color-surface-muted) 70%, var(--vb-color-border-default) 30%);
+  background: color-mix(
+    in srgb,
+    var(--vb-color-surface-muted) 70%,
+    var(--vb-color-border-default) 30%
+  );
   color: var(--vb-color-text-primary);
 }
