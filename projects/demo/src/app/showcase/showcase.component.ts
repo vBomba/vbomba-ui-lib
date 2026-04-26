@@ -41,6 +41,12 @@ export class ShowcaseComponent {
     { value: 'pm', label: 'Product' },
   ]);
 
+  protected readonly envOptions = signal<VbSelectOption[]>([
+    { value: 'dev', label: 'Development' },
+    { value: 'stage', label: 'Staging' },
+    { value: 'prod', label: 'Production' },
+  ]);
+
   protected readonly jsonSample = '{\n  "example": true\n}';
 
   protected readonly tableColumns = signal<VbSimpleTableColumn[]>([

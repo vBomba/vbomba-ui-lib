@@ -73,7 +73,7 @@
   height: 2rem;
   border: 0;
   border-radius: 999px;
-  background: var(--vb-color-action-primary);
+  background: var(--vb-color-action-button);
   color: var(--vb-color-text-on-action-primary);
   cursor: pointer;
   font: inherit;
@@ -88,7 +88,7 @@
 }
 
 .vb-paginator__button:hover:not(:disabled) {
-  background: var(--vb-color-action-primary-strong);
+  background: var(--vb-color-action-button-strong);
   box-shadow:
     var(--vb-color-effect-shadow-xs),
     0 0 0 4px var(--vb-color-effect-ring-focus);

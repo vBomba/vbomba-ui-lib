@@ -80,8 +80,8 @@
     <h2 id="sec-fields">Text field &amp; select</h2>
     <p class="showcase__hint">
       <code>vb-textarea</code> and <code>vb-select</code> mirror chromadb-desc native controls
-      (hairline ring, focus ring, chevron on select). Use <code>[options]</code> or project
-      <code>&lt;option&gt;</code> children — not both at once.
+      (hairline ring, focus ring, chevron on select). Use <code>[options]</code> for the themed
+      dropdown.
     </p>
     <div class="showcase__controls">
       <label class="showcase__label" for="showcase-role">Role</label>
@@ -93,12 +93,8 @@
       />
     </div>
     <div class="showcase__controls">
-      <label class="showcase__label" for="showcase-env">Environment (projected options)</label>
-      <vb-select id="showcase-env" [(value)]="deployEnv">
-        <option value="dev">Development</option>
-        <option value="stage">Staging</option>
-        <option value="prod">Production</option>
-      </vb-select>
+      <label class="showcase__label" for="showcase-env">Environment</label>
+      <vb-select id="showcase-env" [(value)]="deployEnv" [options]="envOptions()" />
     </div>
     <div class="showcase__controls showcase__controls--stack">
       <label class="showcase__label" for="showcase-notes">Notes</label>

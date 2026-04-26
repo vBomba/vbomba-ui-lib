@@ -1,24 +1,59 @@
 <div class="vb-select__wrap">
-  <select
-    #sel
-    class="vb-select__native"
-    [id]="id()"
-    [name]="name()"
-    [attr.aria-label]="ariaLabel()"
-    [disabled]="disabled()"
-    [value]="value()"
-    (change)="onChange(sel)"
-  >
-    @if (placeholder()) {
-      <option value="" disabled>{{ placeholder() }}</option>
+  @if (options().length) {
+    <button
+      class="vb-select__trigger"
+      type="button"
+      role="combobox"
+      [id]="id()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-expanded]="open()"
+      [attr.aria-controls]="listboxId"
+      [disabled]="disabled()"
+      (click)="toggleOpen()"
+      (keydown)="onTriggerKeydown($event)"
+    >
+      <span class="vb-select__value" [class.vb-select__value--placeholder]="isPlaceholder()">
+        {{ displayLabel() }}
+      </span>
+    </button>
+
+    @if (name()) {
+      <input type="hidden" [name]="name()" [value]="value()" />
     }
-    @if (options().length) {
-      @for (opt of options(); track opt.value) {
-        <option [value]="opt.value" [disabled]="opt.disabled ?? false">{{ opt.label }}</option>
+
+    @if (open()) {
+      <div class="vb-select__dropdown" [id]="listboxId" role="listbox">
+        @for (opt of options(); track opt.value) {
+          <button
+            class="vb-select__option"
+            type="button"
+            role="option"
+            [class.vb-select__option--selected]="opt.value === value()"
+            [disabled]="opt.disabled ?? false"
+            [attr.aria-selected]="opt.value === value()"
+            (click)="selectOption(opt)"
+          >
+            {{ opt.label }}
+          </button>
+        }
+      </div>
+    }
+  } @else {
+    <select
+      #sel
+      class="vb-select__native"
+      [id]="id()"
+      [name]="name()"
+      [attr.aria-label]="ariaLabel()"
+      [disabled]="disabled()"
+      [value]="value()"
+      (change)="onChange(sel)"
+    >
+      @if (placeholder()) {
+        <option value="" disabled>{{ placeholder() }}</option>
       }
-    } @else {
       <ng-content />
-    }
-  </select>
+    </select>
+  }
   <span class="vb-select__chevron" aria-hidden="true"></span>
 </div>

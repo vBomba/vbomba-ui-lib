@@ -11,7 +11,8 @@
   width: 100%;
 }
 
-.vb-select__native {
+.vb-select__native,
+.vb-select__trigger {
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -30,36 +31,165 @@
   background-clip: padding-box;
   transform: translateZ(0);
   backface-visibility: hidden;
+  color-scheme: light;
   transition:
     box-shadow 200ms ease,
     background-color 200ms ease;
   cursor: pointer;
 }
 
+.vb-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.vb-select__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vb-select__value--placeholder {
+  color: var(--vb-color-text-muted);
+}
+
+:host-context(body.app-dark-theme) .vb-select__native,
+:host-context(body.app-dark-theme) .vb-select__trigger {
+  color-scheme: dark;
+}
+
 .vb-select__native::-ms-expand {
   display: none;
 }
 
-.vb-select__native:hover {
-  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 6%);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
+.vb-select__native option,
+.vb-select__native optgroup {
+  background-color: var(--vb-color-surface-default);
+  color: var(--vb-color-text-primary);
+  font: inherit;
 }
 
-:host-context(body.app-dark-theme) .vb-select__native:hover {
-  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 9%);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+.vb-select__native option {
+  min-height: 2rem;
 }
 
-.vb-select__native:focus {
+.vb-select__native option:checked {
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 14%,
+    var(--vb-color-surface-muted)
+  );
+  color: var(--vb-color-text-primary);
+}
+
+.vb-select__native option:disabled {
+  color: var(--vb-color-text-muted);
+}
+
+:host-context(body.app-dark-theme) .vb-select__native option,
+:host-context(body.app-dark-theme) .vb-select__native optgroup {
+  background-color: var(--vb-color-surface-muted);
+}
+
+:host-context(body.app-dark-theme) .vb-select__native option:checked {
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 24%,
+    var(--vb-color-surface-muted)
+  );
+  color: var(--vb-color-text-primary);
+}
+
+.vb-select__native:hover,
+.vb-select__trigger:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-surface-input) 88%,
+    var(--vb-color-text-primary) 6%
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
+}
+
+:host-context(body.app-dark-theme) .vb-select__native:hover,
+:host-context(body.app-dark-theme) .vb-select__trigger:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-surface-input) 88%,
+    var(--vb-color-text-primary) 9%
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+}
+
+.vb-select__native:focus,
+.vb-select__trigger:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 1px var(--vb-color-action-primary),
     0 0 0 4px var(--vb-color-effect-ring-focus);
 }
 
-.vb-select__native:disabled {
+.vb-select__native:disabled,
+.vb-select__trigger:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.vb-select__dropdown {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  max-height: 14rem;
+  overflow: auto;
+  padding: 0.35rem;
+  border: 1px solid var(--vb-color-border-default);
+  border-radius: var(--vb-radius-control);
+  background: var(--vb-color-surface-default);
+  color: var(--vb-color-text-primary);
+  box-shadow: var(--vb-color-effect-shadow-card-hover);
+}
+
+.vb-select__option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 2rem;
+  border: 0;
+  border-radius: calc(var(--vb-radius-control) - 3px);
+  background: transparent;
+  color: var(--vb-color-text-primary);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.4rem 0.55rem;
+  text-align: left;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.vb-select__option:hover,
+.vb-select__option:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--vb-color-action-primary) 9%, var(--vb-color-surface-muted));
+  color: var(--vb-color-action-primary-strong);
+}
+
+.vb-select__option--selected {
+  background: color-mix(in srgb, var(--vb-color-action-primary) 14%, var(--vb-color-surface-muted));
+  color: var(--vb-color-action-primary-strong);
+  font-weight: 600;
+}
+
+.vb-select__option:disabled {
+  color: var(--vb-color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .vb-select__chevron {

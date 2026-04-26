@@ -24,10 +24,12 @@ button,
 /* Filled (mat-flat) + elevated (mat-raised): background and label like chromadb (--eco-btn-*) */
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button {
-  background: var(--vb-color-action-primary) !important;
+  background: var(--vb-color-action-button) !important;
   color: var(--vb-color-text-on-action-primary) !important;
-  border: 1px solid color-mix(in srgb, var(--vb-color-action-primary-strong) 52%, transparent) !important;
-  box-shadow: var(--vb-color-effect-shadow-xs), 0 1px 3px rgba(var(--vb-palette-shadow-soft-rgb), 0.05) !important;
+  border: 1px solid color-mix(in srgb, var(--vb-color-action-button-strong) 52%, transparent) !important;
+  box-shadow:
+    var(--vb-color-effect-shadow-xs),
+    0 1px 3px rgba(var(--vb-palette-shadow-soft-rgb), 0.05) !important;
 }
 
 .mat-mdc-raised-button .mdc-button__label,
@@ -37,13 +39,17 @@ button,
 
 .mat-mdc-raised-button:hover,
 .mat-mdc-unelevated-button:hover {
-  background: var(--vb-color-action-primary-strong) !important;
-  box-shadow: 0 2px 5px rgba(var(--vb-palette-shadow-rgb), 0.12), 0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.08) !important;
+  background: var(--vb-color-action-button-strong) !important;
+  box-shadow:
+    0 2px 5px rgba(var(--vb-palette-shadow-rgb), 0.12),
+    0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.08) !important;
 }
 
 body.app-dark-theme .mat-mdc-raised-button:hover,
 body.app-dark-theme .mat-mdc-unelevated-button:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.22) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.38),
+    0 1px 2px rgba(0, 0, 0, 0.22) !important;
 }
 
 .mat-mdc-outlined-button {
@@ -59,20 +65,24 @@ body.app-dark-theme .mat-mdc-unelevated-button:hover {
 
 .mat-mdc-outlined-button:hover {
   border-color: var(--vb-color-action-primary) !important;
-  background: color-mix(in srgb, var(--vb-color-action-primary) 12%, var(--vb-color-surface-default)) !important;
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 12%,
+    var(--vb-color-surface-default)
+  ) !important;
   box-shadow: 0 4px 10px rgba(var(--vb-palette-shadow-rgb), 0.08) !important;
 }
 
 /* Text button (mat-button) */
-.mat-mdc-button:not(.mat-mdc-icon-button):not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(
-    .mat-mdc-raised-button
-  ) {
+.mat-mdc-button:not(.mat-mdc-icon-button):not(.mat-mdc-outlined-button):not(
+    .mat-mdc-unelevated-button
+  ):not(.mat-mdc-raised-button) {
   color: var(--vb-color-action-primary) !important;
 }
 
-.mat-mdc-button:not(.mat-mdc-icon-button):not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(
-    .mat-mdc-raised-button
-  )
+.mat-mdc-button:not(.mat-mdc-icon-button):not(.mat-mdc-outlined-button):not(
+    .mat-mdc-unelevated-button
+  ):not(.mat-mdc-raised-button)
   .mdc-button__label {
   color: var(--vb-color-action-primary) !important;
 }
@@ -81,7 +91,7 @@ body.app-dark-theme .mat-mdc-unelevated-button:hover {
 .mat-mdc-unelevated-button.mat-accent,
 .mat-mdc-raised-button.mat-primary,
 .mat-mdc-raised-button.mat-accent {
-  background: var(--vb-color-action-primary) !important;
+  background: var(--vb-color-action-button) !important;
   color: var(--vb-color-text-on-action-primary) !important;
 }
 
@@ -97,7 +107,11 @@ body.app-dark-theme .mat-mdc-unelevated-button:hover {
 .mat-mdc-raised-button.mat-warn {
   background: var(--vb-color-action-destructive) !important;
   color: var(--vb-color-text-on-action-destructive) !important;
-  border-color: color-mix(in srgb, var(--vb-color-action-destructive) 65%, var(--vb-palette-black) 35%) !important;
+  border-color: color-mix(
+    in srgb,
+    var(--vb-color-action-destructive) 65%,
+    var(--vb-palette-black) 35%
+  ) !important;
 }
 
 .mat-mdc-unelevated-button.mat-warn .mdc-button__label,
@@ -107,14 +121,20 @@ body.app-dark-theme .mat-mdc-unelevated-button:hover {
 
 .mat-mdc-outlined-button.mat-warn {
   color: var(--vb-color-action-destructive) !important;
-  border-color: color-mix(in srgb, var(--vb-color-action-destructive) 45%, var(--vb-color-border-default)) !important;
+  border-color: color-mix(
+    in srgb,
+    var(--vb-color-action-destructive) 45%,
+    var(--vb-color-border-default)
+  ) !important;
 }
 
 .mat-mdc-outlined-button.mat-warn .mdc-button__label {
   color: var(--vb-color-action-destructive) !important;
 }
 
-.mat-mdc-button.mat-warn:not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(.mat-mdc-raised-button) {
+.mat-mdc-button.mat-warn:not(.mat-mdc-outlined-button):not(.mat-mdc-unelevated-button):not(
+    .mat-mdc-raised-button
+  ) {
   color: var(--vb-color-action-destructive) !important;
 }
 
@@ -132,14 +152,19 @@ body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button),
 body.app-dark-theme .mat-mdc-button-base.mat-unthemed:not(.mat-mdc-icon-button) {
   color: var(--vb-color-text-primary) !important;
   background: color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-palette-white) 5%);
-  border: 1px solid color-mix(in srgb, var(--vb-color-border-default) 70%, var(--vb-palette-white) 30%);
+  border: 1px solid
+    color-mix(in srgb, var(--vb-color-border-default) 70%, var(--vb-palette-white) 30%);
   box-shadow: var(--vb-color-effect-shadow-xs);
 }
 
 body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button):hover,
 body.app-dark-theme .mat-mdc-button-base.mat-unthemed:not(.mat-mdc-icon-button):hover {
   background: color-mix(in srgb, var(--vb-color-action-primary) 14%, var(--vb-color-surface-muted));
-  border-color: color-mix(in srgb, var(--vb-color-action-primary) 52%, var(--vb-color-border-default));
+  border-color: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 52%,
+    var(--vb-color-border-default)
+  );
 }
 
 body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button):focus-visible,

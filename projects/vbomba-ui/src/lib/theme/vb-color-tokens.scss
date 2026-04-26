@@ -62,6 +62,8 @@
 
   --vb-color-action-primary: var(--vb-palette-green-600);
   --vb-color-action-primary-strong: var(--vb-palette-green-700);
+  --vb-color-action-button: var(--vb-color-action-primary);
+  --vb-color-action-button-strong: var(--vb-color-action-primary-strong);
   --vb-color-action-destructive: var(--vb-palette-red-800);
 
   --vb-color-text-outlined-button: var(--vb-palette-zinc-800);
@@ -69,9 +71,11 @@
   --vb-color-effect-ring-focus: rgba(var(--vb-palette-green-500-rgb), 0.2);
 
   --vb-color-effect-shadow-xs: 0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.1);
-  --vb-color-effect-shadow-card: 0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.06),
+  --vb-color-effect-shadow-card:
+    0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.06),
     0 2px 8px rgba(var(--vb-palette-green-500-rgb), 0.07);
-  --vb-color-effect-shadow-card-hover: 0 4px 14px rgba(var(--vb-palette-shadow-rgb), 0.09),
+  --vb-color-effect-shadow-card-hover:
+    0 4px 14px rgba(var(--vb-palette-shadow-rgb), 0.09),
     0 10px 24px rgba(var(--vb-palette-green-500-rgb), 0.12);
 
   --vb-radius-md: 10px;
@@ -96,11 +100,15 @@ body.app-light-theme {
 
   --vb-color-action-primary: var(--vb-palette-green-600);
   --vb-color-action-primary-strong: var(--vb-palette-green-700);
+  --vb-color-action-button: var(--vb-color-action-primary);
+  --vb-color-action-button-strong: var(--vb-color-action-primary-strong);
   --vb-color-effect-ring-focus: rgba(var(--vb-palette-green-500-rgb), 0.2);
 
-  --vb-color-effect-shadow-card: 0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.06),
+  --vb-color-effect-shadow-card:
+    0 1px 2px rgba(var(--vb-palette-shadow-rgb), 0.06),
     0 2px 8px rgba(var(--vb-palette-green-500-rgb), 0.07);
-  --vb-color-effect-shadow-card-hover: 0 4px 14px rgba(var(--vb-palette-shadow-rgb), 0.09),
+  --vb-color-effect-shadow-card-hover:
+    0 4px 14px rgba(var(--vb-palette-shadow-rgb), 0.09),
     0 10px 24px rgba(var(--vb-palette-green-500-rgb), 0.12);
 }
 
@@ -109,7 +117,11 @@ body.app-dark-theme {
   --vb-color-surface-default: var(--vb-palette-night-800);
   --vb-color-surface-muted: var(--vb-palette-night-700);
   --vb-color-surface-input: color-mix(in srgb, var(--vb-color-surface-muted) 52%, #3d435c 48%);
-  --vb-color-surface-elevated: color-mix(in srgb, var(--vb-color-surface-default) 55%, var(--vb-color-surface-muted) 45%);
+  --vb-color-surface-elevated: color-mix(
+    in srgb,
+    var(--vb-color-surface-default) 55%,
+    var(--vb-color-surface-muted) 45%
+  );
 
   --vb-color-text-primary: var(--vb-palette-neutral-100);
   --vb-color-text-muted: var(--vb-palette-night-text-muted);
@@ -118,12 +130,16 @@ body.app-dark-theme {
 
   --vb-color-border-default: var(--vb-palette-night-border);
 
-  --vb-color-action-primary: var(--vb-palette-violet-filled);
-  --vb-color-action-primary-strong: var(--vb-palette-violet-filled-strong);
+  --vb-color-action-primary: var(--vb-palette-violet-400);
+  --vb-color-action-primary-strong: var(--vb-palette-violet-500);
+  --vb-color-action-button: var(--vb-palette-violet-filled);
+  --vb-color-action-button-strong: var(--vb-palette-violet-filled-strong);
   --vb-color-effect-ring-focus: rgba(var(--vb-palette-violet-400-rgb), 0.22);
 
-  --vb-color-effect-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.38),
+  --vb-color-effect-shadow-card:
+    0 1px 3px rgba(0, 0, 0, 0.38),
     0 0 0 1px color-mix(in srgb, var(--vb-palette-violet-500) 14%, transparent);
-  --vb-color-effect-shadow-card-hover: 0 10px 28px rgba(0, 0, 0, 0.48),
+  --vb-color-effect-shadow-card-hover:
+    0 10px 28px rgba(0, 0, 0, 0.48),
     0 0 0 1px color-mix(in srgb, var(--vb-palette-violet-400) 26%, transparent);
 }
