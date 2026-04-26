@@ -28,7 +28,7 @@
   --vb-palette-violet-500: #8b5cf6;
   --vb-palette-violet-400-rgb: 167, 139, 250;
   --vb-palette-violet-500-rgb: 139, 92, 246;
-  /* Dark theme: filled buttons match chromadb-desc (--eco-btn-bg), not light violet-400 */
+  /* Dark theme filled buttons use deeper violet than text/accent states. */
   --vb-palette-violet-filled: #6d28d9;
   --vb-palette-violet-filled-strong: #5b21b6;
 
@@ -81,7 +81,7 @@
   --vb-radius-md: 10px;
   --vb-radius-control: 10px;
 
-  /* Native fields (aligned with chromadb-desc --eco-input-*) */
+  /* Native fields */
   --vb-radius-input: 8px;
   --vb-input-min-height: 38px;
   --vb-input-padding-y: 0.4rem;

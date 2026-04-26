@@ -4,7 +4,7 @@ import { VbAppShellComponent, VbShellNavLink } from 'vbomba-ui';
 import { ShowcaseComponent } from './showcase/showcase.component';
 
 const demoNavLinks: VbShellNavLink[] = [
-  { path: 'showcase', label: 'Sticker sheet', icon: 'bx bx-palette' },
+  { path: 'showcase', label: 'Showcase', icon: 'bx bx-palette' },
   { path: 'about', label: 'About', icon: 'bx bx-info-circle' },
 ];
 

@@ -3,7 +3,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { VbThemeService } from './vb-theme.service';
 
-/** Theme toggle: Material icon button + Boxicons (bx bx-moon / bx bx-sun), same idea as ecolabel-apps. */
+/** Theme toggle: Material icon button + Boxicons (bx bx-moon / bx bx-sun). */
 @Component({
   selector: 'vb-theme-toggle',
   standalone: true,
@@ -14,7 +14,9 @@ import { VbThemeService } from './vb-theme.service';
       type="button"
       (click)="theme.toggleTheme()"
       [matTooltip]="theme.theme() === 'light' ? 'Switch to dark theme' : 'Switch to light theme'"
-      [attr.aria-label]="theme.theme() === 'light' ? 'Switch to dark theme' : 'Switch to light theme'"
+      [attr.aria-label]="
+        theme.theme() === 'light' ? 'Switch to dark theme' : 'Switch to light theme'
+      "
     >
       <i [class]="'vb-theme-toggle__icon ' + iconClass()" aria-hidden="true"></i>
     </button>

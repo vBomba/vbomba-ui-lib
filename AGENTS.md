@@ -6,15 +6,15 @@
 
 ## Layout
 
-| Path | Role |
-|------|------|
-| `projects/vbomba-ui/` | Library: components, theme, shell. Public API: `src/public-api.ts`. |
-| `projects/vbomba-ui/src/lib/theme/` | `vb-color-tokens.scss`, `vb-material-bridge.scss`, `VbThemeService`, `VbThemeToggleComponent`. |
-| `projects/vbomba-ui/src/lib/shell/` | `VbAppShellComponent`, type `VbShellNavLink`. |
-| `projects/vbomba-ui/src/lib/textarea/`, `.../select/` | `VbTextareaComponent`, `VbSelectComponent` — native-styled fields (chromadb-desc parity). |
-| `projects/demo/` | Demo: routes, showcase, global styles `src/styles.scss`. |
-| `design/` | Paper layouts / exports, reference HTML. |
-| `dist/vbomba-ui/theme/` | Theme SCSS copied from the library on `ng build vbomba-ui` (`ng-package.json` → `assets`). |
+| Path                                                  | Role                                                                                           |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `projects/vbomba-ui/`                                 | Library: components, theme, shell. Public API: `src/public-api.ts`.                            |
+| `projects/vbomba-ui/src/lib/theme/`                   | `vb-color-tokens.scss`, `vb-material-bridge.scss`, `VbThemeService`, `VbThemeToggleComponent`. |
+| `projects/vbomba-ui/src/lib/shell/`                   | `VbAppShellComponent`, type `VbShellNavLink`.                                                  |
+| `projects/vbomba-ui/src/lib/textarea/`, `.../select/` | `VbTextareaComponent`, `VbSelectComponent` — themed form controls.                             |
+| `projects/demo/`                                      | Demo: routes, showcase, global styles `src/styles.scss`.                                       |
+| `design/`                                             | Paper layouts / exports, reference HTML.                                                       |
+| `dist/vbomba-ui/theme/`                               | Theme SCSS copied from the library on `ng build vbomba-ui` (`ng-package.json` → `assets`).     |
 
 ## Commands
 
@@ -33,7 +33,7 @@
 ## Colors and theme
 
 - All UI colors use **CSS custom properties** from `vb-color-tokens.scss` (`--vb-palette-*` / `--vb-color-*`). Details and the rule against raw hex in components: `.cursor/rules/vbomba-ui-colors.mdc`.
-- Global Material button / toolbar styling aligned with chromadb-desc lives in `vb-material-bridge.scss`; the demo loads it from `projects/demo/src/styles.scss` via `@use`.
+- Global Material button / toolbar styling lives in `vb-material-bridge.scss`; the demo loads it from `projects/demo/src/styles.scss` via `@use`.
 - **Light/dark** theme on `body`: classes `app-light-theme` / `app-dark-theme`; initialize with `VbThemeService.init()` at the app root (see demo `App`).
 
 ## App shell (`VbAppShellComponent`)
@@ -55,11 +55,10 @@ Root `tsconfig.json` maps **`vbomba-ui`** to `projects/vbomba-ui/src/public-api.
 ## Do not
 
 - Duplicate theme with “magic” hex in demo/library component SCSS — extend tokens instead.
-- Bump Angular/Material across the monorepo without an explicit task and alignment with `chromadb-desc` if the library must stay compatible.
+- Bump Angular/Material across the monorepo without an explicit task.
 - Remove `provideAnimationsAsync()` from the demo — required for the shell and Material.
 
 ## Useful context files
 
 - `projects/demo/src/app/app.routes.ts` — shell + child routes.
 - `projects/vbomba-ui/src/lib/shell/vb-app-shell.component.*` — shell markup and animations.
-- Reference UX for a similar layout: `chromadb-desc` → `dashboard-layout` (other repo, orientation only).

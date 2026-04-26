@@ -1,0 +1,116 @@
+:host {
+  display: inline-block;
+  color: var(--vb-color-text-primary);
+}
+
+.vb-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.vb-checkbox__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.vb-checkbox__box {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.1rem;
+  height: 1.1rem;
+  box-sizing: border-box;
+  border-radius: calc(var(--vb-radius-input) - 2px);
+  background: var(--vb-color-surface-input);
+  box-shadow: 0 0 0 1px var(--vb-color-border-default);
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.vb-checkbox__box::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 0.34rem;
+  height: 0.58rem;
+  border: solid var(--vb-color-text-on-action-primary);
+  border-width: 0 2px 2px 0;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(45deg) scale(0.75);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.vb-checkbox__label {
+  color: var(--vb-color-text-primary);
+  font: inherit;
+  line-height: 1.4;
+}
+
+.vb-checkbox:hover .vb-checkbox__box {
+  background: color-mix(
+    in srgb,
+    var(--vb-color-surface-input) 88%,
+    var(--vb-color-text-primary) 6%
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
+}
+
+:host-context(body.app-dark-theme) .vb-checkbox:hover .vb-checkbox__box {
+  background: color-mix(
+    in srgb,
+    var(--vb-color-surface-input) 88%,
+    var(--vb-color-text-primary) 9%
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+}
+
+.vb-checkbox__input:focus-visible + .vb-checkbox__box {
+  box-shadow:
+    0 0 0 1px var(--vb-color-action-primary),
+    0 0 0 4px var(--vb-color-effect-ring-focus);
+}
+
+.vb-checkbox__input:checked + .vb-checkbox__box,
+.vb-checkbox__input:indeterminate + .vb-checkbox__box {
+  background: var(--vb-color-action-button);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-button-strong) 62%, transparent);
+}
+
+.vb-checkbox__input:checked + .vb-checkbox__box::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(45deg) scale(1);
+}
+
+.vb-checkbox__input:indeterminate + .vb-checkbox__box::after {
+  left: 50%;
+  top: 50%;
+  width: 0.62rem;
+  height: 2px;
+  border-width: 0;
+  border-radius: 999px;
+  background: var(--vb-color-text-on-action-primary);
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(0) scale(1);
+}
+
+.vb-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}

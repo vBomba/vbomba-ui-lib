@@ -1,4 +1,4 @@
-/* Styling aligned with chromadb-desc native textarea (box-shadow ring, no border seam). */
+/* Themed textarea with box-shadow ring and no border seam. */
 
 :host {
   display: block;
@@ -29,13 +29,23 @@
 }
 
 .vb-textarea__field:hover {
-  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 6%);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-surface-input) 88%,
+    var(--vb-color-text-primary) 6%
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
 }
 
 :host-context(body.app-dark-theme) .vb-textarea__field:hover {
-  background-color: color-mix(in srgb, var(--vb-color-surface-input) 88%, var(--vb-color-text-primary) 9%);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-surface-input) 88%,
+    var(--vb-color-text-primary) 9%
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
 }
 
 .vb-textarea__field:focus {
@@ -52,7 +62,9 @@
 }
 
 :host(.vb-textarea--mono) .vb-textarea__field {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
   font-size: 0.85rem;
   line-height: 1.4;
 }

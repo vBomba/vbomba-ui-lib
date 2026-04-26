@@ -1,5 +1,5 @@
 /**
- * Align Angular Material (MDC) with vb semantic tokens — same idea as chromadb-desc/src/styles.scss.
+ * Align Angular Material (MDC) with vb semantic tokens.
  * All colors go through var(--vb-color-*) / var(--vb-palette-*).
  */
 
@@ -21,7 +21,7 @@ button,
     color 200ms ease !important;
 }
 
-/* Filled (mat-flat) + elevated (mat-raised): background and label like chromadb (--eco-btn-*) */
+/* Filled (mat-flat) + elevated (mat-raised). */
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button {
   background: var(--vb-color-action-button) !important;
@@ -147,7 +147,7 @@ body.app-dark-theme .mat-mdc-unelevated-button:hover {
   opacity: 0.55;
 }
 
-/* Dark theme: unthemed text buttons (not icon) — like chromadb */
+/* Dark theme: unthemed text buttons (not icon). */
 body.app-dark-theme .mat-unthemed.mat-mdc-button-base:not(.mat-mdc-icon-button),
 body.app-dark-theme .mat-mdc-button-base.mat-unthemed:not(.mat-mdc-icon-button) {
   color: var(--vb-color-text-primary) !important;

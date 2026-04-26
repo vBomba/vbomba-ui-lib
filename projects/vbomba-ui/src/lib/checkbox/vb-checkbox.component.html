@@ -1,0 +1,23 @@
+<label class="vb-checkbox" [class.vb-checkbox--disabled]="disabled()">
+  <input
+    #inputEl
+    class="vb-checkbox__input"
+    type="checkbox"
+    [id]="id()"
+    [name]="name()"
+    [value]="value()"
+    [checked]="checked()"
+    [indeterminate]="indeterminate()"
+    [disabled]="disabled()"
+    [attr.aria-label]="ariaLabel()"
+    (change)="onChange(inputEl)"
+  />
+  <span class="vb-checkbox__box" aria-hidden="true"></span>
+  <span class="vb-checkbox__label">
+    @if (label()) {
+      {{ label() }}
+    } @else {
+      <ng-content />
+    }
+  </span>
+</label>

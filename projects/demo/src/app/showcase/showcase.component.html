@@ -2,7 +2,7 @@
   <header class="showcase__hero">
     <h1>vbomba-ui</h1>
     <p class="showcase__lede">
-      Component library sticker sheet — buttons, app shell, and a simple Material table.
+      Component library showcase — buttons, app shell, forms, feedback, and data display.
     </p>
   </header>
 
@@ -77,12 +77,17 @@
   </section>
 
   <section class="showcase__section" aria-labelledby="sec-fields">
-    <h2 id="sec-fields">Text field &amp; select</h2>
+    <h2 id="sec-fields">Form controls</h2>
     <p class="showcase__hint">
-      <code>vb-textarea</code> and <code>vb-select</code> mirror chromadb-desc native controls
-      (hairline ring, focus ring, chevron on select). Use <code>[options]</code> for the themed
-      dropdown.
+      <code>vb-textarea</code>, <code>vb-select</code>, and <code>vb-checkbox</code> use project
+      tokens for control surfaces, focus rings, and selected states.
     </p>
+    <div class="showcase__checks">
+      <vb-checkbox [(checked)]="notificationsEnabled" label="Enable notifications" />
+      <vb-checkbox [(checked)]="betaEnabled">Join beta features</vb-checkbox>
+      <vb-checkbox [checked]="true" indeterminate label="Partially selected" />
+      <vb-checkbox disabled label="Disabled option" />
+    </div>
     <div class="showcase__controls">
       <label class="showcase__label" for="showcase-role">Role</label>
       <vb-select

@@ -1,7 +1,7 @@
 Design handoff for vbomba-ui (Paper Desktop + MCP plugin-paper-desktop-paper).
 
 Paper file (open in Paper Desktop):
-- Artboard "vbomba-ui sticker sheet" (light) — 960×1200. Same layer tree as dark.
+- Artboard "vbomba-ui showcase" (light) — 960×1200. Same layer tree as dark.
 - Artboard "vbomba-ui — dark (tokens)" — 960×1200. Same structure as light; only fills, borders, text colours, and shadows use night / violet tokens (see body.app-dark-theme in vb-color-tokens.scss).
 
 Hero copy is identical on both frames; only styling differs.
@@ -21,6 +21,6 @@ Hero copy is identical on both frames; only styling differs.
 
 Repo exports (optional refresh from Paper via MCP get_jsx):
 - paper-vbomba-ui-sticker.from-paper.tsx — JSX export (reference).
-- paper-sticker-sheet.html — static HTML (light only; regenerate if needed).
+- paper-sticker-sheet.html — static HTML showcase (light only; regenerate if needed).
 
 Color system in Angular: projects/vbomba-ui/src/lib/theme/vb-color-tokens.scss — published under dist/vbomba-ui/theme/*.scss.

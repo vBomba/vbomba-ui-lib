@@ -9,7 +9,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,10 +49,7 @@ import { VbThemeToggleComponent } from '../theme/vb-theme-toggle.component';
     trigger('vbMainRoute', [
       transition('* => *', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
-        animate(
-          '240ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({ opacity: 1, transform: 'none' }),
-        ),
+        animate('240ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 1, transform: 'none' })),
       ]),
     ]),
   ],
@@ -74,16 +78,16 @@ export class VbAppShellComponent {
   );
 
   protected readonly sidenavMode = toSignal(
-    this.breakpoints.observe(Breakpoints.Handset).pipe(
-      map((r) => (r.matches ? 'over' : 'side') as MatDrawerMode),
-    ),
+    this.breakpoints
+      .observe(Breakpoints.Handset)
+      .pipe(map((r) => (r.matches ? 'over' : 'side') as MatDrawerMode)),
     { initialValue: 'side' as MatDrawerMode },
   );
 
   protected readonly sidenavOpened = signal(!this.isHandset());
   protected readonly sidenavCollapsed = signal(false);
 
-  /** Boxicons classes for the drawer toggle (ecolabel-apps / chromadb-desc pattern). */
+  /** Boxicons classes for the drawer toggle. */
   protected readonly menuIconClass = computed(() => {
     if (this.isHandset()) {
       return this.sidenavOpened() ? 'bx bx-menu-alt-right' : 'bx bx-menu';
