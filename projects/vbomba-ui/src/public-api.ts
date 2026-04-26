@@ -4,6 +4,7 @@
 
 export * from './lib/button/vb-button.component';
 export * from './lib/checkbox/vb-checkbox.component';
+export * from './lib/input/vb-input.component';
 export * from './lib/loader/vb-loader.component';
 export * from './lib/paginator/vb-paginator.component';
 export * from './lib/popup/vb-popup.component';

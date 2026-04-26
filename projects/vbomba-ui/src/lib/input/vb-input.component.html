@@ -1,21 +1,22 @@
-<div class="vb-textarea">
-  <textarea
-    class="vb-textarea__field"
+<div class="vb-input">
+  <input
+    class="vb-input__field"
     [id]="id()"
     [name]="name()"
+    [type]="type()"
+    [attr.autocomplete]="autocomplete()"
     [attr.aria-label]="ariaLabel()"
     [attr.maxlength]="maxLength()"
-    [attr.rows]="rows()"
     [disabled]="disabled()"
     [readonly]="isReadonly()"
     [placeholder]="placeholder()"
     [value]="value()"
     (input)="onInput($event)"
-  ></textarea>
+  />
 
   @if (counter()) {
-    <div class="vb-textarea__meta" aria-live="polite">
-      <span class="vb-textarea__counter">{{ counterLabel() }}</span>
+    <div class="vb-input__meta" aria-live="polite">
+      <span class="vb-input__counter">{{ counterLabel() }}</span>
     </div>
   }
 </div>

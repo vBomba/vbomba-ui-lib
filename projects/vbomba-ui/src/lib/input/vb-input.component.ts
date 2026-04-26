@@ -8,6 +8,8 @@ import {
   numberAttribute,
 } from '@angular/core';
 
+export type VbInputType = 'text' | 'email' | 'password' | 'search' | 'tel' | 'url';
+
 function optionalNumberAttribute(value: unknown): number | undefined {
   if (value == null || value === '') {
     return undefined;
@@ -18,30 +20,26 @@ function optionalNumberAttribute(value: unknown): number | undefined {
 }
 
 @Component({
-  selector: 'vb-textarea',
+  selector: 'vb-input',
   standalone: true,
-  templateUrl: './vb-textarea.component.html',
-  styleUrl: './vb-textarea.component.scss',
+  templateUrl: './vb-input.component.html',
+  styleUrl: './vb-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class.vb-textarea--mono]': 'mono()',
-  },
 })
-export class VbTextareaComponent {
-  /** Two-way bound text value. */
+export class VbInputComponent {
+  /** Two-way bound input value. */
   readonly value = model<string>('');
 
+  readonly type = input<VbInputType>('text');
   readonly placeholder = input<string>('');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly isReadonly = input(false, { transform: booleanAttribute });
   readonly counter = input(false, { transform: booleanAttribute });
   readonly maxLength = input(undefined, { transform: optionalNumberAttribute });
-  readonly rows = input<number>(4);
   readonly id = input<string | undefined>(undefined);
   readonly name = input<string | undefined>(undefined);
+  readonly autocomplete = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
-  /** Monospace styling (metadata / JSON style). */
-  readonly mono = input(false, { transform: booleanAttribute });
 
   protected readonly counterLabel = computed(() => {
     const length = this.value().length;
@@ -50,7 +48,7 @@ export class VbTextareaComponent {
   });
 
   protected onInput(raw: Event): void {
-    const v = (raw.target as HTMLTextAreaElement).value;
-    this.value.set(v);
+    const value = (raw.target as HTMLInputElement).value;
+    this.value.set(value);
   }
 }

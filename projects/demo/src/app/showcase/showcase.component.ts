@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core
 import {
   VbButtonComponent,
   VbCheckboxComponent,
+  VbInputComponent,
   VbLoaderComponent,
   VbPaginatorComponent,
   VbPopupComponent,
@@ -18,6 +19,7 @@ import {
   imports: [
     VbButtonComponent,
     VbCheckboxComponent,
+    VbInputComponent,
     VbLoaderComponent,
     VbPaginatorComponent,
     VbPopupComponent,
@@ -35,6 +37,7 @@ export class ShowcaseComponent {
   protected readonly tablePage = model(1);
   protected readonly notificationsEnabled = model(true);
   protected readonly betaEnabled = model(false);
+  protected readonly displayName = model<string>('Ada Lovelace');
   protected readonly teamRole = model<string>('eng');
   protected readonly deployEnv = model<string>('dev');
   protected readonly draftNotes = model<string>('');

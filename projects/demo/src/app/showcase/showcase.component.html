@@ -79,14 +79,25 @@
   <section class="showcase__section" aria-labelledby="sec-fields">
     <h2 id="sec-fields">Form controls</h2>
     <p class="showcase__hint">
-      <code>vb-textarea</code>, <code>vb-select</code>, and <code>vb-checkbox</code> use project
-      tokens for control surfaces, focus rings, and selected states.
+      <code>vb-input</code>, <code>vb-textarea</code>, <code>vb-select</code>, and
+      <code>vb-checkbox</code> use project tokens for control surfaces, focus rings, selected
+      states, and optional counters.
     </p>
     <div class="showcase__checks">
       <vb-checkbox [(checked)]="notificationsEnabled" label="Enable notifications" />
       <vb-checkbox [(checked)]="betaEnabled">Join beta features</vb-checkbox>
       <vb-checkbox [checked]="true" indeterminate label="Partially selected" />
       <vb-checkbox disabled label="Disabled option" />
+    </div>
+    <div class="showcase__controls">
+      <label class="showcase__label" for="showcase-name">Display name</label>
+      <vb-input
+        id="showcase-name"
+        [(value)]="displayName"
+        [maxLength]="32"
+        counter
+        placeholder="Your name"
+      />
     </div>
     <div class="showcase__controls">
       <label class="showcase__label" for="showcase-role">Role</label>
@@ -106,6 +117,8 @@
       <vb-textarea
         id="showcase-notes"
         [(value)]="draftNotes"
+        [maxLength]="160"
+        counter
         [rows]="5"
         placeholder="Optional notes…"
       />
