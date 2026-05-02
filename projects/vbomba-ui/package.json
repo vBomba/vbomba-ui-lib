@@ -1,6 +1,6 @@
 {
   "name": "vbomba-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "peerDependencies": {
     "@angular/animations": "^21.2.0",
     "@angular/cdk": "^21.2.0",

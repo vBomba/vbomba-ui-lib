@@ -1,64 +1,168 @@
-# VbombaUi
+# vbomba-ui
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+Standalone Angular UI components with a small theme layer for light/dark apps.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Install
 
 ```bash
-ng generate component component-name
+npm install vbomba-ui
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Peer dependencies:
+
+- `@angular/core`, `@angular/common`, `@angular/animations`, `@angular/router`
+- `@angular/material`, `@angular/cdk`
+
+## Theme Setup
+
+Import the theme SCSS once in your app styles.
+
+```scss
+@use 'vbomba-ui/theme/vb-color-tokens';
+@use 'vbomba-ui/theme/vb-material-bridge';
+```
+
+Apply one of the theme classes to `body`:
+
+```html
+<body class="app-light-theme">
+  <app-root></app-root>
+</body>
+```
+
+For runtime switching, initialize `VbThemeService` in your root component.
+
+```ts
+import { Component, inject } from '@angular/core';
+import { VbThemeService } from 'vbomba-ui';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  template: '<router-outlet />',
+})
+export class AppComponent {
+  private readonly theme = inject(VbThemeService);
+
+  constructor() {
+    this.theme.init();
+  }
+}
+```
+
+If you use `VbAppShellComponent` icons or `VbThemeToggleComponent`, include Boxicons in your host app.
+
+## Components
+
+- `VbAppShellComponent` / `VbShellNavLink`
+- `VbThemeToggleComponent` / `VbThemeService`
+- `VbButtonComponent`
+- `VbInputComponent`
+- `VbTextareaComponent`
+- `VbSelectComponent`
+- `VbCheckboxComponent`
+- `VbSimpleTableComponent`
+- `VbPaginatorComponent`
+- `VbPopupComponent`
+- `VbLoaderComponent`
+
+## Examples
+
+### Buttons
+
+```html
+<vb-button variant="filled" label="Save" />
+<vb-button variant="outlined" label="Cancel" />
+<vb-button variant="text" color="warn" label="Delete" />
+```
+
+### Form Controls
+
+```ts
+import { Component, model, signal } from '@angular/core';
+import {
+  VbCheckboxComponent,
+  VbInputComponent,
+  VbSelectComponent,
+  VbTextareaComponent,
+  type VbSelectOption,
+} from 'vbomba-ui';
+
+@Component({
+  standalone: true,
+  imports: [VbCheckboxComponent, VbInputComponent, VbSelectComponent, VbTextareaComponent],
+  templateUrl: './profile-form.html',
+})
+export class ProfileFormComponent {
+  readonly name = model('Ada Lovelace');
+  readonly notes = model('');
+  readonly role = model('eng');
+  readonly notifications = model(true);
+
+  readonly roleOptions = signal<VbSelectOption[]>([
+    { value: 'eng', label: 'Engineer' },
+    { value: 'design', label: 'Designer' },
+  ]);
+}
+```
+
+```html
+<vb-input [(value)]="name" [maxLength]="32" counter placeholder="Display name" />
+<vb-select [(value)]="role" [options]="roleOptions()" placeholder="Choose a role" />
+<vb-checkbox [(checked)]="notifications" label="Enable notifications" />
+<vb-textarea [(value)]="notes" [maxLength]="160" counter placeholder="Notes" />
+```
+
+### App Shell
+
+```ts
+import { Routes } from '@angular/router';
+import { VbAppShellComponent, type VbShellNavLink } from 'vbomba-ui';
+
+const navLinks: VbShellNavLink[] = [
+  { path: 'dashboard', label: 'Dashboard', icon: 'bx bx-home' },
+  { path: 'settings', label: 'Settings', icon: 'bx bx-cog' },
+];
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: VbAppShellComponent,
+    data: {
+      appTitle: 'My app',
+      navLinks,
+    },
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      // child routes...
+    ],
+  },
+];
+```
+
+### Table With Pagination
+
+```html
+<vb-simple-table [columns]="columns()" [rows]="rows()" [pageSize]="10" [(page)]="page" pagination />
+```
+
+### Popup
+
+```html
+<vb-popup [(open)]="open" title="Confirm action" subtitle="Review before continuing.">
+  <p>This content is projected into the popup body.</p>
+
+  <div vbPopupActions>
+    <vb-button variant="text" label="Cancel" (click)="open.set(false)" />
+    <vb-button variant="filled" label="Apply" (click)="open.set(false)" />
+  </div>
+</vb-popup>
+```
+
+## Build From Source
 
 ```bash
-ng generate --help
+npx ng build vbomba-ui
 ```
 
-## Building
-
-To build the library, run:
-
-```bash
-ng build vbomba-ui
-```
-
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-
-   ```bash
-   cd dist/vbomba-ui
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The package output is written to `dist/vbomba-ui`.
