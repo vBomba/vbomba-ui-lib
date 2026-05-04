@@ -5,3 +5,24 @@
 button {
   font-family: inherit;
 }
+
+.vb-button__inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.vb-button__icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+}
+
+.vb-button__icon--icon-button {
+  font-size: 22px;
+}

@@ -9,8 +9,10 @@
   <section class="showcase__section" aria-labelledby="sec-buttons">
     <h2 id="sec-buttons">Buttons</h2>
     <p class="showcase__hint">
-      Variants: filled, outlined, text, elevated — primary / warn / disabled. Button text:
-      <code>label</code> input or projected content.
+      Variants: filled, outlined, text, elevated, icon — primary / warn / disabled. Text:
+      <code>label</code> or content. Optional Boxicons via <code>iconClass</code> (e.g.
+      <code>bx bx-save</code>); <code>icon</code> uses <code>mat-icon-button</code> — set
+      <code>ariaLabel</code> when there is no visible label.
     </p>
     <div class="showcase__row">
       <vb-button variant="filled" color="primary" label="Primary filled" />
@@ -19,8 +21,42 @@
       <vb-button variant="elevated" color="primary" label="Primary elevated" />
     </div>
     <div class="showcase__row">
+      <vb-button
+        variant="filled"
+        color="primary"
+        label="Save"
+        iconClass="bx bx-save"
+      />
+      <vb-button
+        variant="outlined"
+        color="primary"
+        label="Next"
+        iconClass="bx bx-right-arrow-alt"
+        iconPosition="end"
+      />
+      <vb-button variant="icon" color="primary" iconClass="bx bx-heart" ariaLabel="Favorites" />
+      <vb-button variant="icon" color="warn" iconClass="bx bx-trash" ariaLabel="Delete" />
+    </div>
+    <div class="showcase__row">
       <vb-button variant="filled" color="warn" label="Warn" />
       <vb-button variant="filled" color="primary" disabled label="Disabled" />
+    </div>
+  </section>
+
+  <section class="showcase__section" aria-labelledby="sec-chips">
+    <h2 id="sec-chips">Chips</h2>
+    <p class="showcase__hint">
+      <code>vb-chip</code> — <code>label</code> or projected text; <code>removable</code> shows a
+      close control that emits <code>remove</code>. Optional <code>removeAriaLabel</code> overrides
+      the default remove announcement.
+    </p>
+    <div class="showcase__row">
+      <vb-chip label="Read-only" />
+      <vb-chip>Content only</vb-chip>
+      @for (tag of demoTags(); track tag) {
+        <vb-chip [label]="tag" removable (remove)="removeDemoTag(tag)" />
+      }
+      <vb-chip label="Disabled" removable disabled />
     </div>
   </section>
 
@@ -34,6 +70,25 @@
       <vb-loader aria-label="Loading default example" />
       <vb-loader [size]="32" aria-label="Loading small example" />
       <vb-loader [size]="64" aria-label="Loading large example" />
+    </div>
+  </section>
+
+  <section class="showcase__section" aria-labelledby="sec-connection">
+    <h2 id="sec-connection">Connection indicator</h2>
+    <p class="showcase__hint">
+      <code>vb-connection-indicator</code> — <code>status</code>:
+      <code>connected</code> (green glow), <code>disconnected</code> (red),
+      <code>loading</code> (pulsing amber). Optional <code>size</code> (dot diameter in px).
+    </p>
+    <div class="showcase__row">
+      <vb-connection-indicator status="connected" />
+      <vb-connection-indicator status="loading" />
+      <vb-connection-indicator status="disconnected" />
+      <vb-connection-indicator [status]="demoConnectionStatus()" [size]="14" />
+      <span class="showcase__hint">Demo state:</span>
+      <vb-button variant="text" label="Connected" (click)="setDemoConnection('connected')" />
+      <vb-button variant="text" label="Loading" (click)="setDemoConnection('loading')" />
+      <vb-button variant="text" label="Offline" (click)="setDemoConnection('disconnected')" />
     </div>
   </section>
 
@@ -79,15 +134,20 @@
   <section class="showcase__section" aria-labelledby="sec-fields">
     <h2 id="sec-fields">Form controls</h2>
     <p class="showcase__hint">
-      <code>vb-input</code>, <code>vb-textarea</code>, <code>vb-select</code>, and
-      <code>vb-checkbox</code> use project tokens for control surfaces, focus rings, selected
-      states, and optional counters.
+      <code>vb-input</code>, <code>vb-textarea</code>, <code>vb-select</code>,
+      <code>vb-checkbox</code>, and <code>vb-toggle</code> use project tokens for control
+      surfaces, focus rings, and selected states.
     </p>
     <div class="showcase__checks">
       <vb-checkbox [(checked)]="notificationsEnabled" label="Enable notifications" />
       <vb-checkbox [(checked)]="betaEnabled">Join beta features</vb-checkbox>
       <vb-checkbox [checked]="true" indeterminate label="Partially selected" />
       <vb-checkbox disabled label="Disabled option" />
+    </div>
+    <div class="showcase__checks">
+      <vb-toggle [(checked)]="wifiEnabled" label="Wi‑Fi" />
+      <vb-toggle [(checked)]="autoSaveDrafts">Autosave drafts</vb-toggle>
+      <vb-toggle [checked]="true" disabled label="Always on (disabled)" />
     </div>
     <div class="showcase__controls">
       <label class="showcase__label" for="showcase-name">Display name</label>

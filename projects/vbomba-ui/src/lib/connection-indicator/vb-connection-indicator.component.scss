@@ -1,0 +1,63 @@
+:host {
+  --vb-connection-dot-size: 10px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.vb-connection-indicator__dot {
+  width: var(--vb-connection-dot-size);
+  height: var(--vb-connection-dot-size);
+  border-radius: 50%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  transition:
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+:host.vb-connection-indicator--connected .vb-connection-indicator__dot {
+  background: var(--vb-palette-green-600);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--vb-palette-green-700) 35%, transparent),
+    0 0 10px rgba(var(--vb-palette-green-500-rgb), 0.55),
+    0 0 18px rgba(var(--vb-palette-green-500-rgb), 0.35);
+}
+
+:host.vb-connection-indicator--disconnected .vb-connection-indicator__dot {
+  background: var(--vb-color-action-destructive);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--vb-palette-black) 22%, var(--vb-color-action-destructive)),
+    0 0 8px rgba(var(--vb-palette-red-800-rgb), 0.45),
+    0 0 14px rgba(var(--vb-palette-red-800-rgb), 0.28);
+}
+
+:host.vb-connection-indicator--loading .vb-connection-indicator__dot {
+  background: var(--vb-palette-amber-500);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--vb-palette-amber-400) 40%, var(--vb-palette-amber-500)),
+    0 0 10px rgba(var(--vb-palette-amber-500-rgb), 0.55),
+    0 0 18px rgba(var(--vb-palette-amber-500-rgb), 0.3);
+  animation: vb-connection-indicator-blink 1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host.vb-connection-indicator--loading .vb-connection-indicator__dot {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+
+@keyframes vb-connection-indicator-blink {
+  0%,
+  100% {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
+  50% {
+    opacity: 0.38;
+    filter: brightness(0.92);
+  }
+}

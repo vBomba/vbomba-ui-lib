@@ -1,0 +1,26 @@
+<label class="vb-toggle" [class.vb-toggle--disabled]="disabled()">
+  <input
+    #inputEl
+    class="vb-toggle__input"
+    type="checkbox"
+    role="switch"
+    [attr.aria-checked]="checked()"
+    [id]="id()"
+    [name]="name()"
+    [value]="value()"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    [attr.aria-label]="ariaLabel()"
+    (change)="onChange(inputEl)"
+  />
+  <span class="vb-toggle__track" aria-hidden="true">
+    <span class="vb-toggle__thumb"></span>
+  </span>
+  <span class="vb-toggle__label">
+    @if (label()) {
+      {{ label() }}
+    } @else {
+      <ng-content />
+    }
+  </span>
+</label>

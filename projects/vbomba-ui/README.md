@@ -13,6 +13,10 @@ Peer dependencies:
 - `@angular/core`, `@angular/common`, `@angular/animations`, `@angular/router`
 - `@angular/material`, `@angular/cdk`
 
+## License
+
+MIT — see the `LICENSE` file in the repository root.
+
 ## Theme Setup
 
 Import the theme SCSS once in your app styles.
@@ -50,33 +54,36 @@ export class AppComponent {
 }
 ```
 
-If you use `VbAppShellComponent` icons or `VbThemeToggleComponent`, include Boxicons in your host app.
+If you use `VbAppShellComponent` icons, `VbThemeToggleComponent`, `VbButtonComponent` with `iconClass`, or `VbChipComponent`, include **Boxicons** CSS in your host app (see the demo `index.html`).
 
 ## Components
 
-- `VbAppShellComponent` / `VbShellNavLink`
-- `VbThemeToggleComponent` / `VbThemeService`
-- `VbButtonComponent`
-- `VbInputComponent`
-- `VbTextareaComponent`
-- `VbSelectComponent`
-- `VbCheckboxComponent`
-- `VbSimpleTableComponent`
-- `VbPaginatorComponent`
-- `VbPopupComponent`
-- `VbLoaderComponent`
+| Area | Symbols |
+| ---- | ------- |
+| Shell & theme | `VbAppShellComponent`, `VbShellNavLink`, `VbThemeToggleComponent`, `VbThemeService` |
+| Actions | `VbButtonComponent` (`VbButtonVariant`) |
+| Forms | `VbInputComponent`, `VbTextareaComponent`, `VbSelectComponent`, `VbCheckboxComponent`, `VbToggleComponent` |
+| Display & feedback | `VbChipComponent`, `VbConnectionIndicatorComponent` (`VbConnectionStatus`), `VbLoaderComponent`, `VbPopupComponent` |
+| Data | `VbSimpleTableComponent`, `VbPaginatorComponent` |
+
+All public exports live in `public-api.ts`.
 
 ## Examples
 
 ### Buttons
 
+Variants: `filled`, `outlined`, `text`, `elevated`, `icon`. Optional Boxicons on text buttons via `iconClass` / `iconPosition`; icon-only uses `variant="icon"` — set `ariaLabel` when there is no visible label.
+
 ```html
 <vb-button variant="filled" label="Save" />
 <vb-button variant="outlined" label="Cancel" />
 <vb-button variant="text" color="warn" label="Delete" />
+<vb-button variant="filled" label="Save" iconClass="bx bx-save" />
+<vb-button variant="outlined" label="Next" iconClass="bx bx-chevron-right" iconPosition="end" />
+<vb-button variant="icon" color="primary" iconClass="bx bx-heart" ariaLabel="Favorites" />
 ```
 
-### Form Controls
+### Form controls
 
 ```ts
 import { Component, model, signal } from '@angular/core';
@@ -85,12 +92,19 @@ import {
   VbInputComponent,
   VbSelectComponent,
   VbTextareaComponent,
+  VbToggleComponent,
   type VbSelectOption,
 } from 'vbomba-ui';
 
 @Component({
   standalone: true,
-  imports: [VbCheckboxComponent, VbInputComponent, VbSelectComponent, VbTextareaComponent],
+  imports: [
+    VbCheckboxComponent,
+    VbInputComponent,
+    VbSelectComponent,
+    VbTextareaComponent,
+    VbToggleComponent,
+  ],
   templateUrl: './profile-form.html',
 })
 export class ProfileFormComponent {
@@ -98,6 +112,7 @@ export class ProfileFormComponent {
   readonly notes = model('');
   readonly role = model('eng');
   readonly notifications = model(true);
+  readonly wifi = model(true);
 
   readonly roleOptions = signal<VbSelectOption[]>([
     { value: 'eng', label: 'Engineer' },
@@ -110,10 +125,27 @@ export class ProfileFormComponent {
 <vb-input [(value)]="name" [maxLength]="32" counter placeholder="Display name" />
 <vb-select [(value)]="role" [options]="roleOptions()" placeholder="Choose a role" />
 <vb-checkbox [(checked)]="notifications" label="Enable notifications" />
+<vb-toggle [(checked)]="wifi" label="Wi‑Fi" />
 <vb-textarea [(value)]="notes" [maxLength]="160" counter placeholder="Notes" />
 ```
 
-### App Shell
+### Chips
+
+```html
+<vb-chip label="Angular" />
+<vb-chip label="Draft" removable (remove)="onRemoveDraft()" />
+<vb-chip removable removeAriaLabel="Remove filter">Beta</vb-chip>
+```
+
+### Connection indicator
+
+`status`: `connected` (green glow), `disconnected` (red), `loading` (pulsing amber). Optional `size` (px) and `aria-label`.
+
+```html
+<vb-connection-indicator [status]="connStatus()" [size]="12" />
+```
+
+### App shell
 
 ```ts
 import { Routes } from '@angular/router';
@@ -140,7 +172,7 @@ export const routes: Routes = [
 ];
 ```
 
-### Table With Pagination
+### Table with pagination
 
 ```html
 <vb-simple-table [columns]="columns()" [rows]="rows()" [pageSize]="10" [(page)]="page" pagination />

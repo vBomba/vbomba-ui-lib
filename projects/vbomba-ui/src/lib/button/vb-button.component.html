@@ -1,35 +1,106 @@
 @switch (variant()) {
   @case ('filled') {
-    <button mat-flat-button [color]="color()" [disabled]="disabled()" [type]="type()">
-      @if (label()) {
-        {{ label() }}
-      } @else {
-        <ng-content />
-      }
+    <button
+      mat-flat-button
+      [color]="color()"
+      [disabled]="disabled()"
+      [type]="type()"
+      [attr.aria-label]="ariaLabel() || null"
+    >
+      <span class="vb-button__inner">
+        @if (iconPosition() === 'start' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+        @if (label()) {
+          {{ label() }}
+        } @else {
+          <ng-content />
+        }
+        @if (iconPosition() === 'end' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+      </span>
     </button>
   }
   @case ('outlined') {
-    <button mat-stroked-button [color]="color()" [disabled]="disabled()" [type]="type()">
-      @if (label()) {
-        {{ label() }}
-      } @else {
-        <ng-content />
-      }
+    <button
+      mat-stroked-button
+      [color]="color()"
+      [disabled]="disabled()"
+      [type]="type()"
+      [attr.aria-label]="ariaLabel() || null"
+    >
+      <span class="vb-button__inner">
+        @if (iconPosition() === 'start' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+        @if (label()) {
+          {{ label() }}
+        } @else {
+          <ng-content />
+        }
+        @if (iconPosition() === 'end' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+      </span>
     </button>
   }
   @case ('text') {
-    <button mat-button [color]="color()" [disabled]="disabled()" [type]="type()">
-      @if (label()) {
-        {{ label() }}
-      } @else {
-        <ng-content />
-      }
+    <button
+      mat-button
+      [color]="color()"
+      [disabled]="disabled()"
+      [type]="type()"
+      [attr.aria-label]="ariaLabel() || null"
+    >
+      <span class="vb-button__inner">
+        @if (iconPosition() === 'start' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+        @if (label()) {
+          {{ label() }}
+        } @else {
+          <ng-content />
+        }
+        @if (iconPosition() === 'end' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+      </span>
     </button>
   }
   @case ('elevated') {
-    <button mat-raised-button [color]="color()" [disabled]="disabled()" [type]="type()">
-      @if (label()) {
-        {{ label() }}
+    <button
+      mat-raised-button
+      [color]="color()"
+      [disabled]="disabled()"
+      [type]="type()"
+      [attr.aria-label]="ariaLabel() || null"
+    >
+      <span class="vb-button__inner">
+        @if (iconPosition() === 'start' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+        @if (label()) {
+          {{ label() }}
+        } @else {
+          <ng-content />
+        }
+        @if (iconPosition() === 'end' && iconClass()) {
+          <i [class]="'vb-button__icon ' + iconClass()" aria-hidden="true"></i>
+        }
+      </span>
+    </button>
+  }
+  @case ('icon') {
+    <button
+      mat-icon-button
+      [color]="color()"
+      [disabled]="disabled()"
+      [type]="type()"
+      [attr.aria-label]="ariaLabel() || label() || null"
+    >
+      @if (iconClass()) {
+        <i [class]="'vb-button__icon vb-button__icon--icon-button ' + iconClass()" aria-hidden="true"></i>
       } @else {
         <ng-content />
       }

@@ -61,7 +61,10 @@
   line-height: 1.4;
 }
 
-.vb-checkbox:hover .vb-checkbox__box {
+/* Hover only when unchecked: :host-context(...) beats :checked specificity in dark theme. */
+.vb-checkbox:not(.vb-checkbox--disabled):hover
+  .vb-checkbox__input:not(:checked):not(:indeterminate)
+  + .vb-checkbox__box {
   background: color-mix(
     in srgb,
     var(--vb-color-surface-input) 88%,
@@ -71,7 +74,10 @@
     color-mix(in srgb, var(--vb-color-action-primary) 62%, var(--vb-color-border-default));
 }
 
-:host-context(body.app-dark-theme) .vb-checkbox:hover .vb-checkbox__box {
+:host-context(body.app-dark-theme)
+  .vb-checkbox:not(.vb-checkbox--disabled):hover
+  .vb-checkbox__input:not(:checked):not(:indeterminate)
+  + .vb-checkbox__box {
   background: color-mix(
     in srgb,
     var(--vb-color-surface-input) 88%,
@@ -79,6 +85,16 @@
   );
   box-shadow: 0 0 0 1px
     color-mix(in srgb, var(--vb-color-action-primary) 55%, var(--vb-color-border-default));
+}
+
+.vb-checkbox:not(.vb-checkbox--disabled):hover
+  .vb-checkbox__input:checked
+  + .vb-checkbox__box,
+.vb-checkbox:not(.vb-checkbox--disabled):hover
+  .vb-checkbox__input:indeterminate
+  + .vb-checkbox__box {
+  background: var(--vb-color-action-button-strong);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vb-color-action-button-strong) 62%, transparent);
 }
 
 .vb-checkbox__input:focus-visible + .vb-checkbox__box {

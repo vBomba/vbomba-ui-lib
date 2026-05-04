@@ -1,0 +1,20 @@
+<span class="vb-chip" role="presentation">
+  <span class="vb-chip__text">
+    @if (label()) {
+      {{ label() }}
+    } @else {
+      <ng-content />
+    }
+  </span>
+  @if (removable()) {
+    <button
+      type="button"
+      class="vb-chip__remove"
+      [disabled]="disabled()"
+      [attr.aria-label]="removeButtonLabel()"
+      (click)="onRemoveClick($event)"
+    >
+      <i class="bx bx-x vb-chip__remove-icon" aria-hidden="true"></i>
+    </button>
+  }
+</span>

@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core
 import {
   VbButtonComponent,
   VbCheckboxComponent,
+  VbChipComponent,
+  VbConnectionIndicatorComponent,
   VbInputComponent,
   VbLoaderComponent,
   VbPaginatorComponent,
@@ -9,6 +11,8 @@ import {
   VbSelectComponent,
   VbSimpleTableComponent,
   VbTextareaComponent,
+  VbToggleComponent,
+  type VbConnectionStatus,
   type VbSelectOption,
   type VbSimpleTableColumn,
 } from 'vbomba-ui';
@@ -19,6 +23,8 @@ import {
   imports: [
     VbButtonComponent,
     VbCheckboxComponent,
+    VbChipComponent,
+    VbConnectionIndicatorComponent,
     VbInputComponent,
     VbLoaderComponent,
     VbPaginatorComponent,
@@ -26,6 +32,7 @@ import {
     VbSelectComponent,
     VbSimpleTableComponent,
     VbTextareaComponent,
+    VbToggleComponent,
   ],
   templateUrl: './showcase.component.html',
   styleUrl: './showcase.component.scss',
@@ -37,10 +44,15 @@ export class ShowcaseComponent {
   protected readonly tablePage = model(1);
   protected readonly notificationsEnabled = model(true);
   protected readonly betaEnabled = model(false);
+  protected readonly wifiEnabled = model(true);
+  protected readonly autoSaveDrafts = model(false);
   protected readonly displayName = model<string>('Ada Lovelace');
   protected readonly teamRole = model<string>('eng');
   protected readonly deployEnv = model<string>('dev');
   protected readonly draftNotes = model<string>('');
+
+  protected readonly demoTags = signal<string[]>(['Angular', 'Material', 'Standalone']);
+  protected readonly demoConnectionStatus = signal<VbConnectionStatus>('loading');
 
   protected readonly roleOptions = signal<VbSelectOption[]>([
     { value: 'eng', label: 'Engineer' },
@@ -71,4 +83,12 @@ export class ShowcaseComponent {
     { name: 'Hedy Lamarr', role: 'Inventor', status: 'Away' },
     { name: 'Annie Easley', role: 'Engineer', status: 'Active' },
   ]);
+
+  protected removeDemoTag(tag: string): void {
+    this.demoTags.update((tags) => tags.filter((t) => t !== tag));
+  }
+
+  protected setDemoConnection(status: VbConnectionStatus): void {
+    this.demoConnectionStatus.set(status);
+  }
 }
