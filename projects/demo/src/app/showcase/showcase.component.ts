@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
 import {
   VbButtonComponent,
+  VbCardComponent,
+  VbChatbotComponent,
   VbCheckboxComponent,
   VbChipComponent,
   VbConnectionIndicatorComponent,
@@ -10,8 +12,10 @@ import {
   VbPopupComponent,
   VbSelectComponent,
   VbSimpleTableComponent,
+  VbTextLoaderComponent,
   VbTextareaComponent,
   VbToggleComponent,
+  type VbChatbotMessage,
   type VbConnectionStatus,
   type VbSelectOption,
   type VbSimpleTableColumn,
@@ -22,6 +26,8 @@ import {
   standalone: true,
   imports: [
     VbButtonComponent,
+    VbCardComponent,
+    VbChatbotComponent,
     VbCheckboxComponent,
     VbChipComponent,
     VbConnectionIndicatorComponent,
@@ -31,6 +37,7 @@ import {
     VbPopupComponent,
     VbSelectComponent,
     VbSimpleTableComponent,
+    VbTextLoaderComponent,
     VbTextareaComponent,
     VbToggleComponent,
   ],
@@ -53,6 +60,11 @@ export class ShowcaseComponent {
 
   protected readonly demoTags = signal<string[]>(['Angular', 'Material', 'Standalone']);
   protected readonly demoConnectionStatus = signal<VbConnectionStatus>('loading');
+  protected readonly textLoaderRestartKey = signal(0);
+  protected readonly chatbotLoading = signal(false);
+  protected readonly chatbotMessages = signal<VbChatbotMessage[]>([
+    { role: 'assistant', text: 'Hi! Ask me anything about your deployment.' },
+  ]);
 
   protected readonly roleOptions = signal<VbSelectOption[]>([
     { value: 'eng', label: 'Engineer' },
@@ -90,5 +102,22 @@ export class ShowcaseComponent {
 
   protected setDemoConnection(status: VbConnectionStatus): void {
     this.demoConnectionStatus.set(status);
+  }
+
+  protected restartTextLoaders(): void {
+    this.textLoaderRestartKey.update((value) => value + 1);
+  }
+
+  protected onChatbotSend(message: string): void {
+    this.chatbotMessages.update((items) => [...items, { role: 'user', text: message }]);
+    this.chatbotLoading.set(true);
+
+    setTimeout(() => {
+      this.chatbotMessages.update((items) => [
+        ...items,
+        { role: 'assistant', text: `Received: "${message}". Demo bot response completed.` },
+      ]);
+      this.chatbotLoading.set(false);
+    }, 850);
   }
 }

@@ -25,10 +25,16 @@ import { MatDrawerMode, MatSidenavContainer, MatSidenavModule } from '@angular/m
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { VbShellNavLink } from './vb-shell-nav-link';
 import { VbThemeToggleComponent } from '../theme/vb-theme-toggle.component';
+import { VbConnectionIndicatorComponent, type VbConnectionStatus } from '../connection-indicator/vb-connection-indicator.component';
+import { VbLoaderComponent } from '../loader/vb-loader.component';
+import { VbUserInfoComponent } from '../user-info/vb-user-info.component';
+import { VbShellUserInfo } from './vb-shell-user-info';
+import { VbShellMainLoader } from './vb-shell-main-loader';
 
 /**
  * App chrome: top header (menu toggle, title, theme) + animated sidenav + main area with route enter animation.
- * Configure the parent route with `data: { appTitle: string, navLinks: VbShellNavLink[] }`.
+ * Configure the parent route with:
+ * `data: { appTitle: string, navLinks: VbShellNavLink[], toolbarConnectionStatus?: VbConnectionStatus, toolbarUserInfo?: VbShellUserInfo, mainLoader?: VbShellMainLoader }`.
  */
 @Component({
   selector: 'vb-app-shell',
@@ -42,6 +48,9 @@ import { VbThemeToggleComponent } from '../theme/vb-theme-toggle.component';
     MatSidenavModule,
     MatListModule,
     VbThemeToggleComponent,
+    VbConnectionIndicatorComponent,
+    VbLoaderComponent,
+    VbUserInfoComponent,
   ],
   templateUrl: './vb-app-shell.component.html',
   styleUrl: './vb-app-shell.component.scss',
@@ -70,6 +79,18 @@ export class VbAppShellComponent {
   protected readonly navLinks = toSignal(
     this.route.data.pipe(map((d) => (d['navLinks'] as VbShellNavLink[]) ?? [])),
     { initialValue: (this.route.snapshot.data['navLinks'] as VbShellNavLink[]) ?? [] },
+  );
+  protected readonly toolbarConnectionStatus = toSignal(
+    this.route.data.pipe(map((d) => (d['toolbarConnectionStatus'] as VbConnectionStatus | undefined) ?? null)),
+    { initialValue: (this.route.snapshot.data['toolbarConnectionStatus'] as VbConnectionStatus | undefined) ?? null },
+  );
+  protected readonly toolbarUserInfo = toSignal(
+    this.route.data.pipe(map((d) => (d['toolbarUserInfo'] as VbShellUserInfo | undefined) ?? null)),
+    { initialValue: (this.route.snapshot.data['toolbarUserInfo'] as VbShellUserInfo | undefined) ?? null },
+  );
+  protected readonly mainLoader = toSignal(
+    this.route.data.pipe(map((d) => (d['mainLoader'] as VbShellMainLoader | undefined) ?? null)),
+    { initialValue: (this.route.snapshot.data['mainLoader'] as VbShellMainLoader | undefined) ?? null },
   );
 
   protected readonly isHandset = toSignal(

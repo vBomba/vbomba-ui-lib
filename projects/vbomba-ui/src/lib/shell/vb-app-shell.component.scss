@@ -288,6 +288,21 @@
   background: var(--vb-color-surface-canvas);
 }
 
+.vb-app-shell__main-loader-slot {
+  flex: 0 0 auto;
+  min-height: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.vb-app-shell__main-loader-slot vb-loader {
+  width: 100%;
+  --vb-loader-bar-width: 100%;
+}
+
 .vb-app-shell__main {
   flex: 1 1 auto;
   padding: 1rem;

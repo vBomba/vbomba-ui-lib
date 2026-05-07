@@ -19,7 +19,13 @@ MIT — see the `LICENSE` file in the repository root.
 
 ## Theme Setup
 
-Import the theme SCSS once in your app styles.
+Import the global vb style pack once in your app styles (tokens, bridge styles, and Lexend fonts).
+
+```scss
+@use 'vbomba-ui/theme/vb-global';
+```
+
+If you prefer manual setup, you can still import files separately:
 
 ```scss
 @use 'vbomba-ui/theme/vb-color-tokens';

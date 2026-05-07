@@ -21,11 +21,6 @@
 
 .showcase__section {
   margin-bottom: 2.5rem;
-  padding: 1.25rem 1.25rem 1.5rem;
-  border-radius: var(--vb-radius-md);
-  background: var(--vb-color-surface-default);
-  border: 1px solid var(--vb-color-border-default);
-  box-shadow: var(--vb-color-effect-shadow-card);
 }
 
 .showcase__section h2 {
@@ -62,6 +57,17 @@
 
 .showcase__row--loaders {
   gap: 1rem;
+}
+
+.showcase__row--text-loader {
+  gap: 0.9rem 1rem;
+}
+
+.showcase__row--text-loader .showcase__hint {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
 }
 
 .showcase__popup-copy {
@@ -110,6 +116,10 @@
 .showcase__table-wrap {
   overflow: auto;
   border-radius: 12px;
+}
+
+.showcase__chatbot-wrap {
+  max-width: 40rem;
 }
 
 :host-context(body.app-dark-theme) .showcase__hint code {

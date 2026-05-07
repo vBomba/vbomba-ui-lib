@@ -1,0 +1,42 @@
+<section class="vb-chatbot">
+  <header class="vb-chatbot__header">
+    <h3 class="vb-chatbot__title">{{ title() }}</h3>
+  </header>
+
+  <div class="vb-chatbot__messages" aria-live="polite">
+    @for (message of messages(); track message.id ?? $index) {
+      <article
+        class="vb-chatbot__message"
+        [class.vb-chatbot__message--user]="message.role === 'user'"
+        [class.vb-chatbot__message--assistant]="message.role === 'assistant'"
+        [class.vb-chatbot__message--system]="message.role === 'system'"
+      >
+        {{ message.text }}
+      </article>
+    }
+    @if (loading()) {
+      <div class="vb-chatbot__typing">
+        <vb-text-loader [text]="loadingText()" [animateText]="false" [showDots]="true" />
+      </div>
+    }
+  </div>
+
+  <footer class="vb-chatbot__composer">
+    <textarea
+      class="vb-chatbot__input"
+      [value]="draft()"
+      [placeholder]="placeholder()"
+      [disabled]="loading()"
+      rows="2"
+      (input)="onDraftInput($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+    ></textarea>
+    <vb-button
+      variant="icon"
+      iconClass="bx bx-send"
+      [ariaLabel]="sendAriaLabel()"
+      [disabled]="!canSend()"
+      (click)="submit()"
+    />
+  </footer>
+</section>

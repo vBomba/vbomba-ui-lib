@@ -1,0 +1,21 @@
+<div class="vb-user-info">
+  <div class="vb-user-info__avatar-wrap">
+    <div
+      class="vb-user-info__ring"
+      [style.--vb-user-info-progress]="progressDegrees()"
+      aria-hidden="true"
+    ></div>
+    <div class="vb-user-info__avatar">
+      @if (avatarUrl()) {
+        <img [src]="avatarUrl()" [alt]="displayName() + ' avatar'" />
+      } @else {
+        <span>{{ avatarInitials() }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="vb-user-info__meta">
+    <span class="vb-user-info__name">{{ displayName() }}</span>
+    <span class="vb-user-info__countdown">{{ countdown() }}</span>
+  </div>
+</div>

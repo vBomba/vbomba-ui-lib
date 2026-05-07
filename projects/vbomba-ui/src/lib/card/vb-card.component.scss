@@ -1,0 +1,9 @@
+:host.vb-card-host {
+  display: block;
+  box-sizing: border-box;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-radius: var(--vb-radius-md);
+  background: var(--vb-color-surface-default);
+  border: 1px solid var(--vb-color-border-default);
+  box-shadow: var(--vb-color-effect-shadow-card);
+}

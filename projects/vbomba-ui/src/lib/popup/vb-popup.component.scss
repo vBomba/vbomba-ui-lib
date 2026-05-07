@@ -43,6 +43,10 @@
     var(--vb-color-surface-muted);
 }
 
+.vb-popup__header--title-only {
+  align-items: center;
+}
+
 .vb-popup__heading {
   min-width: 0;
 }

@@ -6,7 +6,7 @@
     </p>
   </header>
 
-  <section class="showcase__section" aria-labelledby="sec-buttons">
+  <vb-card class="showcase__section" aria-labelledby="sec-buttons">
     <h2 id="sec-buttons">Buttons</h2>
     <p class="showcase__hint">
       Variants: filled, outlined, text, elevated, icon — primary / warn / disabled. Text:
@@ -41,9 +41,9 @@
       <vb-button variant="filled" color="warn" label="Warn" />
       <vb-button variant="filled" color="primary" disabled label="Disabled" />
     </div>
-  </section>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-chips">
+  <vb-card class="showcase__section" aria-labelledby="sec-chips">
     <h2 id="sec-chips">Chips</h2>
     <p class="showcase__hint">
       <code>vb-chip</code> — <code>label</code> or projected text; <code>removable</code> shows a
@@ -58,22 +58,65 @@
       }
       <vb-chip label="Disabled" removable disabled />
     </div>
-  </section>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-loader">
+  <vb-card class="showcase__section" aria-labelledby="sec-loader">
     <h2 id="sec-loader">Loader</h2>
     <p class="showcase__hint">
       <code>vb-loader</code> uses project action and text tokens, with a configurable
-      <code>size</code> input.
+      <code>size</code> and <code>variant</code> (<code>spinner</code> | <code>horizontal</code>)
+      inputs. <code>vb-text-loader</code> supports optional typing, optional dots, and restart
+      trigger via <code>restartKey</code>.
     </p>
     <div class="showcase__row showcase__row--loaders">
       <vb-loader aria-label="Loading default example" />
       <vb-loader [size]="32" aria-label="Loading small example" />
       <vb-loader [size]="64" aria-label="Loading large example" />
+      <vb-loader variant="horizontal" [size]="28" aria-label="Loading progress example" />
     </div>
-  </section>
+    <div class="showcase__row showcase__row--text-loader">
+      <vb-button
+        variant="icon"
+        iconClass="bx bx-refresh"
+        ariaLabel="Restart text loader examples"
+        (click)="restartTextLoaders()"
+      />
+      <span class="showcase__hint">Restart all text loader examples</span>
+    </div>
+    <div class="showcase__row showcase__row--text-loader">
+      <vb-text-loader
+        text="Generating answer"
+        [restartKey]="textLoaderRestartKey()"
+        aria-label="Generating answer"
+      />
+    </div>
+    <div class="showcase__row showcase__row--text-loader">
+      <vb-text-loader
+        text="Streaming tokenized response from backend"
+        [restartKey]="textLoaderRestartKey()"
+        [typingSpeedMs]="42"
+        aria-label="Streaming tokenized response from backend"
+      />
+    </div>
+    <div class="showcase__row showcase__row--text-loader">
+      <vb-text-loader
+        text="Typing only (no dots)"
+        [restartKey]="textLoaderRestartKey()"
+        [showDots]="false"
+        aria-label="Typing only with no dots"
+      />
+    </div>
+    <div class="showcase__row showcase__row--text-loader">
+      <vb-text-loader
+        text="Static text with animated dots"
+        [animateText]="false"
+        [showDots]="true"
+        aria-label="Static text with animated dots"
+      />
+    </div>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-connection">
+  <vb-card class="showcase__section" aria-labelledby="sec-connection">
     <h2 id="sec-connection">Connection indicator</h2>
     <p class="showcase__hint">
       <code>vb-connection-indicator</code> — <code>status</code>:
@@ -90,9 +133,27 @@
       <vb-button variant="text" label="Loading" (click)="setDemoConnection('loading')" />
       <vb-button variant="text" label="Offline" (click)="setDemoConnection('disconnected')" />
     </div>
-  </section>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-popup">
+  <vb-card class="showcase__section" aria-labelledby="sec-chatbot">
+    <h2 id="sec-chatbot">Chatbot</h2>
+    <p class="showcase__hint">
+      <code>vb-chatbot</code> provides a styled chat surface with message list, composer, send
+      event, and optional typing indicator.
+    </p>
+    <div class="showcase__chatbot-wrap">
+      <vb-chatbot
+        title="Deployment assistant"
+        placeholder="Ask about your deployment status..."
+        [messages]="chatbotMessages()"
+        [loading]="chatbotLoading()"
+        loadingText="Assistant is preparing a response"
+        (send)="onChatbotSend($event)"
+      />
+    </div>
+  </vb-card>
+
+  <vb-card class="showcase__section" aria-labelledby="sec-popup">
     <h2 id="sec-popup">Popup</h2>
     <p class="showcase__hint">
       <code>vb-popup</code> renders an animated dialog with highlighted header, close icon, and
@@ -116,9 +177,9 @@
         <vb-button variant="filled" label="Apply" (click)="popupOpen.set(false)" />
       </div>
     </vb-popup>
-  </section>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-paginator">
+  <vb-card class="showcase__section" aria-labelledby="sec-paginator">
     <h2 id="sec-paginator">Paginator</h2>
     <p class="showcase__hint">
       <code>vb-paginator</code> supports direct page input plus previous / next buttons.
@@ -129,9 +190,9 @@
       [totalItems]="87"
       aria-label="Standalone paginator example"
     />
-  </section>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-fields">
+  <vb-card class="showcase__section" aria-labelledby="sec-fields">
     <h2 id="sec-fields">Form controls</h2>
     <p class="showcase__hint">
       <code>vb-input</code>, <code>vb-textarea</code>, <code>vb-select</code>,
@@ -187,9 +248,9 @@
       <label class="showcase__label" for="showcase-json">Monospace sample</label>
       <vb-textarea id="showcase-json" mono [rows]="4" [isReadonly]="true" [value]="jsonSample" />
     </div>
-  </section>
+  </vb-card>
 
-  <section class="showcase__section" aria-labelledby="sec-table">
+  <vb-card class="showcase__section" aria-labelledby="sec-table">
     <h2 id="sec-table">Table</h2>
     <p class="showcase__hint">
       <code>vb-simple-table</code> — dynamic columns over <code>mat-table</code>, with optional
@@ -204,5 +265,6 @@
         pagination
       />
     </div>
-  </section>
+  </vb-card>
 </div>
+

@@ -1,0 +1,95 @@
+:host {
+  display: block;
+}
+
+.vb-chatbot {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--vb-color-border-default);
+  border-radius: var(--vb-radius-md);
+  background: var(--vb-color-surface-default);
+  overflow: hidden;
+  min-height: 22rem;
+}
+
+.vb-chatbot__header {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--vb-color-border-default);
+  background: var(--vb-color-surface-muted);
+}
+
+.vb-chatbot__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.vb-chatbot__messages {
+  flex: 1 1 auto;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem;
+}
+
+.vb-chatbot__message {
+  max-width: min(86%, 44ch);
+  border-radius: 0.75rem;
+  padding: 0.48rem 0.62rem;
+  line-height: 1.35;
+  font-size: 0.84rem;
+  white-space: pre-wrap;
+}
+
+.vb-chatbot__message--assistant {
+  align-self: flex-start;
+  background: var(--vb-color-surface-muted);
+  border: 1px solid var(--vb-color-border-default);
+}
+
+.vb-chatbot__message--user {
+  align-self: flex-end;
+  background: color-mix(in srgb, var(--vb-color-action-primary) 16%, var(--vb-color-surface-default));
+  border: 1px solid color-mix(in srgb, var(--vb-color-action-primary) 32%, var(--vb-color-border-default));
+}
+
+.vb-chatbot__message--system {
+  align-self: center;
+  color: var(--vb-color-text-muted);
+  background: transparent;
+  border: 1px dashed var(--vb-color-border-default);
+}
+
+.vb-chatbot__typing {
+  align-self: flex-start;
+  padding: 0.2rem 0.1rem;
+}
+
+.vb-chatbot__composer {
+  border-top: 1px solid var(--vb-color-border-default);
+  padding: 0.65rem;
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-end;
+  background: var(--vb-color-surface-default);
+}
+
+.vb-chatbot__input {
+  flex: 1 1 auto;
+  min-height: 2.5rem;
+  max-height: 8rem;
+  resize: vertical;
+  border: 1px solid var(--vb-color-border-default);
+  border-radius: var(--vb-radius-input);
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  color: var(--vb-color-text-primary);
+  background: var(--vb-color-surface-muted);
+}
+
+.vb-chatbot__input:focus-visible {
+  outline: none;
+  border-color: var(--vb-color-action-primary);
+  box-shadow: 0 0 0 3px var(--vb-color-effect-ring-focus);
+}

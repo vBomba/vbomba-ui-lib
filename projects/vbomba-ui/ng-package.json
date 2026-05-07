@@ -10,5 +10,6 @@
       "glob": "*.scss",
       "output": "/theme"
     }
-  ]
+  ],
+  "allowedNonPeerDependencies": ["@fontsource/lexend"]
 }

@@ -14,6 +14,18 @@
     </button>
     <span class="vb-app-shell__title">{{ appTitle() }}</span>
     <span class="vb-app-shell__spacer"></span>
+    @if (toolbarConnectionStatus(); as connectionStatus) {
+      <vb-connection-indicator [status]="connectionStatus" [size]="12" />
+    }
+    @if (toolbarUserInfo(); as userInfo) {
+      <vb-user-info
+        [login]="userInfo.login ?? ''"
+        [username]="userInfo.username ?? ''"
+        [avatarUrl]="userInfo.avatarUrl ?? ''"
+        [sessionDurationSeconds]="userInfo.sessionDurationSeconds ?? 0"
+        [initialRemainingSeconds]="userInfo.initialRemainingSeconds ?? null"
+      />
+    }
     <ng-content select="[vbShellHeaderActions]" />
     <vb-theme-toggle />
   </mat-toolbar>
@@ -42,6 +54,17 @@
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="vb-app-shell__content">
+      @if (mainLoader(); as mainLoaderConfig) {
+        <div class="vb-app-shell__main-loader-slot">
+          @if (mainLoaderConfig.visible !== false) {
+            <vb-loader
+              variant="horizontal"
+              [size]="mainLoaderConfig.size ?? 24"
+              [aria-label]="mainLoaderConfig.ariaLabel ?? 'Loading page content'"
+            />
+          }
+        </div>
+      }
       <div class="vb-app-shell__main" [@vbMainRoute]="mainRouteState()">
         <router-outlet />
       </div>

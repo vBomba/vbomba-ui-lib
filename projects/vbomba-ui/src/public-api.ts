@@ -3,6 +3,9 @@
  */
 
 export * from './lib/button/vb-button.component';
+export * from './lib/card/vb-card.component';
+export * from './lib/chatbot/vb-chatbot-message';
+export * from './lib/chatbot/vb-chatbot.component';
 export * from './lib/checkbox/vb-checkbox.component';
 export * from './lib/chip/vb-chip.component';
 export * from './lib/connection-indicator/vb-connection-indicator.component';
@@ -14,7 +17,11 @@ export * from './lib/select/vb-select.component';
 export * from './lib/textarea/vb-textarea.component';
 export * from './lib/toggle/vb-toggle.component';
 export * from './lib/table/vb-simple-table.component';
+export * from './lib/text-loader/vb-text-loader.component';
+export * from './lib/user-info/vb-user-info.component';
 export * from './lib/theme/vb-theme.service';
 export * from './lib/theme/vb-theme-toggle.component';
 export * from './lib/shell/vb-shell-nav-link';
+export * from './lib/shell/vb-shell-main-loader';
+export * from './lib/shell/vb-shell-user-info';
 export * from './lib/shell/vb-app-shell.component';

@@ -1,11 +1,5 @@
 @use '@angular/material' as mat;
-@use '../../vbomba-ui/src/lib/theme/vb-color-tokens';
-@use '../../vbomba-ui/src/lib/theme/vb-material-bridge';
-
-@import '@fontsource/lexend/400.css';
-@import '@fontsource/lexend/500.css';
-@import '@fontsource/lexend/600.css';
-@import '@fontsource/lexend/700.css';
+@use '../../vbomba-ui/src/lib/theme/vb-global';
 
 $light-theme: mat.define-theme(
   (
@@ -58,16 +52,8 @@ body.app-dark-theme
   background-color: color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-color-text-primary) 9%) !important;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 html,
 body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  font-family: 'Lexend', 'Lexend Fallback', sans-serif;
   background: var(--vb-color-surface-canvas);
   color: var(--vb-color-text-primary);
 }

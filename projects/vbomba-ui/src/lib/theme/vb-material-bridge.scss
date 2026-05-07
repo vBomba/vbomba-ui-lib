@@ -270,3 +270,50 @@ body.app-dark-theme .mat-mdc-icon-button.mat-primary {
 body.app-dark-theme .mat-mdc-icon-button.mat-warn {
   color: var(--vb-color-action-destructive) !important;
 }
+
+/* Tooltip */
+.mat-mdc-tooltip,
+.mdc-tooltip__surface {
+  background: var(--vb-color-surface-muted) !important;
+  color: var(--vb-color-text-primary) !important;
+  border: 1px solid var(--vb-color-border-default);
+  border-radius: var(--vb-radius-md);
+  box-shadow: var(--vb-color-effect-shadow-card);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+/* Scrollbars (WebKit/Blink) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--vb-color-surface-muted);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: color-mix(
+    in srgb,
+    var(--vb-color-border-default) 70%,
+    var(--vb-color-text-muted) 30%
+  );
+  border-radius: 999px;
+  border: 2px solid var(--vb-color-surface-muted);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 45%,
+    var(--vb-color-text-muted) 55%
+  );
+}
+
+/* Scrollbars (Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--vb-color-border-default) 70%, var(--vb-color-text-muted) 30%)
+    var(--vb-color-surface-muted);
+}
