@@ -48,12 +48,13 @@
   overflow: hidden;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--vb-color-surface-muted) 78%, var(--vb-color-surface-default) 22%),
-    color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-color-border-default) 12%)
+    color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-color-border-default) 12%),
+    color-mix(in srgb, var(--vb-color-surface-muted) 78%, var(--vb-color-surface-default) 22%)
   );
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--vb-color-border-default) 38%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--vb-palette-white) 52%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--vb-palette-white) 52%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--vb-palette-white) 52%, transparent);
 }
 
 .vb-loader__bar::before {

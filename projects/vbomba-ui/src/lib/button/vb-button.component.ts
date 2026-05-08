@@ -27,4 +27,6 @@ export class VbButtonComponent {
   readonly iconPosition = input<'start' | 'end'>('start');
   /** Accessible name for `variant="icon"` (and optional override for icon + label). */
   readonly ariaLabel = input<string>('');
+  /** When false (default), Material shows the tap ripple on the button surface. */
+  readonly disableRipple = input(false, { transform: booleanAttribute });
 }

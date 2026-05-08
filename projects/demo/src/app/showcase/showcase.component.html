@@ -138,14 +138,17 @@
   <vb-card class="showcase__section" aria-labelledby="sec-chatbot">
     <h2 id="sec-chatbot">Chatbot</h2>
     <p class="showcase__hint">
-      <code>vb-chatbot</code> provides a styled chat surface with message list, composer, send
-      event, and optional typing indicator.
+      <code>vb-chatbot</code> supports streamed assistant replies via <code>streaming: true</code>
+      (blinking caret, optional composer lock) and a header <code>chatStatus</code> pill
+      (<code>idle</code>, <code>streaming</code>, <code>thinking</code>, <code>busy</code>, etc.).
+      Latency and sources apply after the stream ends.
     </p>
     <div class="showcase__chatbot-wrap">
       <vb-chatbot
         title="Deployment assistant"
         placeholder="Ask about your deployment status..."
         [messages]="chatbotMessages()"
+        [chatStatus]="chatbotHeaderStatus()"
         [loading]="chatbotLoading()"
         loadingText="Assistant is preparing a response"
         (send)="onChatbotSend($event)"

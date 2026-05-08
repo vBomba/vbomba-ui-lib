@@ -15,6 +15,7 @@ import {
   VbTextLoaderComponent,
   VbTextareaComponent,
   VbToggleComponent,
+  type VbChatbotHeaderStatus,
   type VbChatbotMessage,
   type VbConnectionStatus,
   type VbSelectOption,
@@ -62,8 +63,27 @@ export class ShowcaseComponent {
   protected readonly demoConnectionStatus = signal<VbConnectionStatus>('loading');
   protected readonly textLoaderRestartKey = signal(0);
   protected readonly chatbotLoading = signal(false);
+  protected readonly chatbotHeaderStatus = signal<VbChatbotHeaderStatus | null>({
+    label: 'Ready',
+    tone: 'idle',
+  });
   protected readonly chatbotMessages = signal<VbChatbotMessage[]>([
-    { role: 'assistant', text: 'Hi! Ask me anything about your deployment.' },
+    {
+      role: 'assistant',
+      text: 'Hi! Ask me anything about your deployment.',
+      sources: [
+        {
+          href: 'https://angular.dev/overview',
+          pageTitle: 'Angular docs — Overview',
+          chunkType: 'heading',
+        },
+        {
+          href: 'https://angular.dev/guide/forms',
+          pageTitle: 'Reactive forms',
+          chunkType: 'paragraph',
+        },
+      ],
+    },
   ]);
 
   protected readonly roleOptions = signal<VbSelectOption[]>([
@@ -111,13 +131,67 @@ export class ShowcaseComponent {
   protected onChatbotSend(message: string): void {
     this.chatbotMessages.update((items) => [...items, { role: 'user', text: message }]);
     this.chatbotLoading.set(true);
+    this.chatbotHeaderStatus.set({ label: 'Connecting…', tone: 'busy' });
 
-    setTimeout(() => {
+    const replyId = `stream-${Date.now()}`;
+    const startedAt = performance.now();
+    const fullText = `Received: "${message}". Long replies can stream character by character — keep streaming: true on the assistant bubble until the final chunk arrives.`;
+    let charIndex = 0;
+
+    const finishReply = () => {
+      const latencySeconds = (performance.now() - startedAt) / 1000;
+      this.chatbotMessages.update((items) =>
+        items.map((m) =>
+          m.id === replyId
+            ? {
+                ...m,
+                text: fullText,
+                streaming: false,
+                responseLatencySeconds: latencySeconds,
+                sources: [
+                  {
+                    href: 'https://angular.dev/guide/ssr',
+                    pageTitle: 'Server-side rendering',
+                    chunkType: 'section',
+                  },
+                  {
+                    href: 'https://material.angular.dev/components/button/overview',
+                    pageTitle: 'Angular Material — Buttons',
+                    chunkType: 'table',
+                  },
+                ],
+              }
+            : m,
+        ),
+      );
+      this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
+      this.chatbotLoading.set(false);
+    };
+
+    const appendChunk = (): void => {
+      if (charIndex >= fullText.length) {
+        finishReply();
+        return;
+      }
+      // Emulate backend token streaming: irregular chunk sizes and cadence.
+      const nextChunkSize = Math.min(fullText.length - charIndex, Math.floor(Math.random() * 3) + 1);
+      const chunk = fullText.slice(charIndex, charIndex + nextChunkSize);
+      charIndex += nextChunkSize;
+      this.chatbotMessages.update((items) =>
+        items.map((m) => (m.id === replyId ? { ...m, text: `${m.text}${chunk}`, streaming: true } : m)),
+      );
+      const nextDelayMs = 18 + Math.floor(Math.random() * 55);
+      window.setTimeout(appendChunk, nextDelayMs);
+    };
+
+    window.setTimeout(() => {
+      this.chatbotLoading.set(false);
+      this.chatbotHeaderStatus.set({ label: 'Streaming reply…', tone: 'streaming' });
       this.chatbotMessages.update((items) => [
         ...items,
-        { role: 'assistant', text: `Received: "${message}". Demo bot response completed.` },
+        { id: replyId, role: 'assistant', text: '', streaming: true },
       ]);
-      this.chatbotLoading.set(false);
-    }, 850);
+      appendChunk();
+    }, 380);
   }
 }
