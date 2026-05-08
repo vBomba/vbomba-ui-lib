@@ -29,6 +29,24 @@ npx ng build demo
 
 Production build of the demo to `dist/demo/`.
 
+## Release Library
+
+`vbomba-ui` is versioned in `projects/vbomba-ui/package.json`.
+
+```bash
+# from repo root
+npx ng build vbomba-ui
+```
+
+Then publish from `dist/vbomba-ui` (or via your release pipeline).
+
+Recent release-ready additions in the library include:
+
+- Chatbot streaming UX (`streaming`, header status pill, latency bar tiers/trend icons, compact source chips).
+- Sticky shell main-loader slot in `VbAppShellComponent`.
+- Horizontal loader top/bottom shading parity.
+- Optional button ripple control via `VbButtonComponent` (`disableRipple` input).
+
 ## Tests
 
 ```bash

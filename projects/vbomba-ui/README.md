@@ -71,6 +71,7 @@ If you use `VbAppShellComponent` icons, `VbThemeToggleComponent`, `VbButtonCompo
 | Forms | `VbInputComponent`, `VbTextareaComponent`, `VbSelectComponent`, `VbCheckboxComponent`, `VbToggleComponent` |
 | Display & feedback | `VbChipComponent`, `VbConnectionIndicatorComponent` (`VbConnectionStatus`), `VbLoaderComponent`, `VbPopupComponent` |
 | Data | `VbSimpleTableComponent`, `VbPaginatorComponent` |
+| Conversational UI | `VbChatbotComponent`, `VbChatbotMessage`, `VbChatbotHeaderStatus` |
 
 All public exports live in `public-api.ts`.
 
@@ -195,6 +196,52 @@ export const routes: Routes = [
     <vb-button variant="filled" label="Apply" (click)="open.set(false)" />
   </div>
 </vb-popup>
+```
+
+### Chatbot (streaming + latency + sources)
+
+`VbChatbotMessage` supports streamed assistant replies and optional metadata:
+
+- `streaming?: boolean` - marks a message currently receiving tokens/chunks.
+- `responseLatencySeconds?: number` - used for average + last-reply latency indicators.
+- `sources?: VbChatbotSource[]` - compact source chips (title link + chunk type).
+
+Use `chatStatus` to show a status pill in the header (`idle`, `streaming`, `thinking`, `busy`, `error`, `offline`).
+
+```ts
+import { Component, signal } from '@angular/core';
+import {
+  VbChatbotComponent,
+  type VbChatbotHeaderStatus,
+  type VbChatbotMessage,
+} from 'vbomba-ui';
+
+@Component({
+  standalone: true,
+  imports: [VbChatbotComponent],
+  templateUrl: './chat-demo.html',
+})
+export class ChatDemoComponent {
+  readonly status = signal<VbChatbotHeaderStatus>({ label: 'Streaming…', tone: 'streaming' });
+  readonly loading = signal(false);
+  readonly messages = signal<VbChatbotMessage[]>([
+    {
+      role: 'assistant',
+      text: 'Streaming tokenized response from backend...',
+      streaming: true,
+    },
+  ]);
+}
+```
+
+```html
+<vb-chatbot
+  title="Assistant"
+  [chatStatus]="status()"
+  [messages]="messages()"
+  [loading]="loading()"
+  loadingText="Assistant is typing..."
+/>
 ```
 
 ## Build From Source
