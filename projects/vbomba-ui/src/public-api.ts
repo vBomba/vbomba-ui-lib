@@ -23,5 +23,6 @@ export * from './lib/theme/vb-theme.service';
 export * from './lib/theme/vb-theme-toggle.component';
 export * from './lib/shell/vb-shell-nav-link';
 export * from './lib/shell/vb-shell-main-loader';
+export * from './lib/shell/vb-shell-main-loader.service';
 export * from './lib/shell/vb-shell-user-info';
 export * from './lib/shell/vb-app-shell.component';

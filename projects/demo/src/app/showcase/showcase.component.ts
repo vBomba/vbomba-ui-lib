@@ -194,4 +194,10 @@ export class ShowcaseComponent {
       appendChunk();
     }, 380);
   }
+
+  protected onChatbotClearHistory(): void {
+    this.chatbotMessages.set([]);
+    this.chatbotLoading.set(false);
+    this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
+  }
 }

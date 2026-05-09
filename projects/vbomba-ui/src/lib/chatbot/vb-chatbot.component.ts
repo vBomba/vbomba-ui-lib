@@ -25,6 +25,10 @@ export class VbChatbotComponent {
   readonly loadingText = input('Assistant is typing');
   readonly messages = input<VbChatbotMessage[]>([]);
   readonly sendAriaLabel = input('Send message');
+  /** Accessible name for the clear-history action in the header. */
+  readonly clearHistoryAriaLabel = input('Clear chat history');
+  /** Places clear-history action in header next to status instead of composer. */
+  readonly clearHistoryInHeader = input(false);
   /** Label shown before average assistant latency (seconds). */
   readonly latencyAverageLabel = input('Avg');
   /** Label shown before the latest assistant reply latency (seconds). */
@@ -43,6 +47,7 @@ export class VbChatbotComponent {
   readonly composerLockedWhileStreaming = input(true);
 
   readonly send = output<string>();
+  readonly clearHistory = output<void>();
 
   protected readonly draft = signal('');
   protected readonly composerDisabled = computed(
@@ -52,6 +57,12 @@ export class VbChatbotComponent {
         this.messages().some((m) => m.role === 'assistant' && m.streaming)),
   );
   protected readonly canSend = computed(() => this.draft().trim().length > 0 && !this.composerDisabled());
+  protected readonly canClearHistory = computed(
+    () =>
+      this.messages().length > 0 &&
+      !this.loading() &&
+      !this.messages().some((m) => m.role === 'assistant' && m.streaming),
+  );
 
   /** Mean of `responseLatencySeconds` over assistant messages that define it. */
   protected readonly averageAssistantLatencySeconds = computed(() => {
@@ -102,6 +113,13 @@ export class VbChatbotComponent {
     }
     this.send.emit(this.draft().trim());
     this.draft.set('');
+  }
+
+  protected clearMessages(): void {
+    if (!this.canClearHistory()) {
+      return;
+    }
+    this.clearHistory.emit();
   }
 
   protected formatLatencySeconds(value: number): string {

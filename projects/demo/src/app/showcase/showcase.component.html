@@ -149,9 +149,11 @@
         placeholder="Ask about your deployment status..."
         [messages]="chatbotMessages()"
         [chatStatus]="chatbotHeaderStatus()"
+        [clearHistoryInHeader]="true"
         [loading]="chatbotLoading()"
         loadingText="Assistant is preparing a response"
         (send)="onChatbotSend($event)"
+        (clearHistory)="onChatbotClearHistory()"
       />
     </div>
   </vb-card>

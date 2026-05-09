@@ -16,6 +16,8 @@
 }
 
 .vb-popup__panel {
+  display: flex;
+  flex-direction: column;
   width: min(100%, 32rem);
   max-height: min(42rem, calc(100vh - 2rem));
   overflow: hidden;
@@ -121,8 +123,11 @@
 }
 
 .vb-popup__body {
-  max-height: calc(100vh - 15rem);
-  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: calc(100dvh - 15rem);
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem;
   color: var(--vb-color-text-primary);
   line-height: 1.5;

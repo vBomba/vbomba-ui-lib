@@ -26,6 +26,13 @@
   flex-wrap: wrap;
 }
 
+.vb-chatbot__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  flex-wrap: wrap;
+}
+
 .vb-chatbot__title {
   margin: 0;
   flex: 1 1 auto;
@@ -380,6 +387,13 @@
   gap: 0.55rem;
   align-items: flex-end;
   background: var(--vb-color-surface-default);
+}
+
+.vb-chatbot__composer-actions {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
 }
 
 .vb-chatbot__input {

@@ -179,6 +179,31 @@ export const routes: Routes = [
 ];
 ```
 
+To control the shell horizontal loader reactively (e.g. from HTTP/interceptors), use
+`VbShellMainLoaderService`. Runtime overrides take precedence over `route.data.mainLoader`.
+
+```ts
+import { Injectable, inject } from '@angular/core';
+import { VbShellMainLoaderService } from 'vbomba-ui';
+
+@Injectable({ providedIn: 'root' })
+export class HttpLoaderBridge {
+  private readonly shellLoader = inject(VbShellMainLoaderService);
+
+  onRequestStart(): void {
+    this.shellLoader.show({ ariaLabel: 'Loading data...' });
+  }
+
+  onRequestDone(): void {
+    this.shellLoader.hide();
+  }
+
+  resetToRouteDefaults(): void {
+    this.shellLoader.clear();
+  }
+}
+```
+
 ### Table with pagination
 
 ```html

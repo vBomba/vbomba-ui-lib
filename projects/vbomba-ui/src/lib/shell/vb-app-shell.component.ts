@@ -30,6 +30,7 @@ import { VbLoaderComponent } from '../loader/vb-loader.component';
 import { VbUserInfoComponent } from '../user-info/vb-user-info.component';
 import { VbShellUserInfo } from './vb-shell-user-info';
 import { VbShellMainLoader } from './vb-shell-main-loader';
+import { VbShellMainLoaderService } from './vb-shell-main-loader.service';
 
 /**
  * App chrome: top header (menu toggle, title, theme) + animated sidenav + main area with route enter animation.
@@ -68,6 +69,7 @@ export class VbAppShellComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly mainLoaderService = inject(VbShellMainLoaderService);
 
   @ViewChild('drawerContainer') private drawerContainer?: MatSidenavContainer;
 
@@ -88,10 +90,21 @@ export class VbAppShellComponent {
     this.route.data.pipe(map((d) => (d['toolbarUserInfo'] as VbShellUserInfo | undefined) ?? null)),
     { initialValue: (this.route.snapshot.data['toolbarUserInfo'] as VbShellUserInfo | undefined) ?? null },
   );
-  protected readonly mainLoader = toSignal(
+  protected readonly routeMainLoader = toSignal(
     this.route.data.pipe(map((d) => (d['mainLoader'] as VbShellMainLoader | undefined) ?? null)),
     { initialValue: (this.route.snapshot.data['mainLoader'] as VbShellMainLoader | undefined) ?? null },
   );
+  protected readonly mainLoader = computed<VbShellMainLoader | null>(() => {
+    const routeConfig = this.routeMainLoader();
+    const runtimeOverride = this.mainLoaderService.override();
+    if (!routeConfig && !runtimeOverride) {
+      return null;
+    }
+    return {
+      ...(routeConfig ?? {}),
+      ...(runtimeOverride ?? {}),
+    };
+  });
 
   protected readonly isHandset = toSignal(
     this.breakpoints.observe(Breakpoints.Handset).pipe(map((r) => r.matches)),

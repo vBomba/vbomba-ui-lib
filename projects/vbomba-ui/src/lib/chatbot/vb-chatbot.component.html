@@ -2,13 +2,25 @@
   <header class="vb-chatbot__header">
     <div class="vb-chatbot__header-main">
       <h3 class="vb-chatbot__title">{{ title() }}</h3>
-      @if (chatStatus(); as cs) {
-        <span
-          class="vb-chatbot__header-status"
-          [ngClass]="'vb-chatbot__header-status--' + (cs.tone ?? 'idle')"
-          >{{ cs.label }}</span
-        >
-      }
+      <div class="vb-chatbot__header-actions">
+        @if (chatStatus(); as cs) {
+          <span
+            class="vb-chatbot__header-status"
+            [ngClass]="'vb-chatbot__header-status--' + (cs.tone ?? 'idle')"
+            >{{ cs.label }}</span
+          >
+        }
+        @if (clearHistoryInHeader()) {
+          <vb-button
+            variant="icon"
+            color="warn"
+            iconClass="bx bx-trash"
+            [ariaLabel]="clearHistoryAriaLabel()"
+            [disabled]="!canClearHistory()"
+            (click)="clearMessages()"
+          />
+        }
+      </div>
     </div>
   </header>
 
@@ -25,7 +37,6 @@
         @if (
           message.role === 'assistant' &&
           message.responseLatencySeconds != null &&
-          idx === latestTimedAssistantIndex() &&
           averageAssistantLatencySeconds() != null
         ) {
           <div
@@ -116,12 +127,24 @@
       (input)="onDraftInput($any($event.target).value)"
       (keydown)="onKeydown($event)"
     ></textarea>
-    <vb-button
-      variant="icon"
-      iconClass="bx bx-send"
-      [ariaLabel]="sendAriaLabel()"
-      [disabled]="!canSend()"
-      (click)="submit()"
-    />
+    <div class="vb-chatbot__composer-actions">
+      @if (!clearHistoryInHeader()) {
+        <vb-button
+          variant="icon"
+          color="warn"
+          iconClass="bx bx-trash"
+          [ariaLabel]="clearHistoryAriaLabel()"
+          [disabled]="!canClearHistory()"
+          (click)="clearMessages()"
+        />
+      }
+      <vb-button
+        variant="icon"
+        iconClass="bx bx-send"
+        [ariaLabel]="sendAriaLabel()"
+        [disabled]="!canSend()"
+        (click)="submit()"
+      />
+    </div>
   </footer>
 </section>
