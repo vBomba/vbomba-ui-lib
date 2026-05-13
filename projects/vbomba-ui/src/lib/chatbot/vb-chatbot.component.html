@@ -24,7 +24,12 @@
     </div>
   </header>
 
-  <div class="vb-chatbot__messages" aria-live="polite">
+  <div
+    class="vb-chatbot__messages"
+    [class.vb-chatbot__messages--texture]="textureBackdrop()"
+    [class.vb-chatbot__messages--texture-grid]="textureBackdrop() && textureGrid()"
+    aria-live="polite"
+  >
     @for (message of messages(); track message.id ?? $index; let idx = $index) {
       <article
         class="vb-chatbot__message"

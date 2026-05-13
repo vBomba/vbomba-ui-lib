@@ -1,0 +1,45 @@
+<div class="vb-slider" [class.vb-slider--disabled]="disabled()" [class.vb-slider--with-value-input]="valueInput()">
+  @if (label() || showValue()) {
+    <div class="vb-slider__head">
+      @if (label()) {
+        <label class="vb-slider__label" [attr.for]="effectiveId()">{{ label() }}</label>
+      }
+      @if (showValue()) {
+        <span class="vb-slider__readout" [class.vb-slider__readout--end]="!label()" aria-live="polite">
+          {{ formattedValue() }}
+        </span>
+      }
+    </div>
+  }
+  <div class="vb-slider__row">
+    <input
+      class="vb-slider__range"
+      type="range"
+      [id]="effectiveId()"
+      [name]="name()"
+      [min]="0"
+      [max]="internalMax"
+      step="1"
+      [disabled]="disabled()"
+      [style.--vb-range-fill-pct.%]="fillPct()"
+      [value]="internalPosition()"
+      [attr.aria-label]="ariaLabel() ?? (label() ? null : 'Slider')"
+      [attr.aria-valuetext]="ariaValueText()"
+      (input)="onRangeInput($event)"
+    />
+    @if (valueInput()) {
+      <input
+        class="vb-slider__number"
+        type="number"
+        [id]="valueInputEffectiveId()"
+        [attr.aria-label]="valueInputAriaLabel() ?? 'Numeric value'"
+        [min]="min()"
+        [max]="max()"
+        [step]="valueInputStep()"
+        [disabled]="disabled()"
+        [value]="value()"
+        (input)="onValueInputField($event)"
+      />
+    }
+  </div>
+</div>

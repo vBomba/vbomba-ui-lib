@@ -1,0 +1,14 @@
+<div class="vb-empty-state">
+  @if (iconClass()) {
+    <span class="vb-empty-state__icon" aria-hidden="true">
+      <span [class]="iconClass()"></span>
+    </span>
+  }
+  <h3 class="vb-empty-state__title">{{ title() }}</h3>
+  @if (description()) {
+    <p class="vb-empty-state__description">{{ description() }}</p>
+  }
+  <div class="vb-empty-state__actions">
+    <ng-content select="[vbEmptyActions]" />
+  </div>
+</div>

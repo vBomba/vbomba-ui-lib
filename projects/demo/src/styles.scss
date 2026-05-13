@@ -41,7 +41,8 @@ body.app-dark-theme {
   @include mat.all-component-themes($dark-theme);
 }
 
-body.app-dark-theme input:not([type='checkbox']):not(.mat-mdc-input-element):hover,
+body.app-dark-theme
+  input:not([type='checkbox']):not([type='range']):not(.vb-slider__number):not(.mat-mdc-input-element):hover,
 body.app-dark-theme .filter-select:hover {
   background-color: color-mix(in srgb, var(--vb-color-surface-muted) 88%, var(--vb-color-text-primary) 9%);
 }

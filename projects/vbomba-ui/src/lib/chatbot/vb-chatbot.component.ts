@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output, signal } from '@angular/core';
 import { VbButtonComponent } from '../button/vb-button.component';
 import { VbChipComponent } from '../chip/vb-chip.component';
 import { VbTextLoaderComponent } from '../text-loader/vb-text-loader.component';
@@ -45,6 +45,16 @@ export class VbChatbotComponent {
   readonly chatStatus = input<VbChatbotHeaderStatus | null>(null);
   /** Keep composer disabled while any assistant message has `streaming: true`. */
   readonly composerLockedWhileStreaming = input(true);
+  /**
+   * Message area: tinted `surface-muted` / `surface-canvas` panel. Set `false` for a flat
+   * default surface. When `true`, see {@link textureGrid} for the optional line overlay.
+   */
+  readonly textureBackdrop = input(true, { transform: booleanAttribute });
+  /**
+   * When {@link textureBackdrop} is on, draws the grid + diagonals + micro-dots overlay.
+   * Set `false` for the tinted panel only (no pattern).
+   */
+  readonly textureGrid = input(true, { transform: booleanAttribute });
 
   readonly send = output<string>();
   readonly clearHistory = output<void>();

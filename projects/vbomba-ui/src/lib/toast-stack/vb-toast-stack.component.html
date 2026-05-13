@@ -1,0 +1,49 @@
+<div
+  class="vb-toast-stack"
+  [style.--vb-toast-stack-inset-top]="insetTopClearance()"
+  [class.vb-toast-stack--top-right]="position() === 'top-right'"
+  [class.vb-toast-stack--top-left]="position() === 'top-left'"
+  [class.vb-toast-stack--bottom-right]="position() === 'bottom-right'"
+  [class.vb-toast-stack--bottom-left]="position() === 'bottom-left'"
+  role="region"
+  [attr.aria-label]="regionAriaLabel()"
+>
+  @for (toast of stack.items(); track toast.id; let idx = $index) {
+    <div
+      class="vb-toast-stack__item"
+      [class.vb-toast-stack__item--neutral]="toast.tone === 'neutral'"
+      [class.vb-toast-stack__item--info]="toast.tone === 'info'"
+      [class.vb-toast-stack__item--success]="toast.tone === 'success'"
+      [class.vb-toast-stack__item--warn]="toast.tone === 'warn'"
+      [class.vb-toast-stack__item--error]="toast.tone === 'error'"
+      [class.vb-toast-stack__item--paused]="stack.isPaused(toast.id)"
+      [style.z-index]="zBase(idx, stack.items().length)"
+      (pointerenter)="stack.pause(toast.id)"
+      (pointerleave)="stack.resume(toast.id)"
+      [attr.role]="toast.tone === 'error' ? 'alert' : 'status'"
+    >
+      <div class="vb-toast-stack__surface">
+        <div class="vb-toast-stack__main">
+          @if (toast.title) {
+            <div class="vb-toast-stack__title">{{ toast.title }}</div>
+          }
+          <div class="vb-toast-stack__message">{{ toast.message }}</div>
+        </div>
+        <button
+          type="button"
+          class="vb-toast-stack__dismiss"
+          aria-label="Dismiss notification"
+          (click)="onDismiss(toast.id, $event)"
+        >
+          <span class="vb-toast-stack__dismiss-icon bx bx-x" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="vb-toast-stack__timer" aria-hidden="true">
+        <div
+          class="vb-toast-stack__timer-bar"
+          [style.animation-duration]="toast.durationMs + 'ms'"
+        ></div>
+      </div>
+    </div>
+  }
+</div>

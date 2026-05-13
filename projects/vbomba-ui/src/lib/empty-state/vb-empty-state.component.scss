@@ -1,0 +1,57 @@
+:host {
+  display: block;
+}
+
+.vb-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: var(--vb-radius-md);
+  border: 1px dashed color-mix(in srgb, var(--vb-color-border-default) 85%, transparent);
+  background: color-mix(in srgb, var(--vb-color-surface-muted) 55%, var(--vb-color-surface-canvas));
+  color: var(--vb-color-text-primary);
+}
+
+.vb-empty-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--vb-color-text-muted);
+}
+
+.vb-empty-state__title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.vb-empty-state__description {
+  margin: 0 0 0.85rem;
+  max-width: 36ch;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--vb-color-text-muted);
+}
+
+.vb-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/*
+ * Projected actions live in the parent view (different emulated encapsulation).
+ * ::ng-deep lets gap apply; [vbEmptyActions] wrapper uses contents so buttons become flex items.
+ */
+:host ::ng-deep .vb-empty-state__actions [vbEmptyActions] {
+  display: contents;
+}

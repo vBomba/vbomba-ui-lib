@@ -1,0 +1,30 @@
+<fieldset
+  class="vb-radio-group"
+  [class.vb-radio-group--horizontal]="layout() === 'horizontal'"
+  [disabled]="disabled()"
+  [attr.aria-label]="legend() ? null : ariaLabel()"
+>
+  @if (legend()) {
+    <legend class="vb-radio-group__legend">{{ legend() }}</legend>
+  }
+  <div class="vb-radio-group__options">
+    @for (opt of options(); track opt.value) {
+      <label
+        class="vb-radio"
+        [class.vb-radio--disabled]="disabled() || opt.disabled"
+      >
+        <input
+          class="vb-radio__input"
+          type="radio"
+          [name]="resolvedName()"
+          [value]="opt.value"
+          [checked]="value() === opt.value"
+          [disabled]="disabled() || !!opt.disabled"
+          (change)="selectOption(opt.value)"
+        />
+        <span class="vb-radio__circle" aria-hidden="true"></span>
+        <span class="vb-radio__label">{{ opt.label }}</span>
+      </label>
+    }
+  </div>
+</fieldset>

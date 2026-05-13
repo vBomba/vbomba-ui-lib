@@ -1,4 +1,5 @@
 <div class="showcase">
+  <vb-toast-stack />
   <header class="showcase__hero">
     <h1>vbomba-ui</h1>
     <p class="showcase__lede">
@@ -57,6 +58,32 @@
         <vb-chip [label]="tag" removable (remove)="removeDemoTag(tag)" />
       }
       <vb-chip label="Disabled" removable disabled />
+    </div>
+  </vb-card>
+
+  <vb-card class="showcase__section" aria-labelledby="sec-radio">
+    <h2 id="sec-radio">Radio group</h2>
+    <p class="showcase__hint">
+      <code>vb-radio-group</code> — native radios with a shared <code>name</code> (auto when omitted),
+      optional <code>legend</code>, <code>layout</code> (<code>vertical</code> | <code>horizontal</code>),
+      and per-option <code>disabled</code>. Bind selection with <code>[(value)]</code>.
+    </p>
+    <div class="showcase__controls showcase__controls--stack">
+      <vb-radio-group
+        legend="Billing cadence"
+        [(value)]="demoBillingPlan"
+        [options]="demoBillingRadioOptions()"
+      />
+      <p class="showcase__hint">Selected: <code>{{ demoBillingPlan() ?? 'null' }}</code></p>
+    </div>
+    <div class="showcase__controls showcase__controls--stack">
+      <vb-radio-group
+        aria-label="Theme density (demo)"
+        layout="horizontal"
+        name="showcase-density"
+        [options]="demoDensityRadioOptions()"
+        [(value)]="demoDensity"
+      />
     </div>
   </vb-card>
 
@@ -135,13 +162,93 @@
     </div>
   </vb-card>
 
+  <vb-card class="showcase__section" aria-labelledby="sec-alerts">
+    <h2 id="sec-alerts">Alerts</h2>
+    <p class="showcase__hint">
+      <code>vb-alert</code> — <code>tone</code>: <code>neutral</code>, <code>info</code>,
+      <code>success</code>, <code>warn</code>, <code>error</code> (<code>error</code> uses
+      <code>role="alert"</code>; others use <code>status</code>). Optional <code>title</code>,
+      <code>dismissible</code>, and <code>dismiss</code> output.
+    </p>
+    <div class="showcase__controls showcase__controls--stack">
+      <vb-alert tone="neutral">Neutral inline message without a title.</vb-alert>
+      <vb-alert tone="info" title="Heads up">
+        Check the deployment queue before promoting this build.
+      </vb-alert>
+      <vb-alert tone="success" title="Saved">Your workspace preferences were updated.</vb-alert>
+      <vb-alert tone="warn" title="Rate limited">Slow down requests for the next few minutes.</vb-alert>
+      <vb-alert tone="error" title="Request failed">
+        We could not reach the API — try again shortly.
+      </vb-alert>
+      @if (!demoAlertPromoDismissed()) {
+        <vb-alert
+          tone="info"
+          title="Dismissible"
+          dismissible
+          (dismiss)="demoAlertPromoDismissed.set(true)"
+        >
+          Close hides this row until you reset the demo.
+        </vb-alert>
+      } @else {
+        <div class="showcase__row">
+          <vb-button
+            variant="text"
+            label="Show dismissible alert again"
+            (click)="demoAlertPromoDismissed.set(false)"
+          />
+        </div>
+      }
+    </div>
+  </vb-card>
+
+  <vb-card class="showcase__section" aria-labelledby="sec-toasts">
+    <h2 id="sec-toasts">Toast stack</h2>
+    <p class="showcase__hint">
+      Mount <code>vb-toast-stack</code> once (fixed corner). Push items with
+      <code>VbToastStackService.show()</code> — each toast auto-dismisses after <code>durationMs</code>
+      (default 5.2s). A thick, high-contrast bar shrinks to show remaining time; pointer hover pauses
+      both the bar and the timer. Newer toasts stack on top with a slight overlap; hover lifts one
+      above the rest.
+    </p>
+    <div class="showcase__row">
+      <vb-button variant="filled" color="primary" label="Toast: info" (click)="toastDemoInfo()" />
+      <vb-button variant="outlined" color="primary" label="Toast: success" (click)="toastDemoSuccess()" />
+      <vb-button variant="elevated" color="primary" label="Burst (overlap demo)" (click)="toastDemoBurst()" />
+    </div>
+  </vb-card>
+
+  <vb-card class="showcase__section" aria-labelledby="sec-empty">
+    <h2 id="sec-empty">Empty state</h2>
+    <p class="showcase__hint">
+      <code>vb-empty-state</code> — required <code>title</code>, optional <code>description</code> and
+      <code>iconClass</code> (Boxicons). Project actions into an element marked
+      <code>vbEmptyActions</code>.
+    </p>
+    <div class="showcase__controls showcase__controls--stack">
+      <vb-empty-state
+        title="No deployments"
+        description="Start a pipeline run or connect a cluster to see activity here."
+        iconClass="bx bx-package"
+      >
+        <div vbEmptyActions>
+          <vb-button variant="filled" color="primary" label="New deployment" />
+          <vb-button variant="outlined" color="primary" label="View docs" />
+        </div>
+      </vb-empty-state>
+      <vb-empty-state title="Nothing to show" description="Optional body only; no icon or actions." />
+    </div>
+  </vb-card>
+
   <vb-card class="showcase__section" aria-labelledby="sec-chatbot">
     <h2 id="sec-chatbot">Chatbot</h2>
     <p class="showcase__hint">
       <code>vb-chatbot</code> supports streamed assistant replies via <code>streaming: true</code>
       (blinking caret, optional composer lock) and a header <code>chatStatus</code> pill
       (<code>idle</code>, <code>streaming</code>, <code>thinking</code>, <code>busy</code>, etc.).
-      Latency and sources apply after the stream ends.
+      Latency and sources apply after the stream ends. Message list uses a subtle
+      <code>textureBackdrop</code> (muted canvas tint) and <code>textureGrid</code> (line
+      pattern) default to <code>true</code>; use <code>[textureGrid]="false"</code> for tint
+      only, or <code>[textureBackdrop]="false"</code> for a flat panel.
     </p>
     <div class="showcase__chatbot-wrap">
       <vb-chatbot
@@ -201,8 +308,8 @@
     <h2 id="sec-fields">Form controls</h2>
     <p class="showcase__hint">
       <code>vb-input</code>, <code>vb-textarea</code>, <code>vb-select</code>,
-      <code>vb-checkbox</code>, and <code>vb-toggle</code> use project tokens for control
-      surfaces, focus rings, and selected states.
+      <code>vb-checkbox</code>, <code>vb-toggle</code>, <code>vb-radio-group</code>, and
+      <code>vb-slider</code> use project tokens for control surfaces, focus rings, and selected states.
     </p>
     <div class="showcase__checks">
       <vb-checkbox [(checked)]="notificationsEnabled" label="Enable notifications" />
@@ -214,6 +321,36 @@
       <vb-toggle [(checked)]="wifiEnabled" label="Wi‑Fi" />
       <vb-toggle [(checked)]="autoSaveDrafts">Autosave drafts</vb-toggle>
       <vb-toggle [checked]="true" disabled label="Always on (disabled)" />
+    </div>
+    <div class="showcase__controls showcase__controls--stack">
+      <p class="showcase__hint">
+        <code>vb-slider</code> (v2): <code>linear</code> / <code>exponential</code>, thin track with fill, no
+        custom hover styles. Optional <code>valueInput</code> — compact number input without spinners.
+      </p>
+      <vb-slider
+        id="showcase-slider-linear"
+        [(value)]="sliderLinear"
+        [min]="0"
+        [max]="100"
+        scale="linear"
+        label="Volume (linear)"
+        [showValue]="false"
+        [valueInput]="true"
+        value-input-aria-label="Volume value"
+      />
+      <vb-slider
+        id="showcase-slider-exp"
+        [(value)]="sliderExponential"
+        [min]="0"
+        [max]="1000"
+        scale="exponential"
+        [exponentialCurvature]="5"
+        label="Delay ms (exponential scale)"
+        [valueDecimals]="0"
+        [showValue]="false"
+        [valueInput]="true"
+        value-input-aria-label="Delay in milliseconds"
+      />
     </div>
     <div class="showcase__controls">
       <label class="showcase__label" for="showcase-name">Display name</label>

@@ -107,6 +107,82 @@
   padding: 0.85rem;
 }
 
+/* Optional tinted panel behind the message list. */
+.vb-chatbot__messages--texture {
+  position: relative;
+  isolation: isolate;
+  background-color: color-mix(
+    in srgb,
+    var(--vb-color-surface-muted) 58%,
+    var(--vb-color-surface-canvas) 42%
+  );
+}
+
+/* Optional grid overlay (only with `--texture`; tokens only, no images). */
+.vb-chatbot__messages--texture-grid {
+  --vb-chatbot-texture-cell: 20px;
+  /* Light theme: borders read faint on muted mix — push contrast slightly. */
+  --vb-chatbot-texture-line-main: color-mix(in srgb, var(--vb-color-border-default) 50%, transparent);
+  --vb-chatbot-texture-line-diag: color-mix(in srgb, var(--vb-color-border-default) 28%, transparent);
+  --vb-chatbot-texture-dot: color-mix(in srgb, var(--vb-color-text-muted) 34%, transparent);
+}
+
+:host-context(body.app-dark-theme) .vb-chatbot__messages--texture-grid {
+  --vb-chatbot-texture-line-main: color-mix(in srgb, var(--vb-color-border-default) 44%, transparent);
+  --vb-chatbot-texture-line-diag: color-mix(in srgb, var(--vb-color-border-default) 34%, transparent);
+  --vb-chatbot-texture-dot: color-mix(in srgb, var(--vb-color-text-muted) 22%, transparent);
+}
+
+.vb-chatbot__messages--texture-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent calc(var(--vb-chatbot-texture-cell) - 1px),
+      var(--vb-chatbot-texture-line-main) calc(var(--vb-chatbot-texture-cell) - 1px),
+      var(--vb-chatbot-texture-line-main) var(--vb-chatbot-texture-cell)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(var(--vb-chatbot-texture-cell) - 1px),
+      var(--vb-chatbot-texture-line-main) calc(var(--vb-chatbot-texture-cell) - 1px),
+      var(--vb-chatbot-texture-line-main) var(--vb-chatbot-texture-cell)
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 15px,
+      var(--vb-chatbot-texture-line-diag) 15px 16px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 15px,
+      var(--vb-chatbot-texture-line-diag) 15px 16px
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      var(--vb-chatbot-texture-dot) 0.55px,
+      transparent 0.75px
+    );
+  background-size:
+    100% 100%,
+    100% 100%,
+    auto,
+    auto,
+    var(--vb-chatbot-texture-cell) var(--vb-chatbot-texture-cell);
+  background-repeat: repeat, repeat, repeat, repeat, repeat;
+}
+
+.vb-chatbot__messages--texture > * {
+  position: relative;
+  z-index: 1;
+}
+
 .vb-chatbot__message {
   max-width: min(86%, 44ch);
   padding: 0.48rem 0.62rem;

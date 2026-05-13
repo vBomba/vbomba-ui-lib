@@ -1,0 +1,87 @@
+:host {
+  display: block;
+}
+
+.vb-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  box-sizing: border-box;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--vb-radius-control);
+  border: 1px solid var(--vb-color-border-default);
+  background: color-mix(in srgb, var(--vb-color-surface-default) 35%, var(--vb-color-surface-muted));
+  color: var(--vb-color-text-primary);
+}
+
+.vb-alert__main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vb-alert__title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 0.2rem;
+  line-height: 1.35;
+}
+
+.vb-alert__body {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--vb-color-text-muted);
+}
+
+.vb-alert--info {
+  border-color: color-mix(in srgb, var(--vb-color-action-primary) 42%, var(--vb-color-border-default));
+  background: color-mix(in srgb, var(--vb-color-action-primary) 11%, var(--vb-color-surface-muted));
+}
+
+.vb-alert--success {
+  border-color: color-mix(in srgb, var(--vb-palette-green-600) 45%, var(--vb-color-border-default));
+  background: color-mix(in srgb, var(--vb-palette-green-600) 10%, var(--vb-color-surface-muted));
+}
+
+.vb-alert--warn {
+  border-color: color-mix(in srgb, var(--vb-palette-amber-500) 48%, var(--vb-color-border-default));
+  background: color-mix(in srgb, var(--vb-palette-amber-500) 12%, var(--vb-color-surface-muted));
+}
+
+.vb-alert--error {
+  border-color: color-mix(in srgb, var(--vb-color-action-destructive) 55%, var(--vb-color-border-default));
+  background: color-mix(in srgb, var(--vb-color-action-destructive) 9%, var(--vb-color-surface-muted));
+}
+
+.vb-alert__dismiss {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: -0.15rem -0.1rem 0 0;
+  padding: 0.25rem;
+  border: none;
+  border-radius: calc(var(--vb-radius-input) - 2px);
+  background: transparent;
+  color: var(--vb-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.vb-alert__dismiss-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.vb-alert__dismiss:hover {
+  background: color-mix(in srgb, var(--vb-color-text-primary) 6%, transparent);
+  color: var(--vb-color-text-primary);
+}
+
+.vb-alert__dismiss:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--vb-color-action-primary),
+    0 0 0 4px var(--vb-color-effect-ring-focus);
+}

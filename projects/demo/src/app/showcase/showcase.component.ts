@@ -1,23 +1,30 @@
-import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, model, signal } from '@angular/core';
 import {
+  VbAlertComponent,
   VbButtonComponent,
   VbCardComponent,
   VbChatbotComponent,
   VbCheckboxComponent,
   VbChipComponent,
   VbConnectionIndicatorComponent,
+  VbEmptyStateComponent,
   VbInputComponent,
   VbLoaderComponent,
   VbPaginatorComponent,
   VbPopupComponent,
+  VbRadioGroupComponent,
   VbSelectComponent,
+  VbSliderComponent,
   VbSimpleTableComponent,
   VbTextLoaderComponent,
   VbTextareaComponent,
+  VbToastStackComponent,
+  VbToastStackService,
   VbToggleComponent,
   type VbChatbotHeaderStatus,
   type VbChatbotMessage,
   type VbConnectionStatus,
+  type VbRadioOption,
   type VbSelectOption,
   type VbSimpleTableColumn,
 } from 'vbomba-ui';
@@ -26,20 +33,25 @@ import {
   selector: 'app-showcase',
   standalone: true,
   imports: [
+    VbAlertComponent,
     VbButtonComponent,
     VbCardComponent,
     VbChatbotComponent,
     VbCheckboxComponent,
     VbChipComponent,
     VbConnectionIndicatorComponent,
+    VbEmptyStateComponent,
     VbInputComponent,
     VbLoaderComponent,
     VbPaginatorComponent,
     VbPopupComponent,
+    VbRadioGroupComponent,
     VbSelectComponent,
+    VbSliderComponent,
     VbSimpleTableComponent,
     VbTextLoaderComponent,
     VbTextareaComponent,
+    VbToastStackComponent,
     VbToggleComponent,
   ],
   templateUrl: './showcase.component.html',
@@ -47,6 +59,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowcaseComponent {
+  private readonly toastStack = inject(VbToastStackService);
+
   protected readonly popupOpen = model(false);
   protected readonly paginatorPage = model(2);
   protected readonly tablePage = model(1);
@@ -59,8 +73,24 @@ export class ShowcaseComponent {
   protected readonly deployEnv = model<string>('dev');
   protected readonly draftNotes = model<string>('');
 
+  protected readonly sliderLinear = model(42);
+  protected readonly sliderExponential = model(120);
+
   protected readonly demoTags = signal<string[]>(['Angular', 'Material', 'Standalone']);
+  protected readonly demoBillingPlan = model<string | null>('monthly');
+  protected readonly demoBillingRadioOptions = signal<VbRadioOption[]>([
+    { value: 'monthly', label: 'Monthly' },
+    { value: 'yearly', label: 'Yearly (save ~15%)' },
+    { value: 'enterprise', label: 'Enterprise (contact sales)', disabled: true },
+  ]);
+  protected readonly demoAlertPromoDismissed = signal(false);
   protected readonly demoConnectionStatus = signal<VbConnectionStatus>('loading');
+  protected readonly demoDensity = model<string | null>('cozy');
+  protected readonly demoDensityRadioOptions = signal<VbRadioOption[]>([
+    { value: 'compact', label: 'Compact' },
+    { value: 'cozy', label: 'Cozy' },
+    { value: 'spacious', label: 'Spacious' },
+  ]);
   protected readonly textLoaderRestartKey = signal(0);
   protected readonly chatbotLoading = signal(false);
   protected readonly chatbotHeaderStatus = signal<VbChatbotHeaderStatus | null>({
@@ -118,6 +148,40 @@ export class ShowcaseComponent {
 
   protected removeDemoTag(tag: string): void {
     this.demoTags.update((tags) => tags.filter((t) => t !== tag));
+  }
+
+  protected toastDemoInfo(): void {
+    this.toastStack.show({
+      tone: 'info',
+      title: 'Deploy queued',
+      message:
+        'Toasts overlap; hover to expand, read fully, and pause the timer bar. Move the pointer away to resume.',
+      durationMs: 9000,
+    });
+  }
+
+  protected toastDemoSuccess(): void {
+    this.toastStack.show({
+      tone: 'success',
+      title: 'Build passed',
+      message: 'Smoke tests finished without failures.',
+      durationMs: 6500,
+    });
+  }
+
+  protected toastDemoBurst(): void {
+    this.toastDemoInfo();
+    window.setTimeout(() => this.toastDemoSuccess(), 140);
+    window.setTimeout(
+      () =>
+        this.toastStack.show({
+          tone: 'warn',
+          title: 'Rate limit',
+          message: 'You are close to the hourly API quota.',
+          durationMs: 8000,
+        }),
+      280,
+    );
   }
 
   protected setDemoConnection(status: VbConnectionStatus): void {

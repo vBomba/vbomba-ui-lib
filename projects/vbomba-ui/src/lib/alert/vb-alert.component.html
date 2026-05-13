@@ -1,0 +1,28 @@
+<div
+  class="vb-alert"
+  [class.vb-alert--neutral]="tone() === 'neutral'"
+  [class.vb-alert--info]="tone() === 'info'"
+  [class.vb-alert--success]="tone() === 'success'"
+  [class.vb-alert--warn]="tone() === 'warn'"
+  [class.vb-alert--error]="tone() === 'error'"
+  [attr.role]="alertRole()"
+>
+  <div class="vb-alert__main">
+    @if (title()) {
+      <div class="vb-alert__title">{{ title() }}</div>
+    }
+    <div class="vb-alert__body">
+      <ng-content />
+    </div>
+  </div>
+  @if (dismissible()) {
+    <button
+      type="button"
+      class="vb-alert__dismiss"
+      [attr.aria-label]="dismissAriaLabel()"
+      (click)="onDismissClick()"
+    >
+      <span class="vb-alert__dismiss-icon bx bx-x" aria-hidden="true"></span>
+    </button>
+  }
+</div>
