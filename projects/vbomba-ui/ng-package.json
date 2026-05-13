@@ -9,6 +9,11 @@
       "input": "src/lib/theme",
       "glob": "*.scss",
       "output": "/theme"
+    },
+    {
+      "input": ".",
+      "glob": "CHANGELOG.md",
+      "output": "."
     }
   ],
   "allowedNonPeerDependencies": ["@fontsource/lexend"]
