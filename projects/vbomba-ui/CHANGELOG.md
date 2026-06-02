@@ -1,10 +1,20 @@
 # Changelog
 
+## 0.2.2
+
+### Fixed
+
+- `vb-card` with `tabs`: project body content reliably (single `ng-content`), show bordered card surface only under the tab row.
+- Tabbed card layout: tabs render above the card frame (`display: contents` host + internal stack), no gap between tabs and body, active tab merges with the body top edge.
+- `vb-tab` on card: rectangular folder style with top radius only; exclude `.vb-tab` from global Material `button` border-radius overrides.
+- Align `marked` dependency to `^18.0.4`.
+
 ## 0.2.1
 
 ### Fixed
 
 - Publish follow-up patch release after `0.2.0` was already published.
+- Align published `marked` dependency with the monorepo (`^18.0.4`, was `^17.0.0`).
 
 ## 0.2.0
 

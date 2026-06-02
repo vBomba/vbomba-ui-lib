@@ -1,23 +1,25 @@
-@if (hasTabs()) {
+<div class="vb-card__stack" [class.vb-card__stack--tabbed]="hasTabs()">
+  @if (hasTabs()) {
+    <div
+      class="vb-card__tabs"
+      [class.vb-card__tabs--sticky]="stickyTabs()"
+      [class.vb-card__tabs--bg-muted]="tabsBg() === 'muted'"
+    >
+      <vb-tabs
+        [tabs]="tabs()"
+        [stickyTabsBg]="tabsBg()"
+        [(value)]="tabValue"
+        [attr.aria-label]="tabsAriaLabel() || null"
+      />
+    </div>
+  }
+
   <div
-    class="vb-card__tabs"
-    [class.vb-card__tabs--sticky]="stickyTabs()"
-    [class.vb-card__tabs--bg-muted]="tabsBg() === 'muted'"
-  >
-    <vb-tabs
-      [tabs]="tabs()"
-      [stickyTabsBg]="tabsBg()"
-      [(value)]="tabValue"
-      [attr.aria-label]="tabsAriaLabel() || null"
-    />
-  </div>
-  <div
-    class="vb-card__body"
+    class="vb-card__slot"
+    [class.vb-card__body]="hasTabs()"
     [class.vb-card__body--scrollable]="scrollableBody()"
     [style.max-height]="scrollableBody() ? tabBodyMaxHeight() : null"
   >
     <ng-content />
   </div>
-} @else {
-  <ng-content />
-}
+</div>

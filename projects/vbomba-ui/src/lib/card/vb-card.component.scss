@@ -9,30 +9,50 @@
   min-width: 0;
 }
 
+/* Tabbed: <vb-card> is not a box — tabs and body lay out as parent siblings; chrome is on .vb-card__body only. */
 :host.vb-card-host--tabbed {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  overflow: visible;
-  border: none;
-  box-shadow: none;
-  background: transparent;
+  display: contents;
 }
 
+:host:not(.vb-card-host--tabbed) .vb-card__stack {
+  display: contents;
+}
+
+:host:not(.vb-card-host--tabbed) .vb-card__slot {
+  display: contents;
+}
+
+/* One layout unit for parents with gap — tabs flush on the card body below. */
+.vb-card__stack--tabbed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Tab row sits above the card frame (not inside .vb-card__body). */
 .vb-card__tabs {
+  display: block;
   flex: 0 0 auto;
-  align-self: stretch;
   margin: 0;
   padding: 0;
+  line-height: 0;
   background: transparent;
   border: none;
   box-shadow: none;
-  z-index: 2;
+}
+
+.vb-card__tabs ::ng-deep vb-tabs {
+  display: block;
+  line-height: normal;
 }
 
 .vb-card__tabs--sticky {
   position: sticky;
   top: 0;
+  z-index: 2;
 }
 
 .vb-card__tabs--bg-muted {
@@ -45,21 +65,22 @@
 }
 
 .vb-card__tabs ::ng-deep button.vb-tab {
-  border-radius: 0 !important;
   min-height: unset !important;
 }
 
+/* Bordered card surface — only this block is the “card”. */
 .vb-card__body {
-  flex: 1 1 auto;
-  min-height: 0;
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: min-content;
+  margin-top: -1px;
   padding: 0.85rem 1.25rem 1.5rem;
   background: var(--vb-color-surface-default);
   border: 1px solid var(--vb-color-border-default);
-  border-top: none;
   border-radius: 0 var(--vb-radius-md) var(--vb-radius-md) var(--vb-radius-md);
   box-shadow: var(--vb-color-effect-shadow-card);
-  position: relative;
-  z-index: 1;
+  color: var(--vb-color-text-primary);
 }
 
 .vb-card__body--scrollable {

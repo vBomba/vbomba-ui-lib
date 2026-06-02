@@ -83,7 +83,9 @@
   font-weight: 600;
   background: var(--vb-color-surface-default);
   border-bottom-color: var(--vb-color-surface-default);
-  z-index: 2;
+  margin-bottom: -1px;
+  padding-bottom: calc(0.34rem + 1px);
+  z-index: 3;
 }
 
 :host-context(.vb-card__tabs) .vb-tab:focus-visible {
