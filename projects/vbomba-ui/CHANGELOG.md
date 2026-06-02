@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+### Fixed
+
+- Publish follow-up patch release after `0.2.0` was already published.
+
 ## 0.2.0
 
 ### Added
