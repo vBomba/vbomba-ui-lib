@@ -3,7 +3,7 @@
  * All colors go through var(--vb-color-*) / var(--vb-palette-*).
  */
 
-button,
+button:not(.vb-tab),
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button,
 .mat-mdc-unelevated-button {

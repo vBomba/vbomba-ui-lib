@@ -61,6 +61,78 @@
     </div>
   </vb-card>
 
+  <vb-card class="showcase__section" aria-labelledby="sec-tabs">
+    <h2 id="sec-tabs">Tabs</h2>
+    <p class="showcase__hint">
+      <code>vb-tab</code> is used by <code>vb-tabs</code> (<code>[(value)]</code>,
+      <code>tabs</code>, optional Boxicons). Pass <code>tabs</code> to
+      <code>vb-card</code> for a tab row glued to the top of the card; set
+      <code>tabBodyMaxHeight</code> so the card body scrolls and sticky tabs stay visible.
+    </p>
+    <div class="showcase__controls showcase__controls--stack">
+      <span class="showcase__label">Standalone tabs</span>
+      <vb-tabs
+        ariaLabel="Showcase tabs"
+        [tabs]="demoTabItems()"
+        [(value)]="demoTabsValue"
+      />
+      <p class="showcase__hint">
+        Selected: <code>{{ demoTabsValue() }}</code>
+      </p>
+    </div>
+    <div class="showcase__controls showcase__controls--stack">
+      <span class="showcase__label">Tabs on vb-card</span>
+      <vb-toggle [(checked)]="demoStickyTabsEnabled" label="Sticky tab row on card" />
+      <vb-card
+        class="showcase__tabs-card"
+        tabsAriaLabel="Card tabs demo"
+        [tabs]="demoTabItems()"
+        [(tabValue)]="demoCardTabsValue"
+        [stickyTabs]="demoStickyTabsEnabled()"
+        tabBodyMaxHeight="11rem"
+      >
+        @switch (demoCardTabsValue()) {
+          @case ('metrics') {
+            <p class="showcase__tabs-panel">
+              Metrics — scroll inside the card; the tab row stays glued to the top of this
+              <code>vb-card</code>.
+            </p>
+            <p class="showcase__tabs-panel">
+              Latency, error rate, and throughput charts would live here in a real screen.
+            </p>
+          }
+          @case ('settings') {
+            <p class="showcase__tabs-panel">
+              Settings — form fields and toggles for deployment options.
+            </p>
+            <p class="showcase__tabs-panel">
+              The card body has no top-left radius so the active tab lines up flush with the edge.
+            </p>
+          }
+          @default {
+            <p class="showcase__tabs-panel">
+              Overview — default tab when <code>tabValue</code> is empty (first enabled tab).
+            </p>
+            <p class="showcase__tabs-panel">
+              Add more content below to test scroll behavior with and without sticky tabs.
+            </p>
+            <p class="showcase__tabs-panel">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus at urna
+              interdum finibus.
+            </p>
+            <p class="showcase__tabs-panel">
+              Praesent vel lectus vel velit faucibus pretium. Integer euismod, nisl eget
+              ultricies lacinia, lectus nisl aliquet nunc.
+            </p>
+          }
+        }
+      </vb-card>
+      <p class="showcase__hint">
+        Card tab: <code>{{ demoCardTabsValue() }}</code>
+      </p>
+    </div>
+  </vb-card>
+
   <vb-card class="showcase__section" aria-labelledby="sec-radio">
     <h2 id="sec-radio">Radio group</h2>
     <p class="showcase__hint">
@@ -245,7 +317,11 @@
       <code>vb-chatbot</code> supports streamed assistant replies via <code>streaming: true</code>
       (blinking caret, optional composer lock) and a header <code>chatStatus</code> pill
       (<code>idle</code>, <code>streaming</code>, <code>thinking</code>, <code>busy</code>, etc.).
-      Latency and sources apply after the stream ends. Message list uses a subtle
+      Assistant replies support <strong>markdown</strong> (after streaming),
+      <strong>copy</strong>, auto-scroll, and a scroll-to-latest control when you read
+      older messages. Like/dislike icons sit in the message header next to the latency bar.
+      Bind <code>feedback</code> / <code>feedbackComment</code> and
+      <code>(messageFeedback)</code> to persist ratings (optional text after dislike). Message list uses a subtle
       <code>textureBackdrop</code> (muted canvas tint) and <code>textureGrid</code> (line
       pattern) default to <code>true</code>; use <code>[textureGrid]="false"</code> for tint
       only, or <code>[textureBackdrop]="false"</code> for a flat panel.
@@ -261,6 +337,7 @@
         loadingText="Assistant is preparing a response"
         (send)="onChatbotSend($event)"
         (clearHistory)="onChatbotClearHistory()"
+        (messageFeedback)="onChatbotMessageFeedback($event)"
       />
     </div>
   </vb-card>

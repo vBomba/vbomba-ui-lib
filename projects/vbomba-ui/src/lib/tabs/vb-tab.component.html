@@ -1,0 +1,20 @@
+<button
+  type="button"
+  class="vb-tab"
+  role="tab"
+  [class.vb-tab--active]="active()"
+  [class.vb-tab--disabled]="disabled()"
+  [attr.aria-selected]="active()"
+  [attr.aria-disabled]="disabled() ? true : null"
+  [attr.tabindex]="active() ? 0 : -1"
+  [disabled]="disabled()"
+  (click)="select.emit(value())"
+>
+  @if (iconClass()) {
+    <i [class]="'vb-tab__icon ' + iconClass()" aria-hidden="true"></i>
+  }
+  @if (label()) {
+    <span class="vb-tab__label">{{ label() }}</span>
+  }
+</button>
+

@@ -12,6 +12,7 @@
         }
         @if (clearHistoryInHeader()) {
           <vb-button
+            class="vb-chatbot__header-clear"
             variant="icon"
             color="warn"
             iconClass="bx bx-trash"
@@ -24,101 +25,230 @@
     </div>
   </header>
 
-  <div
-    class="vb-chatbot__messages"
-    [class.vb-chatbot__messages--texture]="textureBackdrop()"
-    [class.vb-chatbot__messages--texture-grid]="textureBackdrop() && textureGrid()"
-    aria-live="polite"
-  >
+  <div class="vb-chatbot__messages-wrap">
+    <div
+      #messagesViewport
+      class="vb-chatbot__messages"
+      [class.vb-chatbot__messages--texture]="textureBackdrop()"
+      [class.vb-chatbot__messages--texture-grid]="textureBackdrop() && textureGrid()"
+      aria-live="polite"
+      (scroll)="onMessagesScroll()"
+    >
     @for (message of messages(); track message.id ?? $index; let idx = $index) {
-      <article
-        class="vb-chatbot__message"
-        [class.vb-chatbot__message--user]="message.role === 'user'"
-        [class.vb-chatbot__message--assistant]="message.role === 'assistant'"
-        [class.vb-chatbot__message--system]="message.role === 'system'"
-        [class.vb-chatbot__message--streaming]="message.role === 'assistant' && message.streaming"
-        [attr.aria-busy]="message.role === 'assistant' && message.streaming ? true : null"
-      >
-        @if (
-          message.role === 'assistant' &&
-          message.responseLatencySeconds != null &&
-          averageAssistantLatencySeconds() != null
-        ) {
-          <div
-            class="vb-chatbot__latency-bar"
-            role="status"
-            [attr.aria-label]="
-              latencyLastReplyLabel() +
-              ': ' +
-              formatLatencySeconds(message.responseLatencySeconds) +
-              ' seconds. ' +
-              latencyTrendLabel(idx)
-            "
-            [ngClass]="'vb-chatbot__latency-bar--' + latencyTier(averageAssistantLatencySeconds()!)"
-          >
-            <i
-              [class]="'vb-chatbot__latency-health ' + latencyAverageIcon()"
-              [style.color]="latencyAverageColor()"
-              aria-hidden="true"
-            ></i>
-            <span class="vb-chatbot__latency-bar-stats">
-              <span class="vb-chatbot__latency-bar-line">
-                <span class="vb-chatbot__latency-bar-label">{{ latencyAverageLabel() }}</span>
-                {{ formatLatencySeconds(averageAssistantLatencySeconds()!) }} s
-              </span>
-              <span class="vb-chatbot__latency-bar-sep" aria-hidden="true">·</span>
-              <i
-                [class]="'vb-chatbot__latency-trend ' + latencyTrendIcon(idx)"
-                [ngClass]="latencyTrendClass(idx)"
-                [style.color]="latencyTrendColor(idx)"
-                [attr.aria-label]="latencyTrendLabel(idx)"
-              ></i>
-              <span class="vb-chatbot__latency-bar-line">
-                <span class="vb-chatbot__latency-bar-label">{{ latencyLastReplyLabel() }}</span>
-                {{ formatLatencySeconds(message.responseLatencySeconds) }} s
-              </span>
-            </span>
-          </div>
-        }
-        <div
-          class="vb-chatbot__message-text"
-          [class.vb-chatbot__message-text--streaming]="message.role === 'assistant' && message.streaming"
+      @if (message.role === 'assistant') {
+        <article
+          class="vb-chatbot__message vb-chatbot__message--assistant"
+          [class.vb-chatbot__message--streaming]="message.streaming"
+          [attr.aria-busy]="message.streaming ? true : null"
         >
-          {{ message.text }}
-          @if (message.role === 'assistant' && message.streaming) {
-            <span class="vb-chatbot__stream-dots" aria-hidden="true">
-              <span class="vb-chatbot__stream-dot"></span>
-              <span class="vb-chatbot__stream-dot"></span>
-              <span class="vb-chatbot__stream-dot"></span>
-            </span>
-          }
-        </div>
-        @if (message.role === 'assistant' && message.sources?.length) {
-          <ul class="vb-chatbot__sources" [attr.aria-label]="sourcesAriaLabel()">
-            @for (src of message.sources; track src.href + src.pageTitle + src.chunkType + $index) {
-              <li class="vb-chatbot__source-item">
-                <vb-chip class="vb-chatbot__source-chip" [attr.title]="sourceChipTitle(src)">
-                  <span class="vb-chatbot__source-heading">
-                    <a
-                      class="vb-chatbot__source-anchor"
-                      [href]="src.href"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >{{ src.pageTitle }}</a
-                    >
+          @if (showMessageHeader(message, idx)) {
+            <div
+              class="vb-chatbot__message-header"
+              [class.vb-chatbot__message-header--tools-only]="
+                !hasLatencyBar(message) &&
+                (showMessageFeedback(message, idx) || canCopyMessage(message))
+              "
+            >
+              @if (hasLatencyBar(message)) {
+                <div
+                  class="vb-chatbot__latency-bar"
+                  role="status"
+                  [attr.aria-label]="
+                    latencyLastReplyLabel() +
+                    ': ' +
+                    formatLatencySeconds(message.responseLatencySeconds!) +
+                    ' seconds. ' +
+                    latencyTrendLabel(idx)
+                  "
+                  [ngClass]="'vb-chatbot__latency-bar--' + latencyTier(averageAssistantLatencySeconds()!)"
+                >
+                  <i
+                    [class]="'vb-chatbot__latency-health ' + latencyAverageIcon()"
+                    [style.color]="latencyAverageColor()"
+                    aria-hidden="true"
+                  ></i>
+                  <span class="vb-chatbot__latency-bar-stats">
+                    <span class="vb-chatbot__latency-bar-line">
+                      <span class="vb-chatbot__latency-bar-label">{{ latencyAverageLabel() }}</span>
+                      {{ formatLatencySeconds(averageAssistantLatencySeconds()!) }} s
+                    </span>
+                    <span class="vb-chatbot__latency-bar-sep" aria-hidden="true">·</span>
+                    <i
+                      [class]="'vb-chatbot__latency-trend ' + latencyTrendIcon(idx)"
+                      [ngClass]="latencyTrendClass(idx)"
+                      [style.color]="latencyTrendColor(idx)"
+                      [attr.aria-label]="latencyTrendLabel(idx)"
+                    ></i>
+                    <span class="vb-chatbot__latency-bar-line">
+                      <span class="vb-chatbot__latency-bar-label">{{ latencyLastReplyLabel() }}</span>
+                      {{ formatLatencySeconds(message.responseLatencySeconds!) }} s
+                    </span>
                   </span>
-                  <span class="vb-chatbot__source-type">{{ src.chunkType }}</span>
-                </vb-chip>
-              </li>
+                </div>
+              }
+              @if (canCopyMessage(message) || showMessageFeedback(message, idx)) {
+                <div
+                  class="vb-chatbot__message-tools"
+                  [class.vb-chatbot__message-tools--with-latency]="hasLatencyBar(message)"
+                >
+                  @if (canCopyMessage(message)) {
+                    <button
+                      type="button"
+                      class="vb-chatbot__tool-btn vb-chatbot__tool-btn--copy"
+                      [class.vb-chatbot__tool-btn--copied]="isMessageCopied(message, idx)"
+                      [attr.aria-label]="copyAriaLabel(message, idx)"
+                      (click)="copyMessage(message, idx)"
+                    >
+                      <i
+                        [class]="
+                          isMessageCopied(message, idx) ? 'bx bx-check' : 'bx bx-copy'
+                        "
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+                  }
+                  @if (showMessageFeedback(message, idx)) {
+                    <div
+                      class="vb-chatbot__rate-icons"
+                      role="group"
+                      [attr.aria-label]="messageFeedbackAriaLabel()"
+                    >
+                  <button
+                    type="button"
+                    class="vb-chatbot__tool-btn vb-chatbot__tool-btn--like"
+                    [class.vb-chatbot__tool-btn--active]="message.feedback === 'like'"
+                    [attr.aria-label]="likeAriaLabel()"
+                    [attr.title]="messageFeedbackHelpfulLabel()"
+                    [attr.aria-pressed]="message.feedback === 'like'"
+                    (click)="onMessageFeedbackClick(message, idx, 'like')"
+                  >
+                    <i [class]="feedbackIcon('like', message.feedback === 'like')" aria-hidden="true"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="vb-chatbot__tool-btn vb-chatbot__tool-btn--dislike"
+                    [class.vb-chatbot__tool-btn--active]="message.feedback === 'dislike'"
+                    [attr.aria-label]="dislikeAriaLabel()"
+                    [attr.title]="messageFeedbackNotHelpfulLabel()"
+                    [attr.aria-pressed]="message.feedback === 'dislike'"
+                    (click)="onMessageFeedbackClick(message, idx, 'dislike')"
+                  >
+                    <i
+                      [class]="feedbackIcon('dislike', message.feedback === 'dislike')"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+          <div
+            class="vb-chatbot__message-text"
+            [class.vb-chatbot__message-text--plain]="!useMarkdownFor(message)"
+            [class.vb-chatbot__message-text--streaming]="message.streaming"
+          >
+            @if (useMarkdownFor(message)) {
+              <div class="vb-chatbot__markdown" [innerHTML]="markdownHtml(message.text)"></div>
+            } @else {
+              {{ message.text }}
+              @if (message.streaming) {
+                <span class="vb-chatbot__stream-dots" aria-hidden="true">
+                  <span class="vb-chatbot__stream-dot"></span>
+                  <span class="vb-chatbot__stream-dot"></span>
+                  <span class="vb-chatbot__stream-dot"></span>
+                </span>
+              }
             }
-          </ul>
-        }
-      </article>
+          </div>
+          @if (message.sources?.length) {
+            <ul class="vb-chatbot__sources" [attr.aria-label]="sourcesAriaLabel()">
+              @for (src of message.sources; track src.href + src.pageTitle + src.chunkType + $index) {
+                <li class="vb-chatbot__source-item">
+                  <vb-chip class="vb-chatbot__source-chip" [attr.title]="sourceChipTitle(src)">
+                    <span class="vb-chatbot__source-heading">
+                      <a
+                        class="vb-chatbot__source-anchor"
+                        [href]="src.href"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >{{ src.pageTitle }}</a
+                      >
+                    </span>
+                    <span class="vb-chatbot__source-type">{{ src.chunkType }}</span>
+                  </vb-chip>
+                </li>
+              }
+            </ul>
+          }
+          @if (showDislikeFeedbackForm(message, idx)) {
+            <div class="vb-chatbot__feedback-note">
+              <label class="vb-chatbot__feedback-note-label" [for]="dislikeCommentInputId(message, idx)">
+                {{ dislikeFeedbackLabel() }}
+              </label>
+              <textarea
+                #dislikeNote
+                class="vb-chatbot__feedback-note-input"
+                [id]="dislikeCommentInputId(message, idx)"
+                [value]="message.feedbackComment ?? ''"
+                [placeholder]="dislikeFeedbackPlaceholder()"
+                rows="2"
+                (blur)="commitDislikeComment(message, idx, dislikeNote.value)"
+                (keydown)="onDislikeCommentKeydown($event, message, idx)"
+              ></textarea>
+              <div class="vb-chatbot__feedback-note-actions">
+                <button
+                  type="button"
+                  class="vb-chatbot__feedback-note-submit"
+                  (click)="commitDislikeComment(message, idx, dislikeNote.value)"
+                >
+                  {{ dislikeFeedbackSubmitLabel() }}
+                </button>
+              </div>
+            </div>
+          }
+        </article>
+      } @else {
+        <article
+          class="vb-chatbot__message"
+          [class.vb-chatbot__message--user]="message.role === 'user'"
+          [class.vb-chatbot__message--system]="message.role === 'system'"
+          [class.vb-chatbot__message--copyable]="canCopyMessage(message)"
+        >
+          @if (canCopyMessage(message)) {
+            <button
+              type="button"
+              class="vb-chatbot__tool-btn vb-chatbot__tool-btn--copy vb-chatbot__tool-btn--overlay"
+              [class.vb-chatbot__tool-btn--copied]="isMessageCopied(message, idx)"
+              [attr.aria-label]="copyAriaLabel(message, idx)"
+              (click)="copyMessage(message, idx)"
+            >
+              <i
+                [class]="isMessageCopied(message, idx) ? 'bx bx-check' : 'bx bx-copy'"
+                aria-hidden="true"
+              ></i>
+            </button>
+          }
+          <div class="vb-chatbot__message-text">{{ message.text }}</div>
+        </article>
+      }
     }
     @if (loading()) {
       <div class="vb-chatbot__typing">
         <vb-text-loader [text]="loadingText()" [animateText]="false" [showDots]="true" />
       </div>
+    }
+    </div>
+    @if (showScrollToBottom()) {
+      <button
+        type="button"
+        class="vb-chatbot__scroll-latest"
+        [attr.aria-label]="scrollToBottomAriaLabel()"
+        (click)="scrollToBottom(true)"
+      >
+        <i class="bx bx-down-arrow-alt" aria-hidden="true"></i>
+      </button>
     }
   </div>
 

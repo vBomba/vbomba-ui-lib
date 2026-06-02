@@ -1,0 +1,15 @@
+<section class="vb-sticky-tabs-section">
+  <div
+    class="vb-sticky-tabs-section__tabs"
+    [class.vb-sticky-tabs-section__tabs--sticky]="sticky()"
+    [style.top.px]="stickyTop()"
+    [class.vb-sticky-tabs-section__tabs--bg-muted]="stickyTabsBg() === 'muted'"
+  >
+    <vb-tabs [tabs]="tabs()" [stickyTabsBg]="stickyTabsBg()" [(value)]="value" />
+  </div>
+
+  <div class="vb-sticky-tabs-section__body">
+    <ng-content />
+  </div>
+</section>
+

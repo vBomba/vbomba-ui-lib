@@ -1,14 +1,38 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  SecurityContext,
+  booleanAttribute,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  untracked,
+  viewChild,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { VbButtonComponent } from '../button/vb-button.component';
 import { VbChipComponent } from '../chip/vb-chip.component';
 import { VbTextLoaderComponent } from '../text-loader/vb-text-loader.component';
+import { vbChatbotMarkdownToHtml } from './vb-chatbot-markdown';
 import {
   VbChatbotHeaderStatus,
   VbChatbotLatencyTier,
   VbChatbotMessage,
+  VbChatbotMessageFeedback,
+  VbChatbotMessageFeedbackEvent,
   VbChatbotSource,
 } from './vb-chatbot-message';
+
+/** Emitted after a message body was copied to the clipboard. */
+export interface VbChatbotMessageCopyEvent {
+  messageId: string;
+  messageIndex: number;
+}
 
 @Component({
   selector: 'vb-chatbot',
@@ -19,6 +43,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VbChatbotComponent {
+  private readonly sanitizer = inject(DomSanitizer);
+
   readonly title = input('Assistant');
   readonly placeholder = input('Write a message...');
   readonly loading = input(false);
@@ -55,11 +81,43 @@ export class VbChatbotComponent {
    * Set `false` for the tinted panel only (no pattern).
    */
   readonly textureGrid = input(true, { transform: booleanAttribute });
+  /** Show like/dislike controls on completed assistant replies. */
+  readonly messageFeedbackEnabled = input(true, { transform: booleanAttribute });
+  readonly likeAriaLabel = input('Mark reply as helpful');
+  readonly dislikeAriaLabel = input('Mark reply as not helpful');
+  readonly messageFeedbackPrompt = input('Was this helpful?');
+  readonly messageFeedbackHelpfulLabel = input('Helpful');
+  readonly messageFeedbackNotHelpfulLabel = input('Not helpful');
+  /** Accessible name for the per-message feedback button group. */
+  readonly messageFeedbackAriaLabel = input('Rate this reply');
+  /** Show an optional text field after the user selects dislike. */
+  readonly dislikeFeedbackTextEnabled = input(true, { transform: booleanAttribute });
+  readonly dislikeFeedbackLabel = input('What went wrong?');
+  readonly dislikeFeedbackPlaceholder = input('Optional — how can we improve this reply?');
+  readonly dislikeFeedbackSubmitLabel = input('Send feedback');
+  /** Render completed assistant replies as Markdown (plain text while `streaming`). */
+  readonly markdownEnabled = input(true, { transform: booleanAttribute });
+  /** Scroll to the latest message when content grows, unless the user scrolled up. */
+  readonly autoScrollEnabled = input(true, { transform: booleanAttribute });
+  readonly scrollToBottomAriaLabel = input('Scroll to latest messages');
+  readonly copyMessageAriaLabel = input('Copy message');
+  readonly copiedMessageAriaLabel = input('Copied');
 
   readonly send = output<string>();
   readonly clearHistory = output<void>();
+  readonly messageFeedback = output<VbChatbotMessageFeedbackEvent>();
+  readonly messageCopy = output<VbChatbotMessageCopyEvent>();
+
+  private readonly messagesViewport = viewChild<ElementRef<HTMLElement>>('messagesViewport');
 
   protected readonly draft = signal('');
+  protected readonly stickToBottom = signal(true);
+  protected readonly copiedMessageKey = signal<string | null>(null);
+
+  protected readonly showScrollToBottom = computed(
+    () => this.autoScrollEnabled() && !this.stickToBottom(),
+  );
+
   protected readonly composerDisabled = computed(
     () =>
       this.loading() ||
@@ -73,6 +131,19 @@ export class VbChatbotComponent {
       !this.loading() &&
       !this.messages().some((m) => m.role === 'assistant' && m.streaming),
   );
+
+  constructor() {
+    effect(() => {
+      this.messages();
+      this.loading();
+      if (!this.autoScrollEnabled() || !this.stickToBottom()) {
+        return;
+      }
+      untracked(() => {
+        queueMicrotask(() => this.scrollToBottom(false));
+      });
+    });
+  }
 
   /** Mean of `responseLatencySeconds` over assistant messages that define it. */
   protected readonly averageAssistantLatencySeconds = computed(() => {
@@ -130,6 +201,28 @@ export class VbChatbotComponent {
       return;
     }
     this.clearHistory.emit();
+  }
+
+  protected onMessagesScroll(): void {
+    const el = this.messagesViewport()?.nativeElement;
+    if (!el) {
+      return;
+    }
+    const thresholdPx = 56;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    this.stickToBottom.set(distanceFromBottom <= thresholdPx);
+  }
+
+  protected scrollToBottom(smooth: boolean): void {
+    const el = this.messagesViewport()?.nativeElement;
+    if (!el) {
+      return;
+    }
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: smooth ? 'smooth' : 'auto',
+    });
+    this.stickToBottom.set(true);
   }
 
   protected formatLatencySeconds(value: number): string {
@@ -273,6 +366,173 @@ export class VbChatbotComponent {
         return 'Similar to previous reply';
       default:
         return 'No previous reply to compare';
+    }
+  }
+
+  /** True when a user message appears earlier in the thread (not an opening assistant greeting). */
+  protected hasPriorUserMessageBefore(index: number): boolean {
+    for (let i = 0; i < index; i++) {
+      if (this.messages()[i]?.role === 'user') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  protected isOpeningAssistantMessage(index: number): boolean {
+    const message = this.messages()[index];
+    return message?.role === 'assistant' && !this.hasPriorUserMessageBefore(index);
+  }
+
+  protected showMessageFeedback(message: VbChatbotMessage, index: number): boolean {
+    return (
+      this.messageFeedbackEnabled() &&
+      message.role === 'assistant' &&
+      !message.streaming &&
+      this.hasPriorUserMessageBefore(index)
+    );
+  }
+
+  protected hasLatencyBar(message: VbChatbotMessage): boolean {
+    return (
+      message.responseLatencySeconds != null &&
+      this.averageAssistantLatencySeconds() != null &&
+      Number.isFinite(message.responseLatencySeconds)
+    );
+  }
+
+  protected canCopyMessage(message: VbChatbotMessage): boolean {
+    return message.text.trim().length > 0 && !message.streaming;
+  }
+
+  protected showMessageHeader(message: VbChatbotMessage, index: number): boolean {
+    if (message.role !== 'assistant' || this.isOpeningAssistantMessage(index)) {
+      return false;
+    }
+    return (
+      this.hasLatencyBar(message) ||
+      this.showMessageFeedback(message, index) ||
+      this.canCopyMessage(message)
+    );
+  }
+
+  protected useMarkdownFor(message: VbChatbotMessage): boolean {
+    return (
+      this.markdownEnabled() &&
+      message.role === 'assistant' &&
+      !message.streaming &&
+      message.text.trim().length > 0
+    );
+  }
+
+  protected markdownHtml(text: string): string {
+    const raw = vbChatbotMarkdownToHtml(text);
+    return this.sanitizer.sanitize(SecurityContext.HTML, raw) ?? '';
+  }
+
+  protected feedbackIcon(choice: VbChatbotMessageFeedback, active: boolean): string {
+    if (choice === 'like') {
+      return active ? 'bx bxs-like' : 'bx bx-like';
+    }
+    return active ? 'bx bxs-dislike' : 'bx bx-dislike';
+  }
+
+  protected messageKey(message: VbChatbotMessage, index: number): string {
+    return message.id ?? String(index);
+  }
+
+  protected isMessageCopied(message: VbChatbotMessage, index: number): boolean {
+    return this.copiedMessageKey() === this.messageKey(message, index);
+  }
+
+  protected copyAriaLabel(message: VbChatbotMessage, index: number): string {
+    return this.isMessageCopied(message, index)
+      ? this.copiedMessageAriaLabel()
+      : this.copyMessageAriaLabel();
+  }
+
+  protected async copyMessage(message: VbChatbotMessage, index: number): Promise<void> {
+    if (!this.canCopyMessage(message)) {
+      return;
+    }
+    const key = this.messageKey(message, index);
+    try {
+      await navigator.clipboard.writeText(message.text);
+      this.copiedMessageKey.set(key);
+      this.messageCopy.emit({ messageId: key, messageIndex: index });
+      window.setTimeout(() => {
+        if (this.copiedMessageKey() === key) {
+          this.copiedMessageKey.set(null);
+        }
+      }, 1600);
+    } catch {
+      /* clipboard denied — host may offer a fallback */
+    }
+  }
+
+  protected showDislikeFeedbackForm(message: VbChatbotMessage, index: number): boolean {
+    return (
+      this.dislikeFeedbackTextEnabled() &&
+      message.feedback === 'dislike' &&
+      this.showMessageFeedback(message, index)
+    );
+  }
+
+  protected dislikeCommentInputId(message: VbChatbotMessage, index: number): string {
+    return `vb-chatbot-dislike-${this.messageKey(message, index)}`;
+  }
+
+  protected onMessageFeedbackClick(
+    message: VbChatbotMessage,
+    index: number,
+    choice: VbChatbotMessageFeedback,
+  ): void {
+    const current = message.feedback ?? null;
+    const feedback = current === choice ? null : choice;
+    let feedbackComment: string | null = null;
+    if (feedback === 'dislike') {
+      feedbackComment =
+        current === 'dislike' ? (message.feedbackComment?.trim() || null) : null;
+    }
+    this.messageFeedback.emit({
+      messageId: this.messageKey(message, index),
+      messageIndex: index,
+      feedback,
+      feedbackComment,
+    });
+  }
+
+  protected commitDislikeComment(
+    message: VbChatbotMessage,
+    index: number,
+    rawValue: string,
+  ): void {
+    if (message.feedback !== 'dislike') {
+      return;
+    }
+    const feedbackComment = rawValue.trim() || null;
+    const prev = message.feedbackComment?.trim() || null;
+    if (feedbackComment === prev) {
+      return;
+    }
+    this.messageFeedback.emit({
+      messageId: this.messageKey(message, index),
+      messageIndex: index,
+      feedback: 'dislike',
+      feedbackComment,
+    });
+  }
+
+  protected onDislikeCommentKeydown(
+    event: KeyboardEvent,
+    message: VbChatbotMessage,
+    index: number,
+  ): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      const el = event.target as HTMLTextAreaElement;
+      this.commitDislikeComment(message, index, el.value);
+      el.blur();
     }
   }
 }

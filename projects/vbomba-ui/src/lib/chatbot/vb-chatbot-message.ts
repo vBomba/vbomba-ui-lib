@@ -1,5 +1,21 @@
 export type VbChatRole = 'user' | 'assistant' | 'system';
 
+/** Thumbs up / down on an assistant reply (`null` = cleared). */
+export type VbChatbotMessageFeedback = 'like' | 'dislike';
+
+/** Emitted when the user rates an assistant message. */
+export interface VbChatbotMessageFeedbackEvent {
+  /** `message.id` when set, otherwise the message index as a string. */
+  messageId: string;
+  messageIndex: number;
+  feedback: VbChatbotMessageFeedback | null;
+  /**
+   * Optional note when `feedback` is `dislike` (omit or `null` when cleared / liked).
+   * Host should persist on {@link VbChatbotMessage.feedbackComment}.
+   */
+  feedbackComment?: string | null;
+}
+
 /** CSS tier for styling latency bars (`vb-chatbot__latency-bar--*`). */
 export type VbChatbotLatencyTier = 'good' | 'normal' | 'acceptable' | 'bad';
 
@@ -32,4 +48,8 @@ export interface VbChatbotMessage {
    * and optional composer lock until cleared.
    */
   streaming?: boolean;
+  /** Assistant only: user's like/dislike on this reply. Omit or `null` when unset. */
+  feedback?: VbChatbotMessageFeedback | null;
+  /** Assistant only: optional text when `feedback` is `dislike`. */
+  feedbackComment?: string | null;
 }

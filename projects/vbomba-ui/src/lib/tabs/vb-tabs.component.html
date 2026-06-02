@@ -1,0 +1,17 @@
+<div
+  class="vb-tabs"
+  role="tablist"
+  [attr.aria-label]="ariaLabel() || null"
+>
+  @for (tab of tabs(); track tab.value) {
+    <vb-tab
+      [label]="tab.label"
+      [value]="tab.value"
+      [iconClass]="tab.iconClass ?? ''"
+      [active]="resolveActive(tab)"
+      [disabled]="disabled() || !!tab.disabled"
+      (select)="onSelect($event)"
+    />
+  }
+</div>
+

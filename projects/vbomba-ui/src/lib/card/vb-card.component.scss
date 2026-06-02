@@ -6,4 +6,63 @@
   background: var(--vb-color-surface-default);
   border: 1px solid var(--vb-color-border-default);
   box-shadow: var(--vb-color-effect-shadow-card);
+  min-width: 0;
+}
+
+:host.vb-card-host--tabbed {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: visible;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.vb-card__tabs {
+  flex: 0 0 auto;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  z-index: 2;
+}
+
+.vb-card__tabs--sticky {
+  position: sticky;
+  top: 0;
+}
+
+.vb-card__tabs--bg-muted {
+  background: transparent;
+}
+
+.vb-card__tabs ::ng-deep .vb-tabs {
+  gap: 0;
+  align-items: flex-end;
+}
+
+.vb-card__tabs ::ng-deep button.vb-tab {
+  border-radius: 0 !important;
+  min-height: unset !important;
+}
+
+.vb-card__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0.85rem 1.25rem 1.5rem;
+  background: var(--vb-color-surface-default);
+  border: 1px solid var(--vb-color-border-default);
+  border-top: none;
+  border-radius: 0 var(--vb-radius-md) var(--vb-radius-md) var(--vb-radius-md);
+  box-shadow: var(--vb-color-effect-shadow-card);
+  position: relative;
+  z-index: 1;
+}
+
+.vb-card__body--scrollable {
+  overflow: auto;
+  overscroll-behavior: contain;
 }

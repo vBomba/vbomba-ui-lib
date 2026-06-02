@@ -16,5 +16,5 @@
       "output": "."
     }
   ],
-  "allowedNonPeerDependencies": ["@fontsource/lexend"]
+  "allowedNonPeerDependencies": ["@fontsource/lexend", "marked"]
 }

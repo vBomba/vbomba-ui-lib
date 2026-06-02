@@ -34,3 +34,6 @@ export * from './lib/shell/vb-shell-main-loader';
 export * from './lib/shell/vb-shell-main-loader.service';
 export * from './lib/shell/vb-shell-user-info';
 export * from './lib/shell/vb-app-shell.component';
+export * from './lib/tabs/vb-tab.component';
+export * from './lib/tabs/vb-tabs.component';
+export * from './lib/tabs/vb-sticky-tabs-section.component';

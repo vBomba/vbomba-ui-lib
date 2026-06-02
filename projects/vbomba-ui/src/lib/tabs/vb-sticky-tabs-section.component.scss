@@ -1,0 +1,31 @@
+.vb-sticky-tabs-section {
+  border: 1px solid var(--vb-color-border-default);
+  border-radius: var(--vb-radius-md);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.vb-sticky-tabs-section__tabs {
+  padding: 0.55rem 0.65rem;
+  background: var(--vb-color-surface-default);
+  border-bottom: 1px solid var(--vb-color-border-default);
+  border-radius: calc(var(--vb-radius-md) - 1px) calc(var(--vb-radius-md) - 1px) 0 0;
+  z-index: 10;
+}
+
+.vb-sticky-tabs-section__tabs--sticky {
+  position: sticky;
+}
+
+.vb-sticky-tabs-section__tabs--bg-muted {
+  background: var(--vb-color-surface-muted);
+}
+
+.vb-sticky-tabs-section__body {
+  padding: 0.85rem 0.9rem;
+  min-height: 0;
+  border-radius: 0 0 calc(var(--vb-radius-md) - 1px) calc(var(--vb-radius-md) - 1px);
+}
+

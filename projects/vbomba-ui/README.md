@@ -71,6 +71,7 @@ If you use `VbAppShellComponent` icons, `VbThemeToggleComponent`, `VbButtonCompo
 | Forms | `VbInputComponent`, `VbTextareaComponent`, `VbSelectComponent`, `VbCheckboxComponent`, `VbToggleComponent` |
 | Display & feedback | `VbChipComponent`, `VbConnectionIndicatorComponent` (`VbConnectionStatus`), `VbLoaderComponent`, `VbPopupComponent` |
 | Data | `VbSimpleTableComponent`, `VbPaginatorComponent` |
+| Navigation | `VbTabComponent`, `VbTabsComponent`, `VbStickyTabsSectionComponent` (`VbTabItem`) |
 | Conversational UI | `VbChatbotComponent`, `VbChatbotMessage`, `VbChatbotHeaderStatus` |
 
 All public exports live in `public-api.ts`.
@@ -230,8 +231,18 @@ export class HttpLoaderBridge {
 - `streaming?: boolean` - marks a message currently receiving tokens/chunks.
 - `responseLatencySeconds?: number` - used for average + last-reply latency indicators.
 - `sources?: VbChatbotSource[]` - compact source chips (title link + chunk type).
+- `feedback?: 'like' | 'dislike' | null` - thumbs up/down on a completed assistant reply.
+- `feedbackComment?: string | null` - optional note when `feedback` is `dislike`.
 
 Use `chatStatus` to show a status pill in the header (`idle`, `streaming`, `thinking`, `busy`, `error`, `offline`).
+
+When `streaming` is false, completed assistant replies render as **Markdown** (`markdownEnabled`, default `true`). Plain text is shown while tokens stream in.
+
+**Copy** — header copy icon on assistant messages; hover copy on user bubbles. Emits `(messageCopy)` after a successful clipboard write.
+
+**Scroll** — `autoScrollEnabled` (default `true`) keeps the viewport pinned to the latest message unless the user scrolls up; a floating control returns to the bottom.
+
+Like/dislike icons appear in the message header row — to the right of the latency bar when present. After dislike, an optional comment field is shown (`dislikeFeedbackTextEnabled`, labels via `dislikeFeedbackLabel` / `dislikeFeedbackPlaceholder`). Handle `(messageFeedback)` to update `feedback` and `feedbackComment`; commit on blur, Enter, or **Send feedback**.
 
 ```ts
 import { Component, signal } from '@angular/core';

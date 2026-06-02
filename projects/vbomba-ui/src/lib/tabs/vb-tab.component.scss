@@ -1,0 +1,93 @@
+.vb-tab {
+  font: inherit;
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--vb-color-text-muted);
+  padding: 0.38rem 0.7rem;
+  border-radius: var(--vb-radius-control);
+  cursor: pointer;
+  line-height: 1.2;
+  font-size: 0.74rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  user-select: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.vb-tab__icon {
+  font-style: normal;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.vb-tab--active {
+  color: var(--vb-color-text-primary);
+  background: color-mix(in srgb, var(--vb-color-surface-muted) 50%, transparent);
+}
+
+.vb-tab:not(.vb-tab--disabled):hover {
+  color: var(--vb-color-text-primary);
+  background: color-mix(in srgb, var(--vb-color-surface-muted) 35%, transparent);
+}
+
+.vb-tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--vb-color-effect-ring-focus);
+}
+
+.vb-tab--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Rectangular folder tabs on vb-card — overlap the card top border. */
+:host-context(.vb-card__tabs) .vb-tab {
+  box-sizing: border-box;
+  min-height: unset;
+  padding: 0.28rem 0.62rem 0.34rem;
+  border-radius: var(--vb-radius-input) var(--vb-radius-input) 0 0 !important;
+  border-top-left-radius: var(--vb-radius-input) !important;
+  border-top-right-radius: var(--vb-radius-input) !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  background: color-mix(in srgb, var(--vb-color-surface-muted) 65%, transparent);
+  border: 1px solid var(--vb-color-border-default);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--vb-color-border-default);
+  color: var(--vb-color-text-muted);
+  position: relative;
+  transition: color 120ms ease;
+}
+
+:host-context(.vb-card__tabs):host:not(:first-child) .vb-tab {
+  margin-left: -1px;
+}
+
+:host-context(.vb-card__tabs) .vb-tab:not(.vb-tab--disabled):hover {
+  background: color-mix(in srgb, var(--vb-color-surface-muted) 82%, transparent);
+  color: var(--vb-color-text-primary);
+  z-index: 1;
+}
+
+:host-context(.vb-card__tabs) .vb-tab--active {
+  color: var(--vb-color-text-primary);
+  font-weight: 600;
+  background: var(--vb-color-surface-default);
+  border-bottom-color: var(--vb-color-surface-default);
+  z-index: 2;
+}
+
+:host-context(.vb-card__tabs) .vb-tab:focus-visible {
+  box-shadow:
+    inset 0 0 0 2px var(--vb-color-effect-ring-focus),
+    0 0 0 1px var(--vb-color-effect-ring-focus);
+}

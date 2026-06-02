@@ -16,13 +16,16 @@ import {
   VbSelectComponent,
   VbSliderComponent,
   VbSimpleTableComponent,
+  VbTabsComponent,
   VbTextLoaderComponent,
   VbTextareaComponent,
   VbToastStackComponent,
   VbToastStackService,
   VbToggleComponent,
+  type VbTabItem,
   type VbChatbotHeaderStatus,
   type VbChatbotMessage,
+  type VbChatbotMessageFeedbackEvent,
   type VbConnectionStatus,
   type VbRadioOption,
   type VbSelectOption,
@@ -49,6 +52,7 @@ import {
     VbSelectComponent,
     VbSliderComponent,
     VbSimpleTableComponent,
+    VbTabsComponent,
     VbTextLoaderComponent,
     VbTextareaComponent,
     VbToastStackComponent,
@@ -77,6 +81,15 @@ export class ShowcaseComponent {
   protected readonly sliderExponential = model(120);
 
   protected readonly demoTags = signal<string[]>(['Angular', 'Material', 'Standalone']);
+  protected readonly demoTabItems = signal<VbTabItem[]>([
+    { value: 'overview', label: 'Overview', iconClass: 'bx bx-grid-alt' },
+    { value: 'metrics', label: 'Metrics', iconClass: 'bx bx-line-chart' },
+    { value: 'settings', label: 'Settings', iconClass: 'bx bx-cog' },
+    { value: 'archived', label: 'Archived', iconClass: 'bx bx-archive', disabled: true },
+  ]);
+  protected readonly demoTabsValue = model('overview');
+  protected readonly demoCardTabsValue = model('overview');
+  protected readonly demoStickyTabsEnabled = model(true);
   protected readonly demoBillingPlan = model<string | null>('monthly');
   protected readonly demoBillingRadioOptions = signal<VbRadioOption[]>([
     { value: 'monthly', label: 'Monthly' },
@@ -99,8 +112,9 @@ export class ShowcaseComponent {
   });
   protected readonly chatbotMessages = signal<VbChatbotMessage[]>([
     {
+      id: 'welcome',
       role: 'assistant',
-      text: 'Hi! Ask me anything about your deployment.',
+      text: 'Hi! Ask me anything about your deployment.\n\nTry **markdown** replies, `copy`, and scroll when the thread grows.',
       sources: [
         {
           href: 'https://angular.dev/overview',
@@ -199,7 +213,17 @@ export class ShowcaseComponent {
 
     const replyId = `stream-${Date.now()}`;
     const startedAt = performance.now();
-    const fullText = `Received: "${message}". Long replies can stream character by character — keep streaming: true on the assistant bubble until the final chunk arrives.`;
+    const fullText = `Received: **${message}**
+
+Long replies stream character by character. When \`streaming: false\`, markdown works:
+
+- bullet lists
+- \`inline code\`
+- [Angular docs](https://angular.dev)
+
+\`\`\`ts
+provideRouter(routes);
+\`\`\``;
     let charIndex = 0;
 
     const finishReply = () => {
@@ -263,5 +287,22 @@ export class ShowcaseComponent {
     this.chatbotMessages.set([]);
     this.chatbotLoading.set(false);
     this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
+  }
+
+  protected onChatbotMessageFeedback(event: VbChatbotMessageFeedbackEvent): void {
+    this.chatbotMessages.update((items) =>
+      items.map((m, i) => {
+        const key = m.id ?? String(i);
+        if (key !== event.messageId) {
+          return m;
+        }
+        return {
+          ...m,
+          feedback: event.feedback,
+          feedbackComment:
+            event.feedback === 'dislike' ? (event.feedbackComment ?? null) : null,
+        };
+      }),
+    );
   }
 }
