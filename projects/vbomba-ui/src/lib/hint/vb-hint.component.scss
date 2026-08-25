@@ -1,0 +1,133 @@
+:host {
+  display: block;
+}
+
+.vb-hint {
+  box-sizing: border-box;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--vb-radius-control);
+  border: 1px solid
+    color-mix(in srgb, var(--vb-color-action-primary) 36%, var(--vb-color-border-default));
+  background: color-mix(in srgb, var(--vb-color-action-primary) 9%, var(--vb-color-surface-muted));
+  color: var(--vb-color-text-primary);
+}
+
+.vb-hint__header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  min-height: 0;
+  line-height: 1.2;
+}
+
+.vb-hint__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--vb-hint-icon-color, var(--vb-color-action-primary-strong));
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.vb-hint__icon--primary {
+  --vb-hint-icon-color: var(--vb-color-action-primary-strong);
+}
+
+.vb-hint__icon--muted {
+  --vb-hint-icon-color: var(--vb-color-text-muted);
+}
+
+.vb-hint__icon--success {
+  --vb-hint-icon-color: var(--vb-palette-green-600);
+}
+
+.vb-hint__icon--warn {
+  --vb-hint-icon-color: var(--vb-palette-amber-500);
+}
+
+.vb-hint__icon--error {
+  --vb-hint-icon-color: var(--vb-color-action-destructive);
+}
+
+.vb-hint__icon i {
+  font-style: normal;
+  line-height: 1;
+}
+
+.vb-hint__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  color: var(--vb-color-text-primary);
+}
+
+.vb-hint__toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: calc(var(--vb-radius-input) - 2px);
+  background: transparent;
+  color: var(--vb-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.vb-hint__toggle-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.vb-hint__toggle:hover {
+  background: color-mix(in srgb, var(--vb-color-action-primary) 12%, transparent);
+  color: var(--vb-color-action-primary-strong);
+}
+
+.vb-hint__toggle:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--vb-color-action-primary),
+    0 0 0 4px var(--vb-color-effect-ring-focus);
+}
+
+.vb-hint__body {
+  margin-top: 0.2rem;
+  padding-left: calc(1.25rem + 0.4rem);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--vb-color-text-muted);
+}
+
+.vb-hint__body[hidden] {
+  display: none;
+}
+
+.vb-hint__description {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.vb-hint__content:empty {
+  display: none;
+}
+
+.vb-hint__content:not(:empty) {
+  margin-top: 0.2rem;
+}
+
+.vb-hint__body:not(:has(.vb-hint__description)) .vb-hint__content:not(:empty) {
+  margin-top: 0;
+}

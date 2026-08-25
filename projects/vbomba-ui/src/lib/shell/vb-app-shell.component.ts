@@ -4,8 +4,10 @@ import {
   Component,
   computed,
   effect,
+  HostListener,
   inject,
   signal,
+  untracked,
   ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -31,6 +33,30 @@ import { VbUserInfoComponent } from '../user-info/vb-user-info.component';
 import { VbShellUserInfo } from './vb-shell-user-info';
 import { VbShellMainLoader } from './vb-shell-main-loader';
 import { VbShellMainLoaderService } from './vb-shell-main-loader.service';
+
+interface VbShellNavRow {
+  key: string;
+  link: VbShellNavLink;
+  depth: number;
+  hasChildren: boolean;
+  expanded: boolean;
+  childActive: boolean;
+}
+
+interface VbShellNavFlyoutState {
+  key: string;
+  label: string;
+  children: VbShellNavLink[];
+  top: number;
+  left: number;
+}
+
+const IS_ACTIVE_OPTS = {
+  paths: 'exact' as const,
+  queryParams: 'ignored' as const,
+  fragment: 'ignored' as const,
+  matrixParams: 'ignored' as const,
+};
 
 /**
  * App chrome: top header (menu toggle, title, theme) + animated sidenav + main area with route enter animation.
@@ -120,6 +146,44 @@ export class VbAppShellComponent {
 
   protected readonly sidenavOpened = signal(!this.isHandset());
   protected readonly sidenavCollapsed = signal(false);
+  protected readonly expandedNavKeys = signal<ReadonlySet<string>>(new Set());
+  protected readonly navFlyout = signal<VbShellNavFlyoutState | null>(null);
+
+  /** Icon-rail mode: desktop sidenav collapsed (not handset overlay). */
+  protected readonly railCollapsed = computed(
+    () => !this.isHandset() && this.sidenavCollapsed(),
+  );
+
+  protected readonly navRows = computed<VbShellNavRow[]>(() => {
+    this.mainRouteState();
+    const expanded = this.expandedNavKeys();
+    const hideChildren = this.railCollapsed();
+    const rows: VbShellNavRow[] = [];
+
+    const walk = (links: VbShellNavLink[], depth: number, prefix: string): void => {
+      links.forEach((link, index) => {
+        const key = this.navKey(link, `${prefix}${index}`);
+        const hasChildren = !!link.children?.length;
+        const childActive = hasChildren ? this.branchContainsActive(link) : false;
+        const isExpanded = expanded.has(key);
+        rows.push({
+          key,
+          link,
+          depth,
+          hasChildren,
+          expanded: isExpanded,
+          childActive,
+        });
+        // Collapsed rail uses a flyout instead of nesting child rows in the list.
+        if (hasChildren && isExpanded && !hideChildren) {
+          walk(link.children!, depth + 1, `${prefix}${index}.`);
+        }
+      });
+    };
+
+    walk(this.navLinks(), 0, '');
+    return rows;
+  });
 
   /** Boxicons classes for the drawer toggle. */
   protected readonly menuIconClass = computed(() => {
@@ -142,11 +206,39 @@ export class VbAppShellComponent {
       const mobile = this.isHandset();
       this.sidenavOpened.set(!mobile);
       this.sidenavCollapsed.set(false);
+      untracked(() => this.closeNavFlyout());
       queueMicrotask(() => this.flushDrawerMargins());
+    });
+
+    effect(() => {
+      this.mainRouteState();
+      const links = this.navLinks();
+      untracked(() => this.expandActiveAncestors(links));
     });
   }
 
+  @HostListener('document:click', ['$event'])
+  protected onDocumentClick(event: MouseEvent): void {
+    if (!this.navFlyout()) {
+      return;
+    }
+    const target = event.target as Element | null;
+    if (
+      target?.closest('.vb-app-shell__nav-flyout') ||
+      target?.closest('.vb-app-shell__nav-group')
+    ) {
+      return;
+    }
+    this.closeNavFlyout();
+  }
+
+  @HostListener('document:keydown.escape')
+  protected onDocumentEscape(): void {
+    this.closeNavFlyout();
+  }
+
   protected toggleSidenav(): void {
+    this.closeNavFlyout();
     if (this.isHandset()) {
       this.sidenavOpened.set(!this.sidenavOpened());
       this.flushDrawerMargins();
@@ -162,9 +254,129 @@ export class VbAppShellComponent {
   }
 
   protected onNavigate(): void {
+    this.closeNavFlyout();
     if (this.isHandset()) {
       this.sidenavOpened.set(false);
     }
+  }
+
+  protected isNavGroupExpanded(row: VbShellNavRow): boolean {
+    if (this.railCollapsed()) {
+      return this.navFlyout()?.key === row.key;
+    }
+    return row.expanded;
+  }
+
+  protected toggleNavGroup(row: VbShellNavRow, event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.railCollapsed()) {
+      const open = this.navFlyout();
+      if (open?.key === row.key) {
+        this.closeNavFlyout();
+        return;
+      }
+      const anchor = event.currentTarget as HTMLElement | null;
+      // Defer past the same-tick document:click that would otherwise close immediately.
+      queueMicrotask(() => this.openNavFlyout(row, anchor));
+      return;
+    }
+
+    this.closeNavFlyout();
+    this.expandedNavKeys.update((keys) => {
+      const next = new Set(keys);
+      if (next.has(row.key)) {
+        next.delete(row.key);
+      } else {
+        next.add(row.key);
+      }
+      return next;
+    });
+  }
+
+  protected onNavFlyoutClick(event: MouseEvent): void {
+    event.stopPropagation();
+  }
+
+  private openNavFlyout(row: VbShellNavRow, anchor: HTMLElement | null): void {
+    const children = row.link.children ?? [];
+    if (!children.length) {
+      this.closeNavFlyout();
+      return;
+    }
+
+    let top = 8;
+    let left = 72;
+    if (anchor) {
+      const rect = anchor.getBoundingClientRect();
+      const estimatedHeight = children.length * 40 + 16;
+      top = Math.min(rect.top, Math.max(8, window.innerHeight - estimatedHeight - 8));
+      left = rect.right + 8;
+    }
+
+    this.navFlyout.set({
+      key: row.key,
+      label: row.link.label,
+      children,
+      top,
+      left,
+    });
+  }
+
+  private closeNavFlyout(): void {
+    if (this.navFlyout()) {
+      this.navFlyout.set(null);
+    }
+  }
+
+  private navKey(link: VbShellNavLink, indexPath: string): string {
+    return link.path ?? `group:${indexPath}:${link.label}`;
+  }
+
+  private leafIsActive(link: VbShellNavLink): boolean {
+    if (!link.path) {
+      return false;
+    }
+    const tree = this.router.createUrlTree([link.path], { relativeTo: this.route });
+    return this.router.isActive(tree, IS_ACTIVE_OPTS);
+  }
+
+  private branchContainsActive(link: VbShellNavLink): boolean {
+    return (link.children ?? []).some((child) =>
+      child.children?.length ? this.branchContainsActive(child) : this.leafIsActive(child),
+    );
+  }
+
+  private expandActiveAncestors(links: VbShellNavLink[]): void {
+    const keysToAdd: string[] = [];
+
+    const walk = (nodes: VbShellNavLink[], prefix: string): boolean => {
+      let anyActive = false;
+      nodes.forEach((link, index) => {
+        const key = this.navKey(link, `${prefix}${index}`);
+        const childActive = link.children?.length
+          ? walk(link.children, `${prefix}${index}.`)
+          : this.leafIsActive(link);
+        if (childActive && link.children?.length) {
+          keysToAdd.push(key);
+        }
+        anyActive = anyActive || childActive;
+      });
+      return anyActive;
+    };
+
+    walk(links, '');
+    if (!keysToAdd.length) {
+      return;
+    }
+    this.expandedNavKeys.update((keys) => {
+      const next = new Set(keys);
+      for (const key of keysToAdd) {
+        next.add(key);
+      }
+      return next;
+    });
   }
 
   private flushDrawerMargins(): void {

@@ -273,6 +273,47 @@
     </div>
   </vb-card>
 
+  <vb-card class="showcase__section" aria-labelledby="sec-hints">
+    <h2 id="sec-hints">Hints</h2>
+    <p class="showcase__hint">
+      <code>vb-hint</code> — Boxicons tip icon (<code>iconClass</code>, default
+      <code>bx bx-info-circle</code>; color via <code>iconTone</code>:
+      <code>primary</code>, <code>muted</code>, <code>success</code>, <code>warn</code>,
+      <code>error</code>), short <code>title</code>, and a long body via
+      <code>description</code> and/or projected content. Toggle with
+      <code>[(expanded)]</code>; set <code>[expandable]="false"</code> to keep the body open.
+    </p>
+    <div class="showcase__controls showcase__controls--stack">
+      <vb-hint
+        title="About color tokens"
+        description="Use semantic --vb-color-* variables in component styles. Palette primitives (--vb-palette-*) stay fixed; light/dark themes remap semantics on body.app-light-theme / body.app-dark-theme. Prefer extending vb-color-tokens.scss over raw hex values when a new role is needed."
+        [(expanded)]="demoHintExpanded"
+      />
+      <vb-hint
+        title="Deployment checklist"
+        iconClass="bx bx-bulb"
+        iconTone="warn"
+        [(expanded)]="demoHintProjectedExpanded"
+      >
+        Confirm the build artifact, review migration notes, and notify on-call before promoting
+        to production. Keep the change window short and verify health checks after rollout.
+      </vb-hint>
+      <vb-hint
+        title="Always expanded tip"
+        iconClass="bx bx-check-circle"
+        iconTone="success"
+        [expandable]="false"
+        description="When expandable is false, the long description stays visible and the chevron is hidden."
+      />
+      <vb-hint
+        title="Muted / error tones"
+        iconClass="bx bx-error-circle"
+        iconTone="error"
+        description="iconTone accepts primary, muted, success, warn, or error."
+      />
+    </div>
+  </vb-card>
+
   <vb-card class="showcase__section" aria-labelledby="sec-toasts">
     <h2 id="sec-toasts">Toast stack</h2>
     <p class="showcase__hint">
@@ -317,11 +358,26 @@
       <code>vb-chatbot</code> supports streamed assistant replies via <code>streaming: true</code>
       (blinking caret, optional composer lock) and a header <code>chatStatus</code> pill
       (<code>idle</code>, <code>streaming</code>, <code>thinking</code>, <code>busy</code>, etc.).
+      Pass <code>conversations</code> + <code>[(conversationId)]</code> for a header
+      <code>vb-select</code> switcher and <code>(newConversation)</code> (plus icon). Host owns
+      thread storage and swaps <code>messages</code> when the id changes.
+      Composer attachments: bind <code>[(attachments)]</code>,
+      <code>[sourceOptions]</code>, and optional <code>[roleOption]</code> (one amber role chip,
+      always leftmost). The composer is contenteditable: chips sit on the left and text wraps
+      around them; height grows with content. Typing <code>@</code> opens a menu grouped into
+      <strong>Roles</strong> and <strong>Sources</strong>.
+      Type <code>@</code> plus a fragment to filter; picking a role replaces any previous role.
+      Enable <code>rule</code> later via <code>composerAttachmentKinds</code> (add button).
+      <code>(send)</code> emits <code>VbChatbotSendEvent</code>
+      (<code>text</code> + <code>attachments</code>).
       Assistant replies support <strong>markdown</strong> (after streaming),
       <strong>copy</strong>, auto-scroll, and a scroll-to-latest control when you read
-      older messages. Like/dislike icons sit in the message header next to the latency bar.
+      older messages. RAG sources render as multi-fragment cards (optional
+      <code>sourcesCollapsible</code>); hover <code>[n]</code> markers to highlight chips.
+      Like/dislike icons sit in the message header next to the latency bar.
       Bind <code>feedback</code> / <code>feedbackComment</code> and
-      <code>(messageFeedback)</code> to persist ratings (optional text after dislike). Message list uses a subtle
+      <code>(messageFeedback)</code> to persist ratings (optional text after dislike). Optional
+      <code>placeholder</code> on the composer (omit or empty to hide). Message list uses a subtle
       <code>textureBackdrop</code> (muted canvas tint) and <code>textureGrid</code> (line
       pattern) default to <code>true</code>; use <code>[textureGrid]="false"</code> for tint
       only, or <code>[textureBackdrop]="false"</code> for a flat panel.
@@ -329,17 +385,42 @@
     <div class="showcase__chatbot-wrap">
       <vb-chatbot
         title="Deployment assistant"
-        placeholder="Ask about your deployment status..."
+        placeholder="Ask about your deployment status… Type @ for a source or role"
+        [conversations]="chatbotConversationOptions()"
+        [(conversationId)]="chatbotConversationId"
+        [(attachments)]="chatbotAttachments"
+        [sourceOptions]="chatbotSourceOptions()"
+        [roleOption]="chatbotRoleOption"
         [messages]="chatbotMessages()"
         [chatStatus]="chatbotHeaderStatus()"
         [clearHistoryInHeader]="true"
         [loading]="chatbotLoading()"
         loadingText="Assistant is preparing a response"
+        sourcesCollapsible
         (send)="onChatbotSend($event)"
         (clearHistory)="onChatbotClearHistory()"
+        (newConversation)="onChatbotNewConversation()"
         (messageFeedback)="onChatbotMessageFeedback($event)"
       />
     </div>
+  </vb-card>
+
+  <vb-card class="showcase__section" aria-labelledby="sec-tree-page-picker">
+    <h2 id="sec-tree-page-picker">Tree page picker</h2>
+    <p class="showcase__hint">
+      <code>vb-tree-page-picker</code> walks a nested <code>VbTreePageNode</code> tree (any depth).
+      <code>selectionMode="single"</code> binds <code>[(value)]</code>;
+      <code>multiple</code> uses <code>[(values)]</code>. Optional
+      <code>[filterable]</code> filters by label / description.
+    </p>
+    <vb-tree-page-picker
+      aria-label="Demo pages"
+      selectionMode="single"
+      filterable
+      [nodes]="demoPageTree()"
+      [(value)]="demoTreePageId"
+    />
+    <p class="showcase__hint">Selected: <code>{{ demoTreePageId() ?? 'null' }}</code></p>
   </vb-card>
 
   <vb-card class="showcase__section" aria-labelledby="sec-popup">

@@ -10,8 +10,20 @@ import {
 import { ShowcaseComponent } from './showcase/showcase.component';
 
 const demoNavLinks: VbShellNavLink[] = [
-  { path: 'showcase', label: 'Showcase', icon: 'bx bx-palette' },
-  { path: 'about', label: 'About', icon: 'bx bx-info-circle' },
+  {
+    label: 'Library',
+    icon: 'bx bx-package',
+    children: [
+      {
+        label: 'Components',
+        icon: 'bx bx-grid-alt',
+        children: [
+          { path: 'showcase', label: 'Showcase', icon: 'bx bx-palette' },
+          { path: 'about', label: 'About', icon: 'bx bx-info-circle' },
+        ],
+      },
+    ],
+  },
 ];
 const demoToolbarConnectionStatus: VbConnectionStatus = 'connected';
 const demoToolbarUserInfo: VbShellUserInfo = {

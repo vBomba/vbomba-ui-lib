@@ -1,7 +1,29 @@
 <section class="vb-chatbot">
   <header class="vb-chatbot__header">
     <div class="vb-chatbot__header-main">
-      <h3 class="vb-chatbot__title">{{ title() }}</h3>
+      @if (showConversationSwitcher()) {
+        <div class="vb-chatbot__conversations">
+          <vb-select
+            class="vb-chatbot__conversation-select"
+            [(value)]="conversationId"
+            [options]="conversations()"
+            [placeholder]="conversationPlaceholder()"
+            [aria-label]="conversationAriaLabel()"
+            [disabled]="conversationControlsDisabled()"
+          />
+          <vb-button
+            class="vb-chatbot__new-conversation"
+            variant="icon"
+            color="primary"
+            [iconClass]="newConversationIconClass()"
+            [ariaLabel]="newConversationAriaLabel()"
+            [disabled]="conversationControlsDisabled()"
+            (click)="requestNewConversation()"
+          />
+        </div>
+      } @else {
+        <h3 class="vb-chatbot__title">{{ title() }}</h3>
+      }
       <div class="vb-chatbot__header-actions">
         @if (chatStatus(); as cs) {
           <span
@@ -150,7 +172,12 @@
             [class.vb-chatbot__message-text--streaming]="message.streaming"
           >
             @if (useMarkdownFor(message)) {
-              <div class="vb-chatbot__markdown" [innerHTML]="markdownHtml(message.text)"></div>
+              <div
+                class="vb-chatbot__markdown"
+                [innerHTML]="markdownHtml(message.text)"
+                (mouseover)="onMarkdownMouseOver($event)"
+                (mouseleave)="onMarkdownMouseLeave()"
+              ></div>
             } @else {
               {{ message.text }}
               @if (message.streaming) {
@@ -162,25 +189,30 @@
               }
             }
           </div>
-          @if (message.sources?.length) {
-            <ul class="vb-chatbot__sources" [attr.aria-label]="sourcesAriaLabel()">
-              @for (src of message.sources; track src.href + src.pageTitle + src.chunkType + $index) {
-                <li class="vb-chatbot__source-item">
-                  <vb-chip class="vb-chatbot__source-chip" [attr.title]="sourceChipTitle(src)">
-                    <span class="vb-chatbot__source-heading">
-                      <a
-                        class="vb-chatbot__source-anchor"
-                        [href]="src.href"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >{{ src.pageTitle }}</a
-                      >
-                    </span>
-                    <span class="vb-chatbot__source-type">{{ src.chunkType }}</span>
-                  </vb-chip>
-                </li>
+          @if (message.sources; as sources) {
+            @if (sources.length) {
+              @if (sourcesCollapsible()) {
+                @if (sourcesCollapsedByDefault()) {
+                  <details class="vb-chatbot__sources-details">
+                    <summary class="vb-chatbot__sources-summary">{{ sourcesSummary(sources.length) }}</summary>
+                    <ng-container
+                      *ngTemplateOutlet="sourcesListTpl; context: { $implicit: sources }"
+                    />
+                  </details>
+                } @else {
+                  <details class="vb-chatbot__sources-details" open>
+                    <summary class="vb-chatbot__sources-summary">{{ sourcesSummary(sources.length) }}</summary>
+                    <ng-container
+                      *ngTemplateOutlet="sourcesListTpl; context: { $implicit: sources }"
+                    />
+                  </details>
+                }
+              } @else {
+                <ng-container
+                  *ngTemplateOutlet="sourcesListTpl; context: { $implicit: sources }"
+                />
               }
-            </ul>
+            }
           }
           @if (showDislikeFeedbackForm(message, idx)) {
             <div class="vb-chatbot__feedback-note">
@@ -230,7 +262,26 @@
               ></i>
             </button>
           }
-          <div class="vb-chatbot__message-text">{{ message.text }}</div>
+          <div class="vb-chatbot__message-body">
+            @if (message.attachments?.length) {
+              <div class="vb-chatbot__message-attachments" role="list" aria-label="Attachments">
+                @for (att of orderedAttachments(message.attachments); track att.id) {
+                  <span
+                    class="vb-chatbot__attachment"
+                    role="listitem"
+                    [class.vb-chatbot__attachment--source]="att.kind === 'source'"
+                    [class.vb-chatbot__attachment--rule]="att.kind === 'rule'"
+                    [class.vb-chatbot__attachment--role]="att.kind === 'role'"
+                    [attr.title]="attachmentTitle(att)"
+                  >
+                    <i [class]="attachmentIcon(att.kind)" aria-hidden="true"></i>
+                    <span class="vb-chatbot__attachment-label">{{ att.label }}</span>
+                  </span>
+                }
+              </div>
+            }
+            <div class="vb-chatbot__message-text">{{ message.text }}</div>
+          </div>
         </article>
       }
     }
@@ -253,16 +304,110 @@
   </div>
 
   <footer class="vb-chatbot__composer">
-    <textarea
-      class="vb-chatbot__input"
-      [value]="draft()"
-      [placeholder]="placeholder()"
-      [disabled]="composerDisabled()"
-      rows="2"
-      (input)="onDraftInput($any($event.target).value)"
-      (keydown)="onKeydown($event)"
-    ></textarea>
+    <div class="vb-chatbot__composer-main">
+      @if (showMentionMenu()) {
+        <ul
+          class="vb-chatbot__mention-menu"
+          role="listbox"
+          [attr.aria-label]="sourceMentionAriaLabel()"
+        >
+          @for (group of mentionGroups(); track group.kind) {
+            <li
+              class="vb-chatbot__mention-group"
+              [class.vb-chatbot__mention-group--role]="group.kind === 'role'"
+              [class.vb-chatbot__mention-group--source]="group.kind === 'source'"
+              role="presentation"
+            >
+              {{ group.label }}
+            </li>
+            @for (opt of group.items; track opt.kind + ':' + opt.value) {
+              <li
+                class="vb-chatbot__mention-option"
+                role="option"
+                [class.vb-chatbot__mention-option--active]="opt.flatIndex === mentionHighlight()"
+                [class.vb-chatbot__mention-option--role]="opt.kind === 'role'"
+                [attr.aria-selected]="opt.flatIndex === mentionHighlight()"
+                (mousedown)="applyMention(opt, $event)"
+              >
+                <span class="vb-chatbot__mention-option-label">{{ opt.label }}</span>
+                @if (opt.description) {
+                  <span class="vb-chatbot__mention-option-desc">{{ opt.description }}</span>
+                }
+              </li>
+            }
+          } @empty {
+            <li class="vb-chatbot__mention-empty" role="presentation">
+              {{ sourceMentionEmptyLabel() }}
+            </li>
+          }
+        </ul>
+      }
+      <div
+        class="vb-chatbot__composer-field"
+        [class.vb-chatbot__composer-field--disabled]="composerDisabled()"
+        [class.vb-chatbot__composer-field--has-chips]="attachments().length > 0"
+      >
+        @if (attachments().length) {
+          <div
+            class="vb-chatbot__composer-attachments"
+            role="list"
+            [attr.aria-label]="attachmentsAriaLabel()"
+          >
+            @for (att of orderedAttachments(attachments()); track att.id) {
+              <span
+                class="vb-chatbot__attachment"
+                role="listitem"
+                [class.vb-chatbot__attachment--source]="att.kind === 'source'"
+                [class.vb-chatbot__attachment--rule]="att.kind === 'rule'"
+                [class.vb-chatbot__attachment--role]="att.kind === 'role'"
+                [attr.title]="attachmentTitle(att)"
+              >
+                <i [class]="attachmentIcon(att.kind)" aria-hidden="true"></i>
+                <span class="vb-chatbot__attachment-label">{{ att.label }}</span>
+                <button
+                  type="button"
+                  class="vb-chatbot__attachment-remove"
+                  [disabled]="attachmentControlsDisabled()"
+                  [attr.aria-label]="'Remove ' + att.label"
+                  (mousedown)="$event.preventDefault()"
+                  (click)="removeAttachment(att.id)"
+                >
+                  <i class="bx bx-x" aria-hidden="true"></i>
+                </button>
+              </span>
+            }
+          </div>
+        }
+        <div
+          #composerInput
+          class="vb-chatbot__composer-input"
+          role="textbox"
+          aria-multiline="true"
+          [attr.contenteditable]="composerDisabled() ? 'false' : 'true'"
+          [attr.data-placeholder]="placeholder() || null"
+          [attr.aria-placeholder]="placeholder() || null"
+          [attr.aria-label]="placeholder() || title()"
+          [class.vb-chatbot__composer-input--empty]="!draft() && !attachments().length"
+          (input)="onComposerInput()"
+          (paste)="onComposerPaste($event)"
+          (keydown)="onKeydown($event)"
+          (keyup)="syncComposerCaret()"
+          (mouseup)="syncComposerCaret()"
+          (focus)="syncComposerCaret()"
+        ></div>
+      </div>
+    </div>
     <div class="vb-chatbot__composer-actions">
+      @if (showAddRule()) {
+        <vb-button
+          variant="icon"
+          color="primary"
+          [iconClass]="addRuleIconClass()"
+          [ariaLabel]="addRuleAriaLabel()"
+          [disabled]="attachmentControlsDisabled()"
+          (click)="requestOpenAttachmentPicker('rule')"
+        />
+      }
       @if (!clearHistoryInHeader()) {
         <vb-button
           variant="icon"
@@ -283,3 +428,47 @@
     </div>
   </footer>
 </section>
+
+<ng-template #sourcesListTpl let-sources>
+  <ul class="vb-chatbot__sources vb-chatbot__sources--cards" [attr.aria-label]="sourcesAriaLabel()">
+    @for (src of sources; track src.href + src.pageTitle + $index) {
+      <li
+        class="vb-chatbot__source-item"
+        [class.vb-chatbot__source-item--highlight]="isSourceCiteHighlighted(src)"
+        [attr.data-cite-refs]="sourceCiteRefsAttr(src)"
+        (mouseenter)="onSourceCiteEnter(src, $event)"
+        (mouseleave)="onSourceCiteLeave()"
+      >
+        <vb-chip class="vb-chatbot__source-chip" [attr.title]="sourceChipTitle(src)">
+          <span class="vb-chatbot__source-heading">
+            <a
+              class="vb-chatbot__source-anchor"
+              [href]="src.href"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ src.pageTitle }}</a
+            >
+          </span>
+          @if (sourceFragments(src); as fragments) {
+            @if (fragments.length) {
+              <span class="vb-chatbot__source-fragments">
+                @for (frag of fragments; track frag.label + $index) {
+                  <span class="vb-chatbot__source-type">
+                    <span class="vb-chatbot__source-fragment">{{ frag.label }}</span>
+                    @if (frag.score != null) {
+                      <span
+                        class="vb-chatbot__source-score"
+                        [attr.aria-label]="'Score ' + formatSourceScore(frag.score)"
+                        >{{ formatSourceScore(frag.score) }}</span
+                      >
+                    }
+                  </span>
+                }
+              </span>
+            }
+          }
+        </vb-chip>
+      </li>
+    }
+  </ul>
+</ng-template>

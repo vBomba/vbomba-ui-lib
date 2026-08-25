@@ -38,7 +38,7 @@
 
 ## App shell (`VbAppShellComponent`)
 
-- Rendered as the **parent** route; route `data` supplies **`appTitle`** (string) and **`navLinks`** (`VbShellNavLink[]`: `path`, `label`, **`icon`** — **Boxicons** classes, e.g. `bx bx-palette`). Host apps must include Boxicons CSS (as in `projects/demo/src/index.html`).
+- Rendered as the **parent** route; route `data` supplies **`appTitle`** (string) and **`navLinks`** (`VbShellNavLink[]`: `label`, **`icon`** — **Boxicons** classes, e.g. `bx bx-palette` — and **`path`** on leaf items). Optional **`children`** nest sub-items; group headers omit `path`. Host apps must include Boxicons CSS (as in `projects/demo/src/index.html`).
 - Child routes render inside `<router-outlet>` in the shell; set **`data.animation`** (unique string per page) for content transitions.
 - Optional header slot: **`[vbShellHeaderActions]`** (ng-content).
 

@@ -1,0 +1,79 @@
+<div
+  class="vb-tree-page-picker"
+  [class.vb-tree-page-picker--disabled]="disabled()"
+  [class.vb-tree-page-picker--multiple]="selectionMode() === 'multiple'"
+  [class.vb-tree-page-picker--filterable]="filterable()"
+>
+  @if (filterable()) {
+    <div class="vb-tree-page-picker__filter">
+      <vb-input
+        type="search"
+        [(value)]="filterQuery"
+        [placeholder]="filterPlaceholder()"
+        [disabled]="disabled()"
+        [aria-label]="filterAriaLabel()"
+        autocomplete="off"
+      />
+    </div>
+  }
+
+  <div
+    class="vb-tree-page-picker__tree"
+    role="tree"
+    [attr.aria-label]="ariaLabel() || null"
+    [attr.aria-disabled]="disabled() ? true : null"
+  >
+    @for (row of rows(); track row.node.id) {
+      <div
+        class="vb-tree-page-picker__row"
+        role="treeitem"
+        [attr.aria-level]="row.depth + 1"
+        [attr.aria-expanded]="row.hasChildren ? row.expanded : null"
+        [attr.aria-selected]="isSelected(row.node.id)"
+        [attr.aria-disabled]="disabled() || row.node.disabled ? true : null"
+        [attr.tabindex]="disabled() || row.node.disabled ? -1 : 0"
+        [attr.title]="rowTitle(row.node)"
+        [style.--vb-tree-depth]="row.depth"
+        [class.vb-tree-page-picker__row--selected]="isSelected(row.node.id)"
+        [class.vb-tree-page-picker__row--disabled]="disabled() || row.node.disabled"
+        (click)="onRowActivate(row.node)"
+        (keydown)="onRowKeydown($event, row.node)"
+      >
+        @if (row.hasChildren) {
+          <button
+            type="button"
+            class="vb-tree-page-picker__twist"
+            tabindex="-1"
+            [attr.aria-label]="row.expanded ? 'Collapse' : 'Expand'"
+            [attr.aria-disabled]="disabled() || !!activeFilter() ? true : null"
+            [disabled]="disabled() || null"
+            (click)="toggleExpanded(row.node.id, $event)"
+          >
+            <i
+              class="bx"
+              [class.bx-chevron-down]="row.expanded"
+              [class.bx-chevron-right]="!row.expanded"
+              aria-hidden="true"
+            ></i>
+          </button>
+        } @else {
+          <span class="vb-tree-page-picker__twist-spacer" aria-hidden="true"></span>
+        }
+
+        <span
+          class="vb-tree-page-picker__marker"
+          [class.vb-tree-page-picker__marker--radio]="selectionMode() === 'single'"
+          [class.vb-tree-page-picker__marker--check]="selectionMode() === 'multiple'"
+          [class.vb-tree-page-picker__marker--on]="isSelected(row.node.id)"
+          aria-hidden="true"
+        ></span>
+
+        <span class="vb-tree-page-picker__label">{{ row.node.label }}</span>
+      </div>
+    } @empty {
+      <p class="vb-tree-page-picker__empty">
+        {{ activeFilter() ? filterEmptyLabel() : emptyLabel() }}
+      </p>
+    }
+  </div>
+</div>

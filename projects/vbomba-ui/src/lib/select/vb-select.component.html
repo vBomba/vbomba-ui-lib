@@ -12,7 +12,11 @@
       (click)="toggleOpen()"
       (keydown)="onTriggerKeydown($event)"
     >
-      <span class="vb-select__value" [class.vb-select__value--placeholder]="isPlaceholder()">
+      <span
+        class="vb-select__value"
+        [class.vb-select__value--placeholder]="isPlaceholder()"
+        [attr.title]="displayLabel() || null"
+      >
         {{ displayLabel() }}
       </span>
     </button>
@@ -31,6 +35,7 @@
             [class.vb-select__option--selected]="opt.value === value()"
             [disabled]="opt.disabled ?? false"
             [attr.aria-selected]="opt.value === value()"
+            [attr.title]="opt.label"
             (click)="selectOption(opt)"
           >
             {{ opt.label }}

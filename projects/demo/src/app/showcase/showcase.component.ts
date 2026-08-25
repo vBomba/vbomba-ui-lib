@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, model, signal } from '@angular/core';
 import {
   VbAlertComponent,
   VbButtonComponent,
@@ -8,6 +8,7 @@ import {
   VbChipComponent,
   VbConnectionIndicatorComponent,
   VbEmptyStateComponent,
+  VbHintComponent,
   VbInputComponent,
   VbLoaderComponent,
   VbPaginatorComponent,
@@ -22,15 +23,46 @@ import {
   VbToastStackComponent,
   VbToastStackService,
   VbToggleComponent,
+  VbTreePagePickerComponent,
   type VbTabItem,
+  type VbChatbotComposerAttachment,
   type VbChatbotHeaderStatus,
   type VbChatbotMessage,
   type VbChatbotMessageFeedbackEvent,
+  type VbChatbotSendEvent,
+  type VbChatbotSourceOption,
   type VbConnectionStatus,
   type VbRadioOption,
   type VbSelectOption,
   type VbSimpleTableColumn,
+  type VbTreePageNode,
 } from 'vbomba-ui';
+
+function flattenTreePageLeaves(nodes: VbTreePageNode[]): VbChatbotSourceOption[] {
+  const out: VbChatbotSourceOption[] = [];
+  const walk = (list: VbTreePageNode[]): void => {
+    for (const node of list) {
+      if (node.children?.length) {
+        walk(node.children);
+        continue;
+      }
+      out.push({
+        value: node.id,
+        label: node.label,
+        description: node.description,
+        disabled: node.disabled,
+      });
+    }
+  };
+  walk(nodes);
+  return out;
+}
+
+interface ShowcaseChatConversation {
+  id: string;
+  label: string;
+  messages: VbChatbotMessage[];
+}
 
 @Component({
   selector: 'app-showcase',
@@ -44,6 +76,7 @@ import {
     VbChipComponent,
     VbConnectionIndicatorComponent,
     VbEmptyStateComponent,
+    VbHintComponent,
     VbInputComponent,
     VbLoaderComponent,
     VbPaginatorComponent,
@@ -57,6 +90,7 @@ import {
     VbTextareaComponent,
     VbToastStackComponent,
     VbToggleComponent,
+    VbTreePagePickerComponent,
   ],
   templateUrl: './showcase.component.html',
   styleUrl: './showcase.component.scss',
@@ -97,6 +131,8 @@ export class ShowcaseComponent {
     { value: 'enterprise', label: 'Enterprise (contact sales)', disabled: true },
   ]);
   protected readonly demoAlertPromoDismissed = signal(false);
+  protected readonly demoHintExpanded = model(false);
+  protected readonly demoHintProjectedExpanded = model(true);
   protected readonly demoConnectionStatus = signal<VbConnectionStatus>('loading');
   protected readonly demoDensity = model<string | null>('cozy');
   protected readonly demoDensityRadioOptions = signal<VbRadioOption[]>([
@@ -110,26 +146,155 @@ export class ShowcaseComponent {
     label: 'Ready',
     tone: 'idle',
   });
-  protected readonly chatbotMessages = signal<VbChatbotMessage[]>([
+  protected readonly chatbotConversationId = model('deploy');
+  private readonly chatbotThreads = signal<ShowcaseChatConversation[]>([
     {
-      id: 'welcome',
-      role: 'assistant',
-      text: 'Hi! Ask me anything about your deployment.\n\nTry **markdown** replies, `copy`, and scroll when the thread grows.',
-      sources: [
+      id: 'deploy',
+      label: 'Deployment status',
+      messages: [
         {
-          href: 'https://angular.dev/overview',
-          pageTitle: 'Angular docs — Overview',
-          chunkType: 'heading',
+          id: 'welcome',
+          role: 'assistant',
+          text: 'Hi! Ask me anything about your deployment.\n\nSee [1] for the framework overview and [2] for forms guidance. Try **markdown**, hover citations, `copy`, and scroll when the thread grows.',
+          sources: [
+            {
+              href: 'https://angular.dev/overview',
+              pageTitle: '[1] Angular docs — Overview',
+              chunkType: 'heading',
+              citeIndex: 1,
+              score: 0.912,
+              fragments: [
+                { label: 'Heading', score: 0.912 },
+                { label: 'Paragraph', score: 0.841 },
+              ],
+            },
+            {
+              href: 'https://angular.dev/guide/forms',
+              pageTitle: '[2] Reactive forms',
+              chunkType: 'paragraph',
+              citeIndex: 2,
+              score: 0.873,
+              fragments: [
+                { label: 'Paragraph', score: 0.873 },
+                { label: 'Code', score: 0.704 },
+              ],
+            },
+          ],
         },
+      ],
+    },
+    {
+      id: 'tokens',
+      label: 'Theme tokens',
+      messages: [
         {
-          href: 'https://angular.dev/guide/forms',
-          pageTitle: 'Reactive forms',
-          chunkType: 'paragraph',
+          id: 'tokens-welcome',
+          role: 'assistant',
+          text: 'This is a second conversation. Switch threads with the header select, or start a new one with **+**.',
         },
       ],
     },
   ]);
 
+  protected readonly chatbotConversationOptions = computed<VbSelectOption[]>(() =>
+    this.chatbotThreads().map((thread) => ({ value: thread.id, label: thread.label })),
+  );
+
+  protected readonly chatbotMessages = computed(
+    () =>
+      this.chatbotThreads().find((thread) => thread.id === this.chatbotConversationId())
+        ?.messages ?? [],
+  );
+
+  protected readonly demoPageTree = signal<VbTreePageNode[]>([
+    {
+      id: 'docs',
+      label: 'Documentation',
+      children: [
+        {
+          id: 'framework',
+          label: 'Framework',
+          children: [
+            {
+              id: 'angular-docs',
+              label: 'Angular docs',
+              description: 'Official Angular documentation',
+            },
+            {
+              id: 'angular-cli',
+              label: 'Angular CLI',
+              description: 'Workspace and schematics reference',
+            },
+          ],
+        },
+        {
+          id: 'design',
+          label: 'Design system',
+          children: [
+            {
+              id: 'design-tokens',
+              label: 'Design tokens',
+              description: 'vbomba-ui color and radius tokens',
+            },
+            {
+              id: 'spacing',
+              label: 'Spacing scale',
+              description: 'Layout rhythm and density',
+              children: [
+                {
+                  id: 'spacing-compact',
+                  label: 'Compact',
+                  description: 'Dense UI density preset',
+                },
+                {
+                  id: 'spacing-comfortable',
+                  label: 'Comfortable',
+                  description: 'Default density preset',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'ops',
+      label: 'Operations',
+      children: [
+        {
+          id: 'runbooks',
+          label: 'Ops runbooks',
+          description: 'Internal deployment and incident playbooks',
+        },
+        {
+          id: 'archived-wiki',
+          label: 'Archived wiki',
+          description: 'Read-only legacy pages',
+          disabled: true,
+        },
+      ],
+    },
+  ]);
+
+  protected readonly demoTreePageId = model<string | null>('design-tokens');
+  protected readonly chatbotAttachments = model<VbChatbotComposerAttachment[]>([]);
+  protected readonly chatbotSourceOptions = computed(() => flattenTreePageLeaves(this.demoPageTree()));
+  protected readonly chatbotRoleOption: VbChatbotSourceOption = {
+    value: 'ops-lead',
+    label: 'Ops lead',
+    description: 'Deployment and incident response persona',
+  };
+
+  private updateActiveChatMessages(
+    updater: (messages: VbChatbotMessage[]) => VbChatbotMessage[],
+  ): void {
+    const activeId = this.chatbotConversationId();
+    this.chatbotThreads.update((threads) =>
+      threads.map((thread) =>
+        thread.id === activeId ? { ...thread, messages: updater(thread.messages) } : thread,
+      ),
+    );
+  }
   protected readonly roleOptions = signal<VbSelectOption[]>([
     { value: 'eng', label: 'Engineer' },
     { value: 'design', label: 'Designer' },
@@ -206,14 +371,28 @@ export class ShowcaseComponent {
     this.textLoaderRestartKey.update((value) => value + 1);
   }
 
-  protected onChatbotSend(message: string): void {
-    this.chatbotMessages.update((items) => [...items, { role: 'user', text: message }]);
+  protected onChatbotSend(event: VbChatbotSendEvent): void {
+    this.updateActiveChatMessages((items) => [
+      ...items,
+      {
+        role: 'user',
+        text: event.text,
+        attachments: event.attachments.length ? [...event.attachments] : undefined,
+      },
+    ]);
     this.chatbotLoading.set(true);
     this.chatbotHeaderStatus.set({ label: 'Connecting…', tone: 'busy' });
 
     const replyId = `stream-${Date.now()}`;
+    const targetConversationId = this.chatbotConversationId();
     const startedAt = performance.now();
-    const fullText = `Received: **${message}**
+    const sourceNames = event.attachments
+      .filter((att) => att.kind === 'source')
+      .map((att) => att.label);
+    const sourcesLine = sourceNames.length
+      ? `\n\nUsing sources: ${sourceNames.map((n) => `**${n}**`).join(', ')}.`
+      : '';
+    const fullText = `Received: **${event.text}**${sourcesLine}
 
 Long replies stream character by character. When \`streaming: false\`, markdown works:
 
@@ -226,9 +405,19 @@ provideRouter(routes);
 \`\`\``;
     let charIndex = 0;
 
+    const patchTarget = (updater: (messages: VbChatbotMessage[]) => VbChatbotMessage[]): void => {
+      this.chatbotThreads.update((threads) =>
+        threads.map((thread) =>
+          thread.id === targetConversationId
+            ? { ...thread, messages: updater(thread.messages) }
+            : thread,
+        ),
+      );
+    };
+
     const finishReply = () => {
       const latencySeconds = (performance.now() - startedAt) / 1000;
-      this.chatbotMessages.update((items) =>
+      patchTarget((items) =>
         items.map((m) =>
           m.id === replyId
             ? {
@@ -252,8 +441,10 @@ provideRouter(routes);
             : m,
         ),
       );
-      this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
-      this.chatbotLoading.set(false);
+      if (this.chatbotConversationId() === targetConversationId) {
+        this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
+        this.chatbotLoading.set(false);
+      }
     };
 
     const appendChunk = (): void => {
@@ -265,7 +456,7 @@ provideRouter(routes);
       const nextChunkSize = Math.min(fullText.length - charIndex, Math.floor(Math.random() * 3) + 1);
       const chunk = fullText.slice(charIndex, charIndex + nextChunkSize);
       charIndex += nextChunkSize;
-      this.chatbotMessages.update((items) =>
+      patchTarget((items) =>
         items.map((m) => (m.id === replyId ? { ...m, text: `${m.text}${chunk}`, streaming: true } : m)),
       );
       const nextDelayMs = 18 + Math.floor(Math.random() * 55);
@@ -273,9 +464,11 @@ provideRouter(routes);
     };
 
     window.setTimeout(() => {
-      this.chatbotLoading.set(false);
-      this.chatbotHeaderStatus.set({ label: 'Streaming reply…', tone: 'streaming' });
-      this.chatbotMessages.update((items) => [
+      if (this.chatbotConversationId() === targetConversationId) {
+        this.chatbotLoading.set(false);
+        this.chatbotHeaderStatus.set({ label: 'Streaming reply…', tone: 'streaming' });
+      }
+      patchTarget((items) => [
         ...items,
         { id: replyId, role: 'assistant', text: '', streaming: true },
       ]);
@@ -284,13 +477,35 @@ provideRouter(routes);
   }
 
   protected onChatbotClearHistory(): void {
-    this.chatbotMessages.set([]);
+    this.updateActiveChatMessages(() => []);
+    this.chatbotLoading.set(false);
+    this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
+  }
+
+  protected onChatbotNewConversation(): void {
+    const id = `chat-${Date.now()}`;
+    const index = this.chatbotThreads().length + 1;
+    this.chatbotThreads.update((threads) => [
+      ...threads,
+      {
+        id,
+        label: `Conversation ${index}`,
+        messages: [
+          {
+            id: `${id}-welcome`,
+            role: 'assistant',
+            text: 'New conversation started. Ask anything.',
+          },
+        ],
+      },
+    ]);
+    this.chatbotConversationId.set(id);
     this.chatbotLoading.set(false);
     this.chatbotHeaderStatus.set({ label: 'Ready', tone: 'idle' });
   }
 
   protected onChatbotMessageFeedback(event: VbChatbotMessageFeedbackEvent): void {
-    this.chatbotMessages.update((items) =>
+    this.updateActiveChatMessages((items) =>
       items.map((m, i) => {
         const key = m.id ?? String(i);
         if (key !== event.messageId) {

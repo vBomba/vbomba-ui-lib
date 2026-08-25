@@ -1,7 +1,7 @@
 <div class="vb-app-shell">
   <mat-toolbar
     class="vb-app-shell__toolbar"
-    [class.vb-app-shell__toolbar--collapsed]="!isHandset() && sidenavCollapsed()"
+    [class.vb-app-shell__toolbar--collapsed]="railCollapsed()"
   >
     <button
       class="vb-app-shell__toolbar-toggle"
@@ -35,21 +35,55 @@
       [mode]="sidenavMode()"
       [opened]="isHandset() ? sidenavOpened() : true"
       class="vb-app-shell__sidenav"
-      [class.vb-app-shell__sidenav--collapsed]="!isHandset() && sidenavCollapsed()"
+      [class.vb-app-shell__sidenav--collapsed]="railCollapsed()"
       (openedChange)="onSidenavOpenedChange($event)"
     >
       <mat-nav-list>
-        @for (link of navLinks(); track link.path) {
-          <a
-            mat-list-item
-            [disableRipple]="true"
-            [routerLink]="link.path"
-            routerLinkActive="vb-app-shell__nav--active"
-            (click)="onNavigate()"
-          >
-            <i [class]="'vb-app-shell__nav-icon ' + link.icon" aria-hidden="true"></i>
-            <span matListItemTitle class="vb-app-shell__nav-label">{{ link.label }}</span>
-          </a>
+        @for (row of navRows(); track row.key) {
+          @if (row.hasChildren) {
+            <button
+              mat-list-item
+              type="button"
+              class="vb-app-shell__nav-group"
+              [disableRipple]="true"
+              [style.--vb-nav-depth]="row.depth"
+              [class.vb-app-shell__nav--nested]="row.depth > 0"
+              [class.vb-app-shell__nav--deep]="row.depth > 1"
+              [class.vb-app-shell__nav--active]="
+                railCollapsed() && (row.childActive || isNavGroupExpanded(row))
+              "
+              [class.vb-app-shell__nav--branch]="!railCollapsed() && row.childActive"
+              [attr.aria-expanded]="isNavGroupExpanded(row)"
+              [attr.aria-haspopup]="railCollapsed() ? 'menu' : null"
+              [attr.title]="row.link.label"
+              (click)="toggleNavGroup(row, $event)"
+            >
+              <i [class]="'vb-app-shell__nav-icon ' + row.link.icon" aria-hidden="true"></i>
+              <span matListItemTitle class="vb-app-shell__nav-label">{{ row.link.label }}</span>
+              <span matListItemMeta class="vb-app-shell__nav-chevron" aria-hidden="true">
+                <i
+                  class="bx"
+                  [class.bx-chevron-down]="row.expanded"
+                  [class.bx-chevron-right]="!row.expanded"
+                ></i>
+              </span>
+            </button>
+          } @else if (row.link.path) {
+            <a
+              mat-list-item
+              [disableRipple]="true"
+              [style.--vb-nav-depth]="row.depth"
+              [class.vb-app-shell__nav--nested]="row.depth > 0"
+              [class.vb-app-shell__nav--deep]="row.depth > 1"
+              [routerLink]="row.link.path"
+              routerLinkActive="vb-app-shell__nav--active"
+              [attr.title]="row.link.label"
+              (click)="onNavigate()"
+            >
+              <i [class]="'vb-app-shell__nav-icon ' + row.link.icon" aria-hidden="true"></i>
+              <span matListItemTitle class="vb-app-shell__nav-label">{{ row.link.label }}</span>
+            </a>
+          }
         }
       </mat-nav-list>
     </mat-sidenav>
@@ -70,4 +104,46 @@
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
+
+  @if (navFlyout(); as flyout) {
+    <div
+      class="vb-app-shell__nav-flyout"
+      role="menu"
+      [attr.aria-label]="flyout.label"
+      [style.top.px]="flyout.top"
+      [style.left.px]="flyout.left"
+      (click)="onNavFlyoutClick($event)"
+    >
+      @for (child of flyout.children; track child.path ?? child.label) {
+        @if (child.children?.length) {
+          <div class="vb-app-shell__nav-flyout-group" role="group" [attr.aria-label]="child.label">
+            <div class="vb-app-shell__nav-flyout-heading">{{ child.label }}</div>
+            @for (nested of child.children; track nested.path ?? nested.label) {
+              @if (nested.path) {
+                <a
+                  class="vb-app-shell__nav-flyout-link"
+                  role="menuitem"
+                  [routerLink]="nested.path"
+                  routerLinkActive="vb-app-shell__nav-flyout-link--active"
+                  (click)="onNavigate()"
+                >
+                  {{ nested.label }}
+                </a>
+              }
+            }
+          </div>
+        } @else if (child.path) {
+          <a
+            class="vb-app-shell__nav-flyout-link"
+            role="menuitem"
+            [routerLink]="child.path"
+            routerLinkActive="vb-app-shell__nav-flyout-link--active"
+            (click)="onNavigate()"
+          >
+            {{ child.label }}
+          </a>
+        }
+      }
+    </div>
+  }
 </div>

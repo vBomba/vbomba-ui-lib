@@ -69,10 +69,10 @@ If you use `VbAppShellComponent` icons, `VbThemeToggleComponent`, `VbButtonCompo
 | Shell & theme | `VbAppShellComponent`, `VbShellNavLink`, `VbThemeToggleComponent`, `VbThemeService` |
 | Actions | `VbButtonComponent` (`VbButtonVariant`) |
 | Forms | `VbInputComponent`, `VbTextareaComponent`, `VbSelectComponent`, `VbCheckboxComponent`, `VbToggleComponent` |
-| Display & feedback | `VbChipComponent`, `VbConnectionIndicatorComponent` (`VbConnectionStatus`), `VbLoaderComponent`, `VbPopupComponent` |
-| Data | `VbSimpleTableComponent`, `VbPaginatorComponent` |
+| Display & feedback | `VbAlertComponent`, `VbChipComponent`, `VbConnectionIndicatorComponent` (`VbConnectionStatus`), `VbEmptyStateComponent`, `VbHintComponent` (`VbHintIconTone`), `VbLoaderComponent`, `VbPopupComponent`, `VbToastStackComponent` |
+| Data | `VbSimpleTableComponent`, `VbPaginatorComponent`, `VbTreePagePickerComponent` (`VbTreePageNode`) |
 | Navigation | `VbTabComponent`, `VbTabsComponent`, `VbStickyTabsSectionComponent` (`VbTabItem`) |
-| Conversational UI | `VbChatbotComponent`, `VbChatbotMessage`, `VbChatbotHeaderStatus` |
+| Conversational UI | `VbChatbotComponent`, `VbChatbotMessage`, `VbChatbotHeaderStatus`, `VbChatbotConversationOption`, `VbChatbotComposerAttachment`, `VbChatbotSourceOption`, `VbChatbotSendEvent`, citation helpers (`vbChatbotWrapCitationMarkers`, …) |
 
 All public exports live in `public-api.ts`.
 
@@ -153,6 +153,27 @@ export class ProfileFormComponent {
 <vb-connection-indicator [status]="connStatus()" [size]="12" />
 ```
 
+### Hints
+
+`vb-hint` shows a Boxicons tip icon with a short `title`. Long text via `description` and/or projected content; toggle with `[(expanded)]` (or set `expandable="false"` to keep the body always open). Override the icon with `iconClass` and its color with `iconTone` (`primary` | `muted` | `success` | `warn` | `error`).
+
+```html
+<vb-hint
+  title="Theme tokens"
+  description="Prefer --vb-color-* semantic tokens in component SCSS. Extend vb-color-tokens.scss when you need a new role instead of hardcoding hex values."
+  [(expanded)]="hintOpen"
+/>
+
+<vb-hint
+  title="Always visible"
+  [expandable]="false"
+  iconClass="bx bx-bulb"
+  iconTone="warn"
+>
+  Projected body stays open when expandable is false.
+</vb-hint>
+```
+
 ### App shell
 
 ```ts
@@ -161,7 +182,14 @@ import { VbAppShellComponent, type VbShellNavLink } from 'vbomba-ui';
 
 const navLinks: VbShellNavLink[] = [
   { path: 'dashboard', label: 'Dashboard', icon: 'bx bx-home' },
-  { path: 'settings', label: 'Settings', icon: 'bx bx-cog' },
+  {
+    label: 'Settings',
+    icon: 'bx bx-cog',
+    children: [
+      { path: 'profile', label: 'Profile', icon: 'bx bx-user' },
+      { path: 'billing', label: 'Billing', icon: 'bx bx-credit-card' },
+    ],
+  },
 ];
 
 export const routes: Routes = [
@@ -230,26 +258,48 @@ export class HttpLoaderBridge {
 
 - `streaming?: boolean` - marks a message currently receiving tokens/chunks.
 - `responseLatencySeconds?: number` - used for average + last-reply latency indicators.
-- `sources?: VbChatbotSource[]` - compact source chips (title link + chunk type).
+- `sources?: VbChatbotSource[]` - RAG citations under assistant replies. Each source has `href`, `pageTitle`, and legacy `chunkType`. Prefer `fragments?: { label, score? }[]` for multi-row cards; optional `citeIndex` / `score` for `[n]` hover highlight and page relevance.
 - `feedback?: 'like' | 'dislike' | null` - thumbs up/down on a completed assistant reply.
 - `feedbackComment?: string | null` - optional note when `feedback` is `dislike`.
 
 Use `chatStatus` to show a status pill in the header (`idle`, `streaming`, `thinking`, `busy`, `error`, `offline`).
 
-When `streaming` is false, completed assistant replies render as **Markdown** (`markdownEnabled`, default `true`). Plain text is shown while tokens stream in.
+When `streaming` is false, completed assistant replies render as **Markdown** (`markdownEnabled`, default `true`). Plain text is shown while tokens stream in. Bare `[n]` markers become citation superscripts (`citationMarkersEnabled`, default `true`) that highlight matching source chips on hover.
+
+**Sources UI** — `sourcesCollapsible` wraps chips in a `<details>` disclosure; `sourcesCollapsedByDefault` (default `true`); localize the summary with `sourcesSummaryLabel`. Helpers `vbChatbotWrapCitationMarkers`, `vbChatbotParseCiteIndexesFromTitle`, and `vbChatbotDefaultSourcesSummary` are exported for host apps (e.g. DocBot).
 
 **Copy** — header copy icon on assistant messages; hover copy on user bubbles. Emits `(messageCopy)` after a successful clipboard write.
 
 **Scroll** — `autoScrollEnabled` (default `true`) keeps the viewport pinned to the latest message unless the user scrolls up; a floating control returns to the bottom.
 
+**Composer attachments** — bind `[(attachments)]`, `[sourceOptions]`, and optional `[roleOption]` (single role; amber chip; selecting replaces any previous role and always sits leftmost). The composer is a **contenteditable** field: chips float on the left and typed text wraps around them; height grows with content (up to a max, then scrolls). Typing `@` opens a menu with **Roles** and **Sources** section headers (`roleMentionGroupLabel` / `sourceMentionGroupLabel`) so kinds are not a flat list. Optional `placeholder` (empty/omitted hides it). Suggestions match `label` / `description` (case-insensitive). Arrow keys + Enter/Tab select; Escape dismisses. `sourceMentionLimit` caps source rows only. Default `composerAttachmentKinds` is `['source', 'role']`; include `'rule'` for an add-rule button. `(send)` emits `{ text, attachments }` (`VbChatbotSendEvent`). User messages may echo `attachments` on the bubble.
+
+### Tree page picker
+
+```html
+<vb-tree-page-picker
+  selectionMode="single"
+  filterable
+  [nodes]="pages"
+  [(value)]="pageId"
+  aria-label="Pages"
+/>
+```
+
+`VbTreePageNode.children` may nest to any depth; rows indent by level and expand/collapse via the chevron. Use `selectionMode="multiple"` with `[(values)]` when multi-page selection is needed. Set `filterable` for an optional search field (`[(filterQuery)]`, `filterPlaceholder`) that matches `label` / `description` and keeps ancestor branches visible.
+
 Like/dislike icons appear in the message header row — to the right of the latency bar when present. After dislike, an optional comment field is shown (`dislikeFeedbackTextEnabled`, labels via `dislikeFeedbackLabel` / `dislikeFeedbackPlaceholder`). Handle `(messageFeedback)` to update `feedback` and `feedbackComment`; commit on blur, Enter, or **Send feedback**.
 
 ```ts
-import { Component, signal } from '@angular/core';
+import { Component, model, signal } from '@angular/core';
 import {
   VbChatbotComponent,
+  type VbChatbotComposerAttachment,
   type VbChatbotHeaderStatus,
   type VbChatbotMessage,
+  type VbChatbotSendEvent,
+  type VbChatbotSourceOption,
+  type VbSelectOption,
 } from 'vbomba-ui';
 
 @Component({
@@ -260,6 +310,21 @@ import {
 export class ChatDemoComponent {
   readonly status = signal<VbChatbotHeaderStatus>({ label: 'Streaming…', tone: 'streaming' });
   readonly loading = signal(false);
+  readonly conversationId = model('c1');
+  readonly conversations = signal<VbSelectOption[]>([
+    { value: 'c1', label: 'Deployment status' },
+    { value: 'c2', label: 'Theme tokens' },
+  ]);
+  readonly attachments = model<VbChatbotComposerAttachment[]>([]);
+  readonly sourceOptions = signal<VbChatbotSourceOption[]>([
+    { value: 'design-tokens', label: 'Design tokens', description: 'Color and radius tokens' },
+    { value: 'angular-docs', label: 'Angular docs', description: 'Official Angular documentation' },
+  ]);
+  readonly roleOption = signal<VbChatbotSourceOption>({
+    value: 'ops-lead',
+    label: 'Ops lead',
+    description: 'Deployment and incident response persona',
+  });
   readonly messages = signal<VbChatbotMessage[]>([
     {
       role: 'assistant',
@@ -267,16 +332,31 @@ export class ChatDemoComponent {
       streaming: true,
     },
   ]);
+
+  onSend(event: VbChatbotSendEvent): void {
+    this.messages.update((items) => [
+      ...items,
+      { role: 'user', text: event.text, attachments: event.attachments },
+    ]);
+  }
 }
 ```
 
 ```html
 <vb-chatbot
   title="Assistant"
+  placeholder="Ask anything… Type @ to add a source or role"
+  [conversations]="conversations()"
+  [(conversationId)]="conversationId"
+  [(attachments)]="attachments"
+  [sourceOptions]="sourceOptions()"
+  [roleOption]="roleOption()"
   [chatStatus]="status()"
   [messages]="messages()"
   [loading]="loading()"
   loadingText="Assistant is typing..."
+  (send)="onSend($event)"
+  (newConversation)="/* create thread */"
 />
 ```
 

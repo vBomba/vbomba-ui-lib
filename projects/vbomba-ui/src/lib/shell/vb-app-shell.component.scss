@@ -99,19 +99,32 @@
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-nav-list {
   background: transparent;
   padding-top: 0.5rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 .vb-app-shell__sidenav--collapsed {
   width: var(--vb-shell-collapsed-width);
 }
 
-:host ::ng-deep .vb-app-shell__sidenav a.mat-mdc-list-item {
+:host ::ng-deep .vb-app-shell__sidenav a.mat-mdc-list-item,
+:host ::ng-deep .vb-app-shell__sidenav button.mat-mdc-list-item {
   display: flex !important;
   align-items: center !important;
   box-sizing: border-box;
 }
 
+:host ::ng-deep .vb-app-shell__sidenav button.mat-mdc-list-item {
+  appearance: none;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+}
+
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item {
+  --vb-nav-depth: 0;
   min-height: var(--vb-shell-nav-control-size);
   height: var(--vb-shell-nav-control-size);
   margin: 4px var(--vb-shell-nav-offset);
@@ -122,6 +135,47 @@
     background-color 180ms ease,
     color 180ms ease,
     transform 150ms ease;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item.vb-app-shell__nav--nested {
+  margin-left: calc(var(--vb-shell-nav-offset) + (var(--vb-nav-depth) * 14px));
+  width: calc(100% - (var(--vb-shell-nav-offset) * 2) - (var(--vb-nav-depth) * 14px));
+  background: color-mix(
+    in srgb,
+    var(--vb-color-surface-muted) calc(38% + (var(--vb-nav-depth) * 14%)),
+    var(--vb-color-surface-default)
+  );
+  border-inline-start: 2px solid
+    color-mix(
+      in srgb,
+      var(--vb-color-action-primary) calc(16% + (var(--vb-nav-depth) * 10%)),
+      var(--vb-color-border-default)
+    );
+  border-start-start-radius: 0 !important;
+  border-end-start-radius: 0 !important;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item.vb-app-shell__nav--nested .vb-app-shell__nav-icon,
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item.vb-app-shell__nav--nested .vb-app-shell__nav-chevron {
+  color: var(--vb-color-text-muted);
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item.vb-app-shell__nav--nested .vb-app-shell__nav-label {
+  color: color-mix(in srgb, var(--vb-color-text-muted) 28%, var(--vb-color-text-primary));
+  font-weight: 500;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item.vb-app-shell__nav--deep {
+  background: color-mix(
+    in srgb,
+    var(--vb-color-surface-muted) calc(52% + (var(--vb-nav-depth) * 10%)),
+    var(--vb-color-surface-default)
+  );
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item.vb-app-shell__nav--deep .vb-app-shell__nav-label {
+  font-weight: 400;
+  color: var(--vb-color-text-muted);
 }
 
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .mdc-list-item__ripple,
@@ -208,6 +262,28 @@
   color: var(--vb-color-text-primary);
 }
 
+.vb-app-shell__nav-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vb-color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item .mdc-list-item__end,
+:host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item-meta {
+  margin: 0;
+  margin-left: auto;
+  width: auto;
+  min-width: 0;
+}
+
+.vb-app-shell__nav-chevron i {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
 :host ::ng-deep .vb-app-shell__sidenav .mat-mdc-list-item:hover .vb-app-shell__nav-icon {
   color: var(--vb-color-action-primary) !important;
 }
@@ -233,8 +309,23 @@
   ) !important;
 }
 
-.vb-app-shell__sidenav--collapsed .vb-app-shell__nav-label {
+:host ::ng-deep .vb-app-shell__nav--branch .vb-app-shell__nav-icon,
+:host ::ng-deep .vb-app-shell__nav--branch .vb-app-shell__nav-chevron {
+  color: var(--vb-color-action-primary-strong) !important;
+}
+
+:host ::ng-deep .vb-app-shell__nav--branch .vb-app-shell__nav-label {
+  color: var(--vb-color-action-primary-strong) !important;
+  font-weight: 600;
+}
+
+.vb-app-shell__sidenav--collapsed .vb-app-shell__nav-label,
+.vb-app-shell__sidenav--collapsed .vb-app-shell__nav-chevron {
   display: none;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav--collapsed .mat-mdc-list-item-meta {
+  display: none !important;
 }
 
 :host ::ng-deep .vb-app-shell__sidenav--collapsed .mat-mdc-list-item-title,
@@ -245,6 +336,13 @@
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
+}
+
+:host ::ng-deep .vb-app-shell__sidenav--collapsed .mat-mdc-list-item.vb-app-shell__nav--nested {
+  margin-left: var(--vb-shell-nav-offset);
+  width: var(--vb-shell-nav-control-size) !important;
+  border-inline-start: none;
+  background: transparent;
 }
 
 :host ::ng-deep .vb-app-shell__sidenav--collapsed .mat-mdc-list-item {
@@ -277,6 +375,71 @@
 
 :host ::ng-deep .vb-app-shell__sidenav--collapsed .mat-mdc-list-item:hover {
   transform: translateX(0) scale(1.04);
+}
+
+.vb-app-shell__nav-flyout {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 10.5rem;
+  max-width: min(18rem, calc(100vw - 1rem));
+  padding: 0.35rem;
+  box-sizing: border-box;
+  background: var(--vb-color-surface-default);
+  border: 1px solid var(--vb-color-border-default);
+  border-radius: var(--vb-radius-md);
+  box-shadow: var(--vb-color-effect-shadow-card);
+}
+
+.vb-app-shell__nav-flyout-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vb-app-shell__nav-flyout-heading {
+  padding: 0.4rem 0.7rem 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vb-color-text-muted);
+}
+
+.vb-app-shell__nav-flyout-link {
+  display: block;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--vb-radius-md);
+  color: var(--vb-color-text-primary);
+  text-decoration: none;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.vb-app-shell__nav-flyout-link:hover,
+.vb-app-shell__nav-flyout-link:focus-visible {
+  outline: none;
+  color: var(--vb-color-action-primary);
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 8%,
+    var(--vb-color-surface-default)
+  );
+}
+
+.vb-app-shell__nav-flyout-link--active {
+  color: var(--vb-color-action-primary-strong);
+  font-weight: 600;
+  background: color-mix(
+    in srgb,
+    var(--vb-color-action-primary) 14%,
+    var(--vb-color-surface-default)
+  );
 }
 
 .vb-app-shell__content {

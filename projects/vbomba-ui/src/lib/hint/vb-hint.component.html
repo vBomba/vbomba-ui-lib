@@ -1,0 +1,49 @@
+<div
+  class="vb-hint"
+  [class.vb-hint--expanded]="bodyVisible()"
+  [class.vb-hint--expandable]="expandable()"
+>
+  <div class="vb-hint__header">
+    <span
+      class="vb-hint__icon"
+      [class.vb-hint__icon--primary]="iconTone() === 'primary'"
+      [class.vb-hint__icon--muted]="iconTone() === 'muted'"
+      [class.vb-hint__icon--success]="iconTone() === 'success'"
+      [class.vb-hint__icon--warn]="iconTone() === 'warn'"
+      [class.vb-hint__icon--error]="iconTone() === 'error'"
+      aria-hidden="true"
+    >
+      <i [class]="iconClass()"></i>
+    </span>
+    <div class="vb-hint__title">{{ title() }}</div>
+    @if (expandable()) {
+      <button
+        type="button"
+        class="vb-hint__toggle"
+        [attr.aria-expanded]="expanded()"
+        [attr.aria-controls]="bodyId"
+        [attr.aria-label]="expanded() ? collapseAriaLabel() : expandAriaLabel()"
+        (click)="toggleExpanded()"
+      >
+        <i
+          class="bx vb-hint__toggle-icon"
+          [class.bx-chevron-up]="expanded()"
+          [class.bx-chevron-down]="!expanded()"
+          aria-hidden="true"
+        ></i>
+      </button>
+    }
+  </div>
+  <div
+    class="vb-hint__body"
+    [attr.id]="bodyId"
+    [hidden]="!bodyVisible()"
+  >
+    @if (hasDescription()) {
+      <p class="vb-hint__description">{{ description() }}</p>
+    }
+    <div class="vb-hint__content">
+      <ng-content />
+    </div>
+  </div>
+</div>

@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.3.0
+
+### Added
+
+- `vb-tree-page-picker` — nested page tree (`VbTreePageNode` at any depth) with optional `filterable` search.
+- `vb-hint` — inline hint with optional icon tone.
+- `vb-chatbot` composer: `@` mention menu grouped into Roles / Sources; optional `roleOption`; at most one role chip, always leftmost.
+- Content-editable composer so chips sit inline and typed text wraps around them; field grows with content.
+- App shell sidenav: nested levels use a guide rail, muted tint, and quieter typography.
+- `vb-chatbot` enriched RAG sources: `VbChatbotSource.fragments`, `citeIndex`, `score`; multi-fragment source cards.
+- Collapsible sources list via `sourcesCollapsible` / `sourcesCollapsedByDefault` / `sourcesSummaryLabel`.
+- Inline `[n]` citation markers in markdown (`citationMarkersEnabled`) with hover highlight against matching source chips.
+- Public helpers: `vbChatbotWrapCitationMarkers`, `vbChatbotParseCiteIndexesFromTitle`, `vbChatbotFormatSourceScore`, `vbChatbotDefaultSourcesSummary`.
+
+### Changed
+
+- Chatbot attachments wrap with the draft; placeholder hides when chips are present.
+
+### Fixed
+
+- Composer close-chip hover no longer stretches the chip height.
+- Tree picker row height stays stable while filtering.
+- Citation marker styles apply to `[innerHTML]` markdown (encapsulation pierce); markers use theme primary text color and `cursor: pointer`.
+
+## 0.2.2
+
+### Added
+
+- `vb-chatbot` enriched RAG sources: `VbChatbotSource.fragments`, `citeIndex`, `score`; multi-fragment source cards.
+- Collapsible sources list via `sourcesCollapsible` / `sourcesCollapsedByDefault` / `sourcesSummaryLabel`.
+- Inline `[n]` citation markers in markdown (`citationMarkersEnabled`) with hover highlight against matching source chips.
+- Public helpers: `vbChatbotWrapCitationMarkers`, `vbChatbotParseCiteIndexesFromTitle`, `vbChatbotFormatSourceScore`, `vbChatbotDefaultSourcesSummary`.
+
+### Fixed
+
+- Citation marker styles apply to `[innerHTML]` markdown (encapsulation pierce); markers use theme primary text color and `cursor: pointer`.
+
 ## 0.2.2
 
 ### Fixed
