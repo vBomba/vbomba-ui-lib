@@ -60,7 +60,7 @@ export type VbChatbotComposerAttachmentKind = 'source' | 'rule' | 'role';
 
 /**
  * An option the user can attach via `@` mention in the composer
- * (sources or the single role). Filtered by substring on `label` / `description`.
+ * (sources or roles). Filtered by substring on `label` / `description`.
  */
 export interface VbChatbotSourceOption {
   /** Semantic id — stored on {@link VbChatbotComposerAttachment.value}. */

@@ -272,7 +272,7 @@ When `streaming` is false, completed assistant replies render as **Markdown** (`
 
 **Scroll** — `autoScrollEnabled` (default `true`) keeps the viewport pinned to the latest message unless the user scrolls up; a floating control returns to the bottom.
 
-**Composer attachments** — bind `[(attachments)]`, `[sourceOptions]`, and optional `[roleOption]` (single role; amber chip; selecting replaces any previous role and always sits leftmost). The composer is a **contenteditable** field: chips float on the left and typed text wraps around them; height grows with content (up to a max, then scrolls). Typing `@` opens a menu with **Roles** and **Sources** section headers (`roleMentionGroupLabel` / `sourceMentionGroupLabel`) so kinds are not a flat list. Optional `placeholder` (empty/omitted hides it). Suggestions match `label` / `description` (case-insensitive). Arrow keys + Enter/Tab select; Escape dismisses. `sourceMentionLimit` caps source rows only. Default `composerAttachmentKinds` is `['source', 'role']`; include `'rule'` for an add-rule button. `(send)` emits `{ text, attachments }` (`VbChatbotSendEvent`). User messages may echo `attachments` on the bubble.
+**Composer attachments** — bind `[(attachments)]`, `[sourceOptions]`, and optional `[roleOptions]` (amber role chips; selecting one replaces any previous role and always sits leftmost). Legacy `[roleOption]` still works and merges with `roleOptions`. The composer is a **contenteditable** field: chips float on the left and typed text wraps around them; height grows with content (up to a max, then scrolls). Typing `@` opens a menu with **Roles** and **Sources** section headers (`roleMentionGroupLabel` / `sourceMentionGroupLabel`) so kinds are not a flat list. Optional `placeholder` (empty/omitted hides it). Suggestions match `label` / `description` (case-insensitive). Arrow keys + Enter/Tab select; Escape dismisses. `sourceMentionLimit` caps source rows only. Default `composerAttachmentKinds` is `['source', 'role']`; include `'rule'` for an add-rule button. `(send)` emits `{ text, attachments }` (`VbChatbotSendEvent`). User messages may echo `attachments` on the bubble.
 
 ### Tree page picker
 
@@ -320,11 +320,18 @@ export class ChatDemoComponent {
     { value: 'design-tokens', label: 'Design tokens', description: 'Color and radius tokens' },
     { value: 'angular-docs', label: 'Angular docs', description: 'Official Angular documentation' },
   ]);
-  readonly roleOption = signal<VbChatbotSourceOption>({
-    value: 'ops-lead',
-    label: 'Ops lead',
-    description: 'Deployment and incident response persona',
-  });
+  readonly roleOptions = signal<VbChatbotSourceOption[]>([
+    {
+      value: 'ops-lead',
+      label: 'Ops lead',
+      description: 'Deployment and incident response persona',
+    },
+    {
+      value: 'docs-writer',
+      label: 'Docs writer',
+      description: 'Clear technical documentation persona',
+    },
+  ]);
   readonly messages = signal<VbChatbotMessage[]>([
     {
       role: 'assistant',
@@ -350,7 +357,7 @@ export class ChatDemoComponent {
   [(conversationId)]="conversationId"
   [(attachments)]="attachments"
   [sourceOptions]="sourceOptions()"
-  [roleOption]="roleOption()"
+  [roleOptions]="roleOptions()"
   [chatStatus]="status()"
   [messages]="messages()"
   [loading]="loading()"

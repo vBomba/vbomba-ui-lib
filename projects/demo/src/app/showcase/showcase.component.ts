@@ -279,11 +279,23 @@ export class ShowcaseComponent {
   protected readonly demoTreePageId = model<string | null>('design-tokens');
   protected readonly chatbotAttachments = model<VbChatbotComposerAttachment[]>([]);
   protected readonly chatbotSourceOptions = computed(() => flattenTreePageLeaves(this.demoPageTree()));
-  protected readonly chatbotRoleOption: VbChatbotSourceOption = {
-    value: 'ops-lead',
-    label: 'Ops lead',
-    description: 'Deployment and incident response persona',
-  };
+  protected readonly chatbotRoleOptions: readonly VbChatbotSourceOption[] = [
+    {
+      value: 'ops-lead',
+      label: 'Ops lead',
+      description: 'Deployment and incident response persona',
+    },
+    {
+      value: 'docs-writer',
+      label: 'Docs writer',
+      description: 'Clear technical documentation persona',
+    },
+    {
+      value: 'security-reviewer',
+      label: 'Security reviewer',
+      description: 'Threat modeling and hardening persona',
+    },
+  ];
 
   private updateActiveChatMessages(
     updater: (messages: VbChatbotMessage[]) => VbChatbotMessage[],

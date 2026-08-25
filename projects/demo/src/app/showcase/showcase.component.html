@@ -362,10 +362,10 @@
       <code>vb-select</code> switcher and <code>(newConversation)</code> (plus icon). Host owns
       thread storage and swaps <code>messages</code> when the id changes.
       Composer attachments: bind <code>[(attachments)]</code>,
-      <code>[sourceOptions]</code>, and optional <code>[roleOption]</code> (one amber role chip,
-      always leftmost). The composer is contenteditable: chips sit on the left and text wraps
-      around them; height grows with content. Typing <code>@</code> opens a menu grouped into
-      <strong>Roles</strong> and <strong>Sources</strong>.
+      <code>[sourceOptions]</code>, and optional <code>[roleOptions]</code> (amber role chips;
+      at most one attached, always leftmost). The composer is contenteditable: chips sit on the
+      left and text wraps around them; height grows with content. Typing <code>@</code> opens a
+      menu grouped into <strong>Roles</strong> and <strong>Sources</strong>.
       Type <code>@</code> plus a fragment to filter; picking a role replaces any previous role.
       Enable <code>rule</code> later via <code>composerAttachmentKinds</code> (add button).
       <code>(send)</code> emits <code>VbChatbotSendEvent</code>
@@ -390,7 +390,7 @@
         [(conversationId)]="chatbotConversationId"
         [(attachments)]="chatbotAttachments"
         [sourceOptions]="chatbotSourceOptions()"
-        [roleOption]="chatbotRoleOption"
+        [roleOptions]="chatbotRoleOptions"
         [messages]="chatbotMessages()"
         [chatStatus]="chatbotHeaderStatus()"
         [clearHistoryInHeader]="true"

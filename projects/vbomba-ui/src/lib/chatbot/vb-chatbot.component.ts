@@ -135,15 +135,21 @@ export class VbChatbotComponent implements AfterViewInit {
    */
   readonly sourceOptions = input<readonly VbChatbotSourceOption[]>([]);
   /**
+   * Roles available via `@` mention (amber chips). Selecting one replaces any previous role.
+   * Prefer this over {@link roleOption} when more than one persona is offered.
+   */
+  readonly roleOptions = input<readonly VbChatbotSourceOption[]>([]);
+  /**
    * Optional single role available via `@` mention.
+   * Merged with {@link roleOptions} when both are set. Prefer `roleOptions` for multiple roles.
    * At most one role chip can be attached at a time.
    */
   readonly roleOption = input<VbChatbotSourceOption | null>(null);
-  /** Max source rows shown in the `@` suggestion list (the role row is not capped by this). */
+  /** Max source rows shown in the `@` suggestion list (roles are not capped by this). */
   readonly sourceMentionLimit = input(6);
   readonly sourceMentionAriaLabel = input('Mention suggestions');
   readonly sourceMentionEmptyLabel = input('No matching mentions');
-  /** Section header above the role row in the `@` menu. */
+  /** Section header above role rows in the `@` menu. */
   readonly roleMentionGroupLabel = input('Roles');
   /** Section header above source rows in the `@` menu. */
   readonly sourceMentionGroupLabel = input('Sources');
@@ -220,7 +226,8 @@ export class VbChatbotComponent implements AfterViewInit {
   readonly newConversation = output<void>();
   /**
    * Host should open a picker for the given kind and push into `attachments`.
-   * Sources and role use `@` + {@link sourceOptions} / {@link roleOption}; this output is mainly for `'rule'`.
+   * Sources and roles use `@` + {@link sourceOptions} / {@link roleOptions} (or legacy
+   * {@link roleOption}); this output is mainly for `'rule'`.
    */
   readonly openAttachmentPicker = output<VbChatbotComposerAttachmentKind>();
 
@@ -249,9 +256,25 @@ export class VbChatbotComponent implements AfterViewInit {
     this.composerAttachmentKinds().includes('source'),
   );
 
-  protected readonly roleMentionEnabled = computed(
-    () => this.composerAttachmentKinds().includes('role') && !!this.roleOption(),
-  );
+  /** `roleOptions` plus legacy single {@link roleOption}, de-duplicated by `value`. */
+  private readonly resolvedRoleOptions = computed(() => {
+    const byValue = new Map<string, VbChatbotSourceOption>();
+    for (const opt of this.roleOptions()) {
+      byValue.set(opt.value, opt);
+    }
+    const single = this.roleOption();
+    if (single) {
+      byValue.set(single.value, single);
+    }
+    return [...byValue.values()];
+  });
+
+  protected readonly roleMentionEnabled = computed(() => {
+    if (!this.composerAttachmentKinds().includes('role')) {
+      return false;
+    }
+    return this.resolvedRoleOptions().length > 0;
+  });
 
   protected readonly showAddRule = computed(() => this.composerAttachmentKinds().includes('rule'));
 
@@ -278,7 +301,7 @@ export class VbChatbotComponent implements AfterViewInit {
     if (!this.sourceMentionEnabled() && !this.roleMentionEnabled()) {
       return null;
     }
-    if (!this.sourceOptions().length && !this.roleOption()) {
+    if (!this.sourceOptions().length && !this.resolvedRoleOptions().length) {
       return null;
     }
     return this.parseSourceMention(this.draft(), this.caretIndex());
@@ -301,9 +324,10 @@ export class VbChatbotComponent implements AfterViewInit {
 
     const roles: VbChatbotMentionMatch[] = [];
     if (this.roleMentionEnabled()) {
-      const role = this.roleOption();
-      if (role && !role.disabled && matchesQuery(role)) {
-        roles.push({ ...role, kind: 'role' });
+      for (const role of this.resolvedRoleOptions()) {
+        if (!role.disabled && matchesQuery(role)) {
+          roles.push({ ...role, kind: 'role' });
+        }
       }
     }
 
